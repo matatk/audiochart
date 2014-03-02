@@ -66,8 +66,8 @@ class NotePitchMapper extends PitchMapper
 
 class Sounder
 	constructor: -> throw 'please use a derived class'
-	start: (opt_offset) ->
-	stop: (opt_offset) ->
+	start: ->
+	stop: (offset) ->
 
 
 class WebAudioSounder extends Sounder
@@ -79,15 +79,15 @@ class WebAudioSounder extends Sounder
 		@oscillator.start 0
 		return
 
-	frequency: (frequency, offset = 0) ->
+	frequency: (frequency, offset) ->
 		callback = =>
 			@oscillator.frequency.value = frequency
 			return
 		setTimeout callback, offset
 		return
 
-	stop: (opt_offset = 0) ->
-		@oscillator.stop 0  # NOTE: seems a browser bug that offset is ignored
+	stop: (offset) ->
+		@oscillator.stop offset
 		return
 
 
@@ -117,15 +117,12 @@ class Player
 		@sounder.start 0
 		@sounder.frequency @data_source.series_value(0, 0)
 
-		callback_play = =>
-			for i in [1 .. series_max_index]
-				@sounder.frequency \
-					@data_source.series_value(0, i),
-					@interval * i
-			return
+		for i in [1 .. series_max_index]
+			@sounder.frequency \
+				@data_source.series_value(0, i),
+				@interval * i
 
-		setTimeout callback_play, @interval
-		setTimeout (=> @sounder.stop()), series_length * @interval
+		@sounder.stop (series_length * @interval) / 1000
 		return
 
 

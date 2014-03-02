@@ -35,45 +35,46 @@ describe 'FrequencyPitchMapper', ->
 	it 'will not allow min frequency > max frequency', ->
 		expect(() -> new ac.FrequencyPitchMapper 0, 42, MAX, MIN).toThrow()
 
-	it 'maps from input data to a frequency (1)', ->
-		fm = new ac.FrequencyPitchMapper 0, 42, 100, 1000
-		(expect fm.map 0).toBe 100
-		(expect fm.map 42).toBe 1000
-		(expect fm.map 21).toBe 550
+	describe 'maps from input data to a frequency', ->
+		it 'test range 1', ->
+			fm = new ac.FrequencyPitchMapper 0, 42, 100, 1000
+			(expect fm.map 0).toBe 100
+			(expect fm.map 42).toBe 1000
+			(expect fm.map 21).toBe 550
 
-	it 'maps from input data to a frequency (2)', ->
-		fm = new ac.FrequencyPitchMapper 0, 100, 0, 100
-		(expect fm.map 0).toBe 0
-		(expect fm.map 21).toBe 21
-		(expect fm.map 42).toBe 42
-		(expect fm.map 50).toBe 50
-		(expect fm.map 70).toBe 70
-		(expect fm.map 100).toBe 100
+		it 'test range 2', ->
+			fm = new ac.FrequencyPitchMapper 0, 100, 0, 100
+			(expect fm.map 0).toBe 0
+			(expect fm.map 21).toBe 21
+			(expect fm.map 42).toBe 42
+			(expect fm.map 50).toBe 50
+			(expect fm.map 70).toBe 70
+			(expect fm.map 100).toBe 100
 
-	it 'maps from input data to a frequency (3)', ->
-		fm = new ac.FrequencyPitchMapper 0, 100, 1, 101
-		(expect fm.map 0).toBe 1
-		(expect fm.map 21).toBe 22
-		(expect fm.map 42).toBe 43
-		(expect fm.map 50).toBe 51
-		(expect fm.map 70).toBe 71
-		(expect fm.map 100).toBe 101
+		it 'test range 3', ->
+			fm = new ac.FrequencyPitchMapper 0, 100, 1, 101
+			(expect fm.map 0).toBe 1
+			(expect fm.map 21).toBe 22
+			(expect fm.map 42).toBe 43
+			(expect fm.map 50).toBe 51
+			(expect fm.map 70).toBe 71
+			(expect fm.map 100).toBe 101
 
-	it 'maps from input data to a frequency (4)', ->
-		fm = new ac.FrequencyPitchMapper -100, 0, 0, 100
-		(expect fm.map -100).toBe 0
-		(expect fm.map -70).toBe 30
-		(expect fm.map -50).toBe 50
-		(expect fm.map -20).toBe 80
-		(expect fm.map 0).toBe 100
+		it 'test range 4', ->
+			fm = new ac.FrequencyPitchMapper -100, 0, 0, 100
+			(expect fm.map -100).toBe 0
+			(expect fm.map -70).toBe 30
+			(expect fm.map -50).toBe 50
+			(expect fm.map -20).toBe 80
+			(expect fm.map 0).toBe 100
 
-	it 'maps from input data to a frequency (5)', ->
-		fm = new ac.FrequencyPitchMapper -100, 100, 0, 100
-		(expect fm.map -100).toBe 0
-		(expect fm.map -50).toBe 25
-		(expect fm.map 0).toBe 50
-		(expect fm.map 50).toBe 75
-		(expect fm.map 100).toBe 100
+		it 'test range 5', ->
+			fm = new ac.FrequencyPitchMapper -100, 100, 0, 100
+			(expect fm.map -100).toBe 0
+			(expect fm.map -50).toBe 25
+			(expect fm.map 0).toBe 50
+			(expect fm.map 50).toBe 75
+			(expect fm.map 100).toBe 100
 
 	it 'can cope when the data are totally flat', ->
 		fm = new ac.FrequencyPitchMapper 42, 42, 0, 100

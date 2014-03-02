@@ -46,7 +46,7 @@ mixin_data_source = (msg, data_source_class, interval, call_count) ->
 
 		it 'makes calls appropriate to play the sound', ->
 			# FIXME assumes play time is five seconds
-			# TODO check the offsets are correct too?
+			# FIXME test things are called at the right offsets
 			spyOn(fake_sounder, 'start')
 			spyOn(fake_sounder, 'frequency')
 			spyOn(fake_sounder, 'stop')
