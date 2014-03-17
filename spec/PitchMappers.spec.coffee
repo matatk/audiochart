@@ -4,21 +4,21 @@ else
 	ac = window
 
 
-mixin_min_max = (klass, min, max) ->
+mixin_min_max = (klass, test_min, test_max) ->
 	describe 'Minimum and Maximum data', ->
 		obj = null
 
 		beforeEach ->
-			obj = new klass min, max
+			obj = new klass test_min, test_max
 
 		it 'stores a minimum data value [not intended for public use]', ->
-			(expect obj.minimum_datum).toBe min
+			(expect obj.minimum_datum).toBe test_min
 
 		it 'stores a maximum data value [not intended for public use]', ->
-			(expect obj.maximum_datum).toBe max
+			(expect obj.maximum_datum).toBe test_max
 
 		it 'will not allow min datum > max datum', ->
-			expect(() -> new klass max, min).toThrow()
+			expect(() -> new klass test_max, test_min).toThrow()
 
 
 describe 'PitchMapper', ->
@@ -76,9 +76,9 @@ describe 'FrequencyPitchMapper', ->
 			(expect fm.map 50).toBe 75
 			(expect fm.map 100).toBe 100
 
-	it 'can cope when the data are totally flat', ->
-		fm = new ac.FrequencyPitchMapper 42, 42, 0, 100
-		(expect fm.map 42).toBe 50
+		it 'test range 6', ->
+			fm = new ac.FrequencyPitchMapper 42, 42, 0, 100
+			(expect fm.map 42).toBe 50
 
 
 describe 'NotePitchMapper', ->

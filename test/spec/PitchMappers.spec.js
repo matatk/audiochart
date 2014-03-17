@@ -8,22 +8,22 @@
     ac = window;
   }
 
-  mixin_min_max = function(klass, min, max) {
+  mixin_min_max = function(klass, test_min, test_max) {
     return describe('Minimum and Maximum data', function() {
       var obj;
       obj = null;
       beforeEach(function() {
-        return obj = new klass(min, max);
+        return obj = new klass(test_min, test_max);
       });
       it('stores a minimum data value [not intended for public use]', function() {
-        return (expect(obj.minimum_datum)).toBe(min);
+        return (expect(obj.minimum_datum)).toBe(test_min);
       });
       it('stores a maximum data value [not intended for public use]', function() {
-        return (expect(obj.maximum_datum)).toBe(max);
+        return (expect(obj.maximum_datum)).toBe(test_max);
       });
       return it('will not allow min datum > max datum', function() {
         return expect(function() {
-          return new klass(max, min);
+          return new klass(test_max, test_min);
         }).toThrow();
       });
     });
@@ -46,7 +46,7 @@
         return new ac.FrequencyPitchMapper(0, 42, MAX, MIN);
       }).toThrow();
     });
-    describe('maps from input data to a frequency', function() {
+    return describe('maps from input data to a frequency', function() {
       it('test range 1', function() {
         var fm;
         fm = new ac.FrequencyPitchMapper(0, 42, 100, 1000);
@@ -83,7 +83,7 @@
         (expect(fm.map(-20))).toBe(80);
         return (expect(fm.map(0))).toBe(100);
       });
-      return it('test range 5', function() {
+      it('test range 5', function() {
         var fm;
         fm = new ac.FrequencyPitchMapper(-100, 100, 0, 100);
         (expect(fm.map(-100))).toBe(0);
@@ -92,11 +92,11 @@
         (expect(fm.map(50))).toBe(75);
         return (expect(fm.map(100))).toBe(100);
       });
-    });
-    return it('can cope when the data are totally flat', function() {
-      var fm;
-      fm = new ac.FrequencyPitchMapper(42, 42, 0, 100);
-      return (expect(fm.map(42))).toBe(50);
+      return it('test range 6', function() {
+        var fm;
+        fm = new ac.FrequencyPitchMapper(42, 42, 0, 100);
+        return (expect(fm.map(42))).toBe(50);
+      });
     });
   });
 

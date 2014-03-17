@@ -4,8 +4,8 @@ else
 	ac = window
 
 
-# TODO: merge this with the fake data wrapper
-class BaseFakeDataSource
+# TODO: DRY this wrt GoogleDataWrapper?
+class BaseFakeDataWrapper
 	#constructor: (@data) -> @fakedata = [ . . . ]
 	num_series: -> 1
 	series_names: -> ['Test']
@@ -14,15 +14,17 @@ class BaseFakeDataSource
 	series_value: (series, index) -> @fakedata[index]
 	#series_length: (series) -> n
 
-
-class ShortFakeDataSource extends BaseFakeDataSource
+class ShortFakeDataWrapper extends BaseFakeDataWrapper
 	constructor: (@data) -> @fakedata = [ 2, 3, 3, 4 ]
 	series_length: (series) -> 4
 
-
-class LongFakeDataSource extends BaseFakeDataSource
+class LongFakeDataWrapper extends BaseFakeDataWrapper
 	constructor: (@data) -> @fakedata = [ 2, 3, 3, 4 ]
 	series_length: (series) -> 100
+
+
+class FakeMapper
+	map: ->
 
 
 class FakeSounder
@@ -31,22 +33,26 @@ class FakeSounder
 	stop: ->
 
 
-mixin_data_source = (msg, data_source_class, interval, call_count) ->
+mixin_data_wrapper = (msg, test_data_class, test_interval, test_call_count) ->
 	describe msg, ->
+		fake_mapper = null
 		fake_sounder = null
 		player = null
 
 		beforeEach ->
+			fake_mapper = new FakeMapper
 			fake_sounder = new FakeSounder
-			player = new ac.Player new data_source_class, fake_sounder
+			player = new ac.Player \
+				new test_data_class, fake_mapper, fake_sounder
 
 		it 'works out for how long to sound each datum', ->
 			# FIXME assumes play time is five seconds
-			(expect player.interval).toBe interval
+			(expect player.interval).toBe test_interval
 
 		it 'makes calls appropriate to play the sound', ->
 			# FIXME assumes play time is five seconds
 			# FIXME test things are called at the right offsets
+			spyOn(fake_mapper, 'map')
 			spyOn(fake_sounder, 'start')
 			spyOn(fake_sounder, 'frequency')
 			spyOn(fake_sounder, 'stop')
@@ -58,20 +64,21 @@ mixin_data_source = (msg, data_source_class, interval, call_count) ->
 			waits 5000  # FIXME got to be a quicker way to wait for stop()
 
 			runs ->
+				(expect fake_mapper.map.callCount).toBe test_call_count
 				(expect fake_sounder.start).toHaveBeenCalled()
-				(expect fake_sounder.frequency.callCount).toBe call_count
+				(expect fake_sounder.frequency.callCount).toBe test_call_count
 				(expect fake_sounder.stop).toHaveBeenCalled()
 
 
 describe 'Player', ->
-	mixin_data_source \
+	mixin_data_wrapper \
 		'instantiated with short fake data source',
-		ShortFakeDataSource,
+		ShortFakeDataWrapper,
 		1250,
 		4
 
-	mixin_data_source \
+	mixin_data_wrapper \
 		'instantiated with long fake data source',
-		LongFakeDataSource,
+		LongFakeDataWrapper,
 		50,
 		100

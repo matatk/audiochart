@@ -1,12 +1,11 @@
 class DataWrapper
-	constructor: -> throw 'please use a derived class'  # TODO: test throw?
+	constructor: (@data) -> throw 'please use a derived class'  # TODO: test
 	num_series: ->
 	series_names: ->
 	series_min: (series) ->
 	series_max: (series) ->
 	series_value: (series, index) ->
 	series_length: (series) ->
-
 
 class GoogleDataWrapper extends DataWrapper
 	# Note: We assume that the first column in the data table is there simply
@@ -21,24 +20,24 @@ class GoogleDataWrapper extends DataWrapper
 		@data.getColumnLabel i for i in [1 .. @data.getNumberOfColumns() - 1]
 
 	series_min: (series) ->
-		(@data.getColumnRange series + 1)['min']
+		@data.getColumnRange(series + 1)['min']
 
 	series_max: (series) ->
-		(@data.getColumnRange series + 1)['max']
+		@data.getColumnRange(series + 1)['max']
 
 	series_value: (series, index) ->
-		@data.getValue index, series + 1
+		@data.getValue index, (series + 1)
 
 	series_length: (series) ->
 		@data.getNumberOfRows()
 
 
 class PitchMapper
+	# TODO: test derived class thing?
 	constructor: (@minimum_datum, @maximum_datum) ->
 		if @minimum_datum > @maximum_datum
 			throw 'minimum datum should be <= maximum datum'
 	map: (datum) ->
-
 
 class FrequencyPitchMapper extends PitchMapper
 	constructor: (
@@ -49,28 +48,22 @@ class FrequencyPitchMapper extends PitchMapper
 		super minimum_datum, maximum_datum
 		if @minimum_frequency > @maximum_frequency
 			throw 'minimum frequency should be <= maximum frequency'
+		@data_range = @maximum_datum - @minimum_datum
 
 	map: (datum) ->
-		# how far into the data scale is the datum?
-		data_range = @maximum_datum - @minimum_datum
-		if data_range > 0
-			ratio = (datum - @minimum_datum) / data_range
+		# How far into the data scale is the datum?
+		if @data_range
+			ratio = (datum - @minimum_datum) / @data_range
 		else
-			ratio = 0.5
-		@minimum_frequency + ratio * (@maximum_frequency - @minimum_frequency)
-
+			ratio = 0.5  # flat data; return half-way frequency
+		return @minimum_frequency \
+			+ ratio * (@maximum_frequency - @minimum_frequency)
 
 class NotePitchMapper extends PitchMapper
 	# pass
 
 
-class Sounder
-	constructor: -> throw 'please use a derived class'
-	start: ->
-	stop: (offset) ->
-
-
-class WebAudioSounder extends Sounder
+class WebAudioSounder
 	constructor: (@context) ->
 		@oscillator = @context.createOscillator()
 
@@ -91,35 +84,21 @@ class WebAudioSounder extends Sounder
 		return
 
 
-class DataSource
-	constructor: (@data_wrapper, @pitch_mapper) ->
-
-	num_series: ->
-		@data_wrapper.num_series()
-
-	series_names: ->
-		@data_wrapper.series_names()
-
-	series_value: (series, index) ->
-		@pitch_mapper.map @data_wrapper.series_value series, index
-
-	series_length: (series) ->
-		@data_wrapper.series_length series
-
-
 class Player
-	constructor: (@data_source, @sounder) ->
-		@interval = (5 * 1000) / @data_source.series_length 0
+	constructor: (@data_wrapper, @pitch_mapper, @sounder) ->
+		@interval = (5 * 1000) / @data_wrapper.series_length 0
 
 	play: ->
-		series_length = @data_source.series_length 0
+		series_length = @data_wrapper.series_length 0
 		series_max_index = series_length - 1
 		@sounder.start 0
-		@sounder.frequency @data_source.series_value(0, 0)
+		# Initial datum
+		@sounder.frequency @pitch_mapper.map @data_wrapper.series_value(0, 0)
 
+		# All the rest come after certain intervals
 		for i in [1 .. series_max_index]
 			@sounder.frequency \
-				@data_source.series_value(0, i),
+				@pitch_mapper.map(@data_wrapper.series_value(0, i)),
 				@interval * i
 
 		@sounder.stop (series_length * @interval) / 1000
@@ -128,38 +107,33 @@ class Player
 
 class AudioChart
 	constructor: (data) ->
-		# This is presently untested at integration level
+		# This is presently un(-mechanically-)tested at integration level
 		@data_wrapper = new GoogleDataWrapper data
 		@freq_pitch_mapper = new FrequencyPitchMapper \
 			@data_wrapper.series_min(0),
 			@data_wrapper.series_max(0),
 			200,
 			600
-		@data_source = new DataSource @data_wrapper, @freq_pitch_mapper
 		@sounder = new WebAudioSounder new webkitAudioContext
-		@player = new Player @data_source, @sounder
+		@player = new Player @data_wrapper, @freq_pitch_mapper, @sounder
 		@player.play()
 
 
 if exports?
 	exports.AudioChart = AudioChart
-	exports.DataWrapper = DataWrapper
+	exports.DataWrapper = DataWrapper  # base
 	exports.GoogleDataWrapper = GoogleDataWrapper
 	exports.PitchMapper = PitchMapper  # base
 	exports.FrequencyPitchMapper = FrequencyPitchMapper
 	exports.NotePitchMapper = NotePitchMapper
-	exports.Sounder = Sounder  # base
 	exports.WebAudioSounder = WebAudioSounder
-	exports.DataSource = DataSource
 	exports.Player = Player
 else
 	this['AudioChart'] = AudioChart
-	this['DataWrapper'] = DataWrapper
+	this['DataWrapper'] = DataWrapper  # base
 	this['GoogleDataWrapper'] = GoogleDataWrapper
 	this['PitchMapper'] = PitchMapper  # base
 	this['FrequencyPitchMapper'] = FrequencyPitchMapper
 	this['NotePitchMapper'] = NotePitchMapper
-	this['Sounder'] = Sounder  # base
 	this['WebAudioSounder'] = WebAudioSounder
-	this['DataSource'] = DataSource
 	this['Player'] = Player
