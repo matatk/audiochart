@@ -8,10 +8,12 @@
 			line-height: 1.5em;
 		}
 
-		button { font-size: inherit; }
+		button {
+			font-size: inherit;
+		}
 	</style>
 	<script src="https://www.google.com/jsapi"></script>
-	<script src='build/audiochart-min.js'></script>
+	<script src="build/audiochart-min.js"></script>
 	<script>
 		google.load('visualization', '1.0', {'packages':['corechart']});
 		google.setOnLoadCallback(draw_all);
@@ -20,11 +22,19 @@
 			draw_chart_line();
 			draw_chart_gradient();
 			draw_chart_sine();
-			draw_chart_sales_plain();
-			draw_chart_sales_annotated();
+			draw_chart_sales_line();
+			draw_chart_sales_an();
 		}
 
-		function _draw_chart_core(data, id, btn) {
+		function _draw_line_chart_core(data, id, btn) {
+			_draw_chart_core(google.visualization.LineChart, data, id, btn);
+		}
+
+		function _draw_bar_chart_core(data, id, btn) {
+			_draw_chart_core(google.visualization.BarChart, data, id, btn);
+		}
+
+		function _draw_chart_core(klass, data, id, btn) {
 			// Set chart options
 			var options = {
 				'title': 'Example',
@@ -34,7 +44,7 @@
 			};
 
 			// Instantiate and draw our chart, passing in some options.
-			var chart = new google.visualization.LineChart(
+			var chart = new klass(
 				document.getElementById(id));
 
 			chart.draw(data, options);
@@ -50,7 +60,7 @@
 
 			var MIN = 0
 			var MAX = 1
-			var DELTA = 0.01;
+			var DELTA = 0.1;
 			var results = [];
 			var index = 0;
 			for( var i = MIN; i <= MAX; i = i + DELTA ) {
@@ -62,7 +72,7 @@
 			data.addColumn('number', 'blah');
 			data.addRows(results);
 
-			_draw_chart_core(data, 'chart_line', 'btn_line');
+			_draw_line_chart_core(data, 'chart_line', 'btn_line');
 		}
 
 		function draw_chart_gradient() {
@@ -74,7 +84,7 @@
 			var DELTA = 0.01;
 			var results = [];
 			var index = 0;
-			for( var i = MIN; i <= MAX; i = i + DELTA ) {
+			for( var i = MIN; i <= MAX; i += DELTA ) {
 				results[index] = [i, i];
 				index++;
 			}
@@ -83,7 +93,7 @@
 			data.addColumn('number', 'blah');
 			data.addRows(results);
 
-			_draw_chart_core(data, 'chart_gradient', 'btn_gradient');
+			_draw_line_chart_core(data, 'chart_gradient', 'btn_gradient');
 		}
 
 		function draw_chart_sine() {
@@ -104,10 +114,10 @@
 			data.addColumn('number', 'Sine');
 			data.addRows(results);
 
-			_draw_chart_core(data, 'chart_sine', 'btn_sine');
+			_draw_line_chart_core(data, 'chart_sine', 'btn_sine');
 		}
 
-		function draw_chart_sales_plain() {
+		function draw_chart_sales_line() {
 			// Create the data table.
 			var data = new google.visualization.DataTable();
 			data.addColumn('string', 'Month'); // Implicit domain label col.
@@ -119,10 +129,11 @@
 				['July', 1030]
 			]);
 
-			_draw_chart_core(data, 'chart_sales_plain', 'btn_sales_plain');
+			_draw_line_chart_core(data, 'chart_sales_line', 'btn_sales_line');
+			_draw_bar_chart_core(data, 'chart_sales_bar', 'btn_sales_bar');
 		}
 
-		function draw_chart_sales_annotated() {
+		function draw_chart_sales_an() {
 			// Create the data table.
 			var data = new google.visualization.DataTable();
 			data.addColumn('string', 'Month'); // Implicit domain label col.
@@ -144,7 +155,7 @@
 			    ['July', 1030, null, null, null, null, false]
 			]);
 
-			_draw_chart_core(data, 'chart_sales_annotated', 'btn_sales_annotated');
+			_draw_line_chart_core(data, 'chart_sales_an', 'btn_sales_an');
 		}
     </script>
   </head>
@@ -166,12 +177,17 @@
 	<hr/>
 	<h1>Sales</h1>
 	<p>This one has few data points.</p>
-    <div id="chart_sales_plain"></div>
-	<button id="btn_sales_plain">play</button>
+    <div id="chart_sales_line"></div>
+	<button id="btn_sales_line">play</button>
 	<hr/>
-	<h1>Sales with annotations</h1>
+	<h1>Sales as a Bar Chart</h1>
 	<p>This one has few data points.</p>
-    <div id="chart_sales_annotated"></div>
-	<button id="btn_sales_annotated">play</button>
+    <div id="chart_sales_bar"></div>
+	<button id="btn_sales_bar">play</button>
+	<hr/>
+	<h1>Sales with Annotations</h1>
+	<p>This one has few data points.</p>
+    <div id="chart_sales_an"></div>
+	<button id="btn_sales_an">play</button>
   </body>
 </html>

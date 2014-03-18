@@ -2,7 +2,7 @@
 <html lang="en-GB">
 	<head>
 		<title>AudioChart</title>
-		<style type='text/css'>
+		<style>
 			body {
 				font-family: Verdana, sans-serif;
 				font-size: 1.2em;
@@ -19,15 +19,16 @@
 				Allows the user to explore charts on web pages using sound and the keyboard rather than, or in conjunction with, visually and with the mouse.
 			</p>
 			<p>
-				Thanks to <a href='http://paciellogroup.com'>The Paciello Group</a> for allowing me to share this with you.
+				Thanks to <a href="http://paciellogroup.com">The Paciello Group</a> for allowing me to share this with you.  The code is <a href="https://github.com/matatk/audiochart">hosted on GitHub</a>.
 			</p>
-			<h2>Examples</h2>
+			<h2>Tutorial and Examples</h2>
 			<ul>
+				<li><a href="hello-world.html">"Hello, world" example</a>&mdash;steps to create this are described in the <a href="https://github.com/matatk/audiochart/blob/gh-pages/README.md">README</a>.</li>
 				<li><a href="example-google-charts.html">Line charts</a> (all examples play for five seconds and cannot currently be stopped).</li>
 			</ul>
 			<h2>Currently supports charts&hellip;</h2>
 			<ul>
-				<li>&hellip;made with Google Chart Tools API.</li>
+				<li>&hellip;made with Google Charts.</li>
 				<li>&hellip;with one data series per plot.</li>
 			</ul>
 			<h2>Future</h2>
@@ -36,7 +37,7 @@
 				<li>Allow exploration (play, rewind etc.) via keyboard and mouse.</li>
 			</ul>
 			<h2>Testing</h2>
-			<p>You can <a href='test/'>run the unit tests in-browser</a> in-browser or via the command line if you have <code>jasmine-node</code> installed.</p>
+			<p>You can <a href="test/">run the unit tests in-browser</a> in-browser or via the command line if you have <code>jasmine-node</code> installed.</p>
 			<h2>Known Bugs</h2>
 			<ul>
 				<li>Sometimes, if you hear no audio when trying to play one of the examples, you have to reload the page (because the audio context gets locked up).  This is probably down to my code not clearing up properly.</li>
