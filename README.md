@@ -1,9 +1,9 @@
 AudioChart
 ===========
 
-Allows the user to explore charts on web pages using sound and the keyboard rather than, or in conjunction with, visually and with the mouse.
+Allows the user to explore charts on web pages using sound and the keyboard rather than, or in conjunction with, visually and with the mouse.  Thanks to [The Paciello Group](http://paciellogroup.com) for allowing me to share this with you.
 
-Thanks to [The Paciello Group](http://paciellogroup.com) for allowing me to share this with you.
+AudioChart uses the Web Audio API, which has [increasing support amongst browsers](http://caniuse.com/audio-api), but is not yet supported by Internet Explorer.
 
 Use Cases and Examples
 -----------------------
@@ -129,6 +129,8 @@ Development
 AudioChart is developed in [CoffeeScript](http://coffeescript.org), which is translated into JS as part of the build process.  You do not need to know CoffeeScript to use AudioChart, as a built JS version is present in this repository.
 
 A Makefile is provided to automate the translation and run tests.  Unit tests can be run in-browser or directly (on the CoffeeScript code) by jasmine-node.  Development dependencies therefore are: make, [coffee-script](https://www.npmjs.org/package/coffee-script) and, optionally, [jasmine-node](https://www.npmjs.org/package/jasmine-node).
+
+The `pre-commit` hook can be used to ensure only code that passes tests is committed.  You can make a symlink from the `.git/hooks/` directory to it and it'll be run before you are asked for a commit message.
 
 Future Work
 ------------

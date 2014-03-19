@@ -1,5 +1,5 @@
 class DataWrapper
-	constructor: (@data) -> throw 'please use a derived class'  # TODO: test
+	constructor: (@data) -> throw new Error 'please use a derived class'  # TODO: test
 	num_series: ->
 	series_names: ->
 	series_min: (series) ->
@@ -36,7 +36,7 @@ class PitchMapper
 	# TODO: test derived class thing?
 	constructor: (@minimum_datum, @maximum_datum) ->
 		if @minimum_datum > @maximum_datum
-			throw 'minimum datum should be <= maximum datum'
+			throw new Error 'minimum datum should be <= maximum datum'
 	map: (datum) ->
 
 class FrequencyPitchMapper extends PitchMapper
@@ -47,7 +47,7 @@ class FrequencyPitchMapper extends PitchMapper
 		@maximum_frequency) ->
 		super minimum_datum, maximum_datum
 		if @minimum_frequency > @maximum_frequency
-			throw 'minimum frequency should be <= maximum frequency'
+			throw new Error 'minimum frequency should be <= maximum frequency'
 		@data_range = @maximum_datum - @minimum_datum
 
 	map: (datum) ->
@@ -83,6 +83,15 @@ class WebAudioSounder
 		@oscillator.stop offset
 		return
 
+# Helper needed to even out cross-browser differences
+audio_context_getter = ->
+	if AudioContext?
+		return new AudioContext
+	else if webkitAudioContext?
+		return new webkitAudioContext
+	else
+		throw new Error 'No support for Web Audio API'
+
 
 class Player
 	constructor: (@data_wrapper, @pitch_mapper, @sounder) ->
@@ -114,7 +123,7 @@ class AudioChart
 			@data_wrapper.series_max(0),
 			200,
 			600
-		@sounder = new WebAudioSounder new webkitAudioContext
+		@sounder = new WebAudioSounder audio_context_getter()
 		@player = new Player @data_wrapper, @freq_pitch_mapper, @sounder
 		@player.play()
 
