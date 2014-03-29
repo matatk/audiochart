@@ -33,21 +33,28 @@ class FakeSounder
 	stop: ->
 
 
-mixin_data_wrapper = (msg, test_data_class, test_interval, test_call_count) ->
+mixin_data_wrapper_core = (msg, test_data_class, use_callback, test_interval, test_call_count) ->
 	describe msg, ->
 		fake_mapper = null
 		fake_sounder = null
+		if use_callback
+			fake_callback = null
 		player = null
 
 		beforeEach ->
 			fake_mapper = new FakeMapper
 			fake_sounder = new FakeSounder
-			player = new ac.Player \
-				new test_data_class, fake_mapper, fake_sounder
+			if use_callback
+				fake_callback = jasmine.createSpy 'fake_callback'
+				player = new ac.Player \
+					new test_data_class, fake_mapper, fake_sounder, fake_callback
+			else
+				player = new ac.Player \
+					new test_data_class, fake_mapper, fake_sounder
 
 		it 'works out for how long to sound each datum', ->
 			# FIXME assumes play time is five seconds
-			(expect player.interval).toBe test_interval
+			expect(player.interval).toBe test_interval
 
 		it 'makes calls appropriate to play the sound', ->
 			# FIXME assumes play time is five seconds
@@ -64,10 +71,28 @@ mixin_data_wrapper = (msg, test_data_class, test_interval, test_call_count) ->
 			waits 5000  # FIXME got to be a quicker way to wait for stop()
 
 			runs ->
-				(expect fake_mapper.map.callCount).toBe test_call_count
-				(expect fake_sounder.start).toHaveBeenCalled()
-				(expect fake_sounder.frequency.callCount).toBe test_call_count
-				(expect fake_sounder.stop).toHaveBeenCalled()
+				expect(fake_mapper.map.callCount).toBe test_call_count
+				expect(fake_sounder.start).toHaveBeenCalled()
+				expect(fake_sounder.frequency.callCount).toBe test_call_count
+				expect(fake_sounder.stop).toHaveBeenCalled()
+				if use_callback
+					expect(fake_callback.callCount).toBe test_call_count
+
+
+mixin_data_wrapper = (msg, test_data_class, test_interval, test_call_count) ->
+	describe msg, ->
+		mixin_data_wrapper_core \
+			'when not having a callback',
+			test_data_class,
+			false,
+			test_interval,
+			test_call_count
+		mixin_data_wrapper_core \
+			'when having a callback',
+			test_data_class,
+			true,
+			test_interval,
+			test_call_count
 
 
 describe 'Player', ->

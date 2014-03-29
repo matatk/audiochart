@@ -83,6 +83,60 @@ class WebAudioSounder
 		@oscillator.stop offset
 		return
 
+
+class Player
+	constructor: (@data, @pitch_mapper, @sounder, @visual_callback = null) ->
+		@interval = (5 * 1000) / @data.series_length 0
+
+	play: ->
+		series_length = @data.series_length 0
+		series_max_index = series_length - 1
+		@sounder.start 0
+		# Initial datum
+		if @visual_callback?
+			@visual_callback 0, 0
+		@sounder.frequency @pitch_mapper.map @data.series_value(0, 0)
+
+		# All the rest come after certain intervals
+		for i in [1 .. series_max_index]
+			offset = @interval * i
+			# Visual
+			if @visual_callback?
+				@highlight_enqueue 0, i, offset
+			# Audio
+			@sounder.frequency \
+				@pitch_mapper.map(@data.series_value 0, i),
+				offset
+
+		@sounder.stop (series_length * @interval) / 1000
+		return
+
+	# Due to scoping behaviour, this has to be separate from the loop
+	# TODO try making it a private member function (may not work due to var)
+	highlight_enqueue: (series, row, offset) ->
+		callback = =>
+			@visual_callback(series, row)
+			return
+		setTimeout callback, offset
+		return
+
+
+class AudioChart
+	constructor: (data, chart) ->
+		# This is presently un(-mechanically-)tested at integration level
+		data_wrapper = new GoogleDataWrapper data
+		freq_pitch_mapper = new FrequencyPitchMapper \
+			data_wrapper.series_min(0),
+			data_wrapper.series_max(0),
+			200,
+			600
+		sounder = new WebAudioSounder audio_context_getter()
+		callback = google_visual_callback_maker chart
+		player = new Player \
+			data_wrapper, freq_pitch_mapper, sounder, callback
+		player.play()
+
+
 # Helper needed to even out cross-browser differences
 audio_context_getter = ->
 	if AudioContext?
@@ -93,39 +147,12 @@ audio_context_getter = ->
 		throw new Error 'No support for Web Audio API'
 
 
-class Player
-	constructor: (@data_wrapper, @pitch_mapper, @sounder) ->
-		@interval = (5 * 1000) / @data_wrapper.series_length 0
-
-	play: ->
-		series_length = @data_wrapper.series_length 0
-		series_max_index = series_length - 1
-		@sounder.start 0
-		# Initial datum
-		@sounder.frequency @pitch_mapper.map @data_wrapper.series_value(0, 0)
-
-		# All the rest come after certain intervals
-		for i in [1 .. series_max_index]
-			@sounder.frequency \
-				@pitch_mapper.map(@data_wrapper.series_value(0, i)),
-				@interval * i
-
-		@sounder.stop (series_length * @interval) / 1000
+# Callback generator ensures that setSelection will be called with the
+# correct arguments and that the Player doesn't need to know about the chart.
+google_visual_callback_maker = (chart) ->
+	return (series, row) ->
+		chart.setSelection([{'row': row, 'column': series + 1}])
 		return
-
-
-class AudioChart
-	constructor: (data) ->
-		# This is presently un(-mechanically-)tested at integration level
-		@data_wrapper = new GoogleDataWrapper data
-		@freq_pitch_mapper = new FrequencyPitchMapper \
-			@data_wrapper.series_min(0),
-			@data_wrapper.series_max(0),
-			200,
-			600
-		@sounder = new WebAudioSounder audio_context_getter()
-		@player = new Player @data_wrapper, @freq_pitch_mapper, @sounder
-		@player.play()
 
 
 if exports?
@@ -137,6 +164,7 @@ if exports?
 	exports.NotePitchMapper = NotePitchMapper
 	exports.WebAudioSounder = WebAudioSounder
 	exports.Player = Player
+	exports.google_visual_callback_maker = google_visual_callback_maker
 else
 	this['AudioChart'] = AudioChart
 	this['DataWrapper'] = DataWrapper  # base
@@ -146,3 +174,4 @@ else
 	this['NotePitchMapper'] = NotePitchMapper
 	this['WebAudioSounder'] = WebAudioSounder
 	this['Player'] = Player
+	this['google_visual_callback_maker'] = google_visual_callback_maker

@@ -7,9 +7,15 @@ WAAPI_EXTERNS=/usr/local/Cellar/closure-compiler/20130823/libexec/contrib/extern
 GCT_EXTERNS_PATH=https://raw.github.com/vicb/VisuGps3/master/src/vgps3/plugins/chart/externs
 GCT_EXTERNS=google_viz_api_v1.0.js
 
-RM=rm -f
-RMDIR=rmdir
-MKDIR=mkdir -p
+ifeq ($(OS),Windows_NT)
+	RM := cmd /C del
+	MKDIR := cmd /C md
+else
+	RM=rm -f
+	RMDIR=rmdir
+	MKDIR=mkdir -p
+endif
+
 CURL=curl
 COFFEE=coffee
 JASMINE=jasmine-node

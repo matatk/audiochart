@@ -73,23 +73,23 @@
         return data = new ac.GoogleDataWrapper(new FakeGoogleDataTable(test_one));
       });
       it('can get the number of series', function() {
-        return (expect(data.num_series())).toBe(1);
+        return expect(data.num_series()).toBe(1);
       });
       it('can get series names', function() {
-        return (expect(data.series_names())).toEqual(['Test']);
+        return expect(data.series_names()).toEqual(['Test']);
       });
       it('can get the min and max value of data in a series', function() {
-        (expect(data.series_min(0))).toBe(2);
-        return (expect(data.series_max(0))).toBe(4);
+        expect(data.series_min(0)).toBe(2);
+        return expect(data.series_max(0)).toBe(4);
       });
       it('can get values of data in a series', function() {
-        (expect(data.series_value(0, 0))).toBe(2);
-        (expect(data.series_value(0, 1))).toBe(3);
-        (expect(data.series_value(0, 2))).toBe(3);
-        return (expect(data.series_value(0, 3))).toBe(4);
+        expect(data.series_value(0, 0)).toBe(2);
+        expect(data.series_value(0, 1)).toBe(3);
+        expect(data.series_value(0, 2)).toBe(3);
+        return expect(data.series_value(0, 3)).toBe(4);
       });
       return it('gets the length of a series', function() {
-        return (expect(data.series_length(0))).toBe(4);
+        return expect(data.series_length(0)).toBe(4);
       });
     });
     return describe('when storing negative data', function() {
@@ -99,24 +99,24 @@
         return data = new ac.GoogleDataWrapper(new FakeGoogleDataTable(test_neg));
       });
       it('can get the number of series', function() {
-        return (expect(data.num_series())).toBe(1);
+        return expect(data.num_series()).toBe(1);
       });
       it('can get series names', function() {
-        return (expect(data.series_names())).toEqual(['Test']);
+        return expect(data.series_names()).toEqual(['Test']);
       });
       it('can get the min and max value of data in a series', function() {
-        (expect(data.series_min(0))).toBe(-90);
-        return (expect(data.series_max(0))).toBe(20);
+        expect(data.series_min(0)).toBe(-90);
+        return expect(data.series_max(0)).toBe(20);
       });
       it('can get values of data in a series', function() {
-        (expect(data.series_value(0, 0))).toBe(20);
-        (expect(data.series_value(0, 1))).toBe(-10);
-        (expect(data.series_value(0, 2))).toBe(0);
-        (expect(data.series_value(0, 3))).toBe(8);
-        return (expect(data.series_value(0, 4))).toBe(-90);
+        expect(data.series_value(0, 0)).toBe(20);
+        expect(data.series_value(0, 1)).toBe(-10);
+        expect(data.series_value(0, 2)).toBe(0);
+        expect(data.series_value(0, 3)).toBe(8);
+        return expect(data.series_value(0, 4)).toBe(-90);
       });
       return it('gets the length of a series', function() {
-        return (expect(data.series_length(0))).toBe(5);
+        return expect(data.series_length(0)).toBe(5);
       });
     });
   });

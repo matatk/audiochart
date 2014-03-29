@@ -48,7 +48,7 @@
       var sounder;
       spyOn(fake_audio_context, 'createOscillator');
       sounder = new ac.WebAudioSounder(fake_audio_context);
-      return (expect(fake_audio_context.createOscillator)).toHaveBeenCalled();
+      return expect(fake_audio_context.createOscillator).toHaveBeenCalled();
     });
     it('connects and starts its oscillator', function() {
       var fake_oscillator, sounder;
@@ -57,8 +57,8 @@
       spyOn(fake_oscillator, 'connect');
       spyOn(fake_oscillator, 'start');
       sounder.start();
-      (expect(fake_oscillator.connect)).toHaveBeenCalledWith(fake_audio_context.destination);
-      return (expect(fake_oscillator.start)).toHaveBeenCalledWith(0);
+      expect(fake_oscillator.connect).toHaveBeenCalledWith(fake_audio_context.destination);
+      return expect(fake_oscillator.start).toHaveBeenCalledWith(0);
     });
     it('changes frequency immediately', function() {
       var fake_oscillator;
@@ -67,7 +67,7 @@
         var sounder;
         sounder = new ac.WebAudioSounder(fake_audio_context);
         fake_oscillator = sounder.oscillator;
-        (expect(fake_oscillator.frequency.value)).toBe(0);
+        expect(fake_oscillator.frequency.value).toBe(0);
         return sounder.frequency(42);
       });
       return waitsFor(function() {
@@ -81,7 +81,7 @@
         var sounder;
         sounder = new ac.WebAudioSounder(fake_audio_context);
         fake_oscillator = sounder.oscillator;
-        (expect(fake_oscillator.frequency.value)).toBe(0);
+        expect(fake_oscillator.frequency.value).toBe(0);
         return sounder.frequency(84, 250);
       });
       return waitsFor(function() {

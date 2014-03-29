@@ -25,7 +25,7 @@ You can check out the finished ["hello, world" HTML file](http://matatk.agrip.or
 
 ### Google Charts Bits
 
-More instructions on this can be found in the [Google Charts documentation](https://developers.google.com/chart/).
+More details on this can be found in the [Google Charts documentation](https://developers.google.com/chart/).
 
  1. Load Google Charts API.
 
@@ -105,7 +105,7 @@ More instructions on this can be found in the [Google Charts documentation](http
 
 	```js
 	document.getElementById('play').onclick = function() {
-		new AudioChart(data);
+		new AudioChart(data, chart);
 	}
 	```
 
@@ -120,8 +120,13 @@ The following objects are present in AudioChart ([JS code](https://github.com/ma
     - `FrequencyPitchMapper` does basic interpolation.
     - `NotePitchMapper` does basic interpolation, then "rounds" this to the nearest musical note (not yet implemented).
  * The `WebAudioSounder` wraps the Web Audio API.
- * The `Player` brings together wrapped data source, mapper and sounder).
+ * The `Player` brings together wrapped data source, mapper and sounder.
  * The `AudioChart` object provides the public-facing interface.
+
+There are two helper functions.
+
+ * `audio_context_getter()` fetches the Web Audio context for the current page, abstracting away from cross-browser issues.
+ * `google_visual_callback_maker()` creates the callback function to update the visual highlight, allowing the `Player` to know nothing of the visual chart.
 
 Development
 ------------
@@ -130,7 +135,7 @@ AudioChart is developed in [CoffeeScript](http://coffeescript.org), which is tra
 
 A Makefile is provided to automate the translation and run tests.  Unit tests can be run in-browser or directly (on the CoffeeScript code) by jasmine-node.  Development dependencies therefore are: make, [coffee-script](https://www.npmjs.org/package/coffee-script) and, optionally, [jasmine-node](https://www.npmjs.org/package/jasmine-node).
 
-The `pre-commit` hook can be used to ensure only code that passes tests is committed.  You can make a symlink from the `.git/hooks/` directory to it and it'll be run before you are asked for a commit message.
+Development is carried out in a [test-driven](http://en.wikipedia.org/wiki/Test-driven_development) manner.  The `pre-commit` hook can be used to ensure only code that passes tests is committed.  You can make a symlink from the `.git/hooks/` directory to it and it'll be run before you are asked for a commit message.
 
 Future Work
 ------------
@@ -142,3 +147,4 @@ Future Work
  * Rendering a visual highlight element for chart APIs that don't provide this.
  * Multiple plots/data series per chart.
  * Instruments as different sound types.
+ * Support for development on Windows.
