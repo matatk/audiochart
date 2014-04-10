@@ -192,10 +192,16 @@
 
   AudioChart = (function() {
     function AudioChart(data, chart) {
-      var callback, data_wrapper, freq_pitch_mapper, player, sounder;
+      var callback, context, data_wrapper, fail, freq_pitch_mapper, player, sounder;
+      fail = "Sorry, it seems your browser doesn't support the Web Audio API.";
       data_wrapper = new GoogleDataWrapper(data);
       freq_pitch_mapper = new FrequencyPitchMapper(data_wrapper.series_min(0), data_wrapper.series_max(0), 200, 600);
-      sounder = new WebAudioSounder(audio_context_getter());
+      context = audio_context_getter();
+      if (context == null) {
+        alert(fail);
+        throw new Error(fail);
+      }
+      sounder = new WebAudioSounder(context);
       callback = google_visual_callback_maker(chart);
       player = new Player(data_wrapper, freq_pitch_mapper, sounder, callback);
       player.play();
@@ -211,7 +217,7 @@
     } else if (typeof webkitAudioContext !== "undefined" && webkitAudioContext !== null) {
       return new webkitAudioContext;
     } else {
-      throw new Error('No support for Web Audio API');
+      return null;
     }
   };
 

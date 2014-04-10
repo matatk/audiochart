@@ -124,13 +124,18 @@ class Player
 class AudioChart
 	constructor: (data, chart) ->
 		# This is presently un(-mechanically-)tested at integration level
+		fail = "Sorry, it seems your browser doesn't support the Web Audio API."
 		data_wrapper = new GoogleDataWrapper data
 		freq_pitch_mapper = new FrequencyPitchMapper \
 			data_wrapper.series_min(0),
 			data_wrapper.series_max(0),
 			200,
 			600
-		sounder = new WebAudioSounder audio_context_getter()
+		context = audio_context_getter()
+		if not context?
+			alert fail
+			throw new Error fail
+		sounder = new WebAudioSounder context
 		callback = google_visual_callback_maker chart
 		player = new Player \
 			data_wrapper, freq_pitch_mapper, sounder, callback
@@ -144,7 +149,7 @@ audio_context_getter = ->
 	else if webkitAudioContext?
 		return new webkitAudioContext
 	else
-		throw new Error 'No support for Web Audio API'
+		return null
 
 
 # Callback generator ensures that setSelection will be called with the

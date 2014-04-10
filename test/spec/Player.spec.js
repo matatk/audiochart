@@ -106,25 +106,20 @@
         return expect(player.interval).toBe(test_interval);
       });
       return it('makes calls appropriate to play the sound', function() {
-        var result;
+        jasmine.Clock.useMock();
         spyOn(fake_mapper, 'map');
         spyOn(fake_sounder, 'start');
         spyOn(fake_sounder, 'frequency');
         spyOn(fake_sounder, 'stop');
-        result = 42;
-        runs(function() {
-          return result = player.play();
-        });
-        waits(5000);
-        return runs(function() {
-          expect(fake_mapper.map.callCount).toBe(test_call_count);
-          expect(fake_sounder.start).toHaveBeenCalled();
-          expect(fake_sounder.frequency.callCount).toBe(test_call_count);
-          expect(fake_sounder.stop).toHaveBeenCalled();
-          if (use_callback) {
-            return expect(fake_callback.callCount).toBe(test_call_count);
-          }
-        });
+        player.play();
+        jasmine.Clock.tick(5000);
+        expect(fake_mapper.map.callCount).toBe(test_call_count);
+        expect(fake_sounder.start).toHaveBeenCalled();
+        expect(fake_sounder.frequency.callCount).toBe(test_call_count);
+        expect(fake_sounder.stop).toHaveBeenCalled();
+        if (use_callback) {
+          return expect(fake_callback.callCount).toBe(test_call_count);
+        }
       });
     });
   };

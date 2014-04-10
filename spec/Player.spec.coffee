@@ -59,24 +59,19 @@ mixin_data_wrapper_core = (msg, test_data_class, use_callback, test_interval, te
 		it 'makes calls appropriate to play the sound', ->
 			# FIXME assumes play time is five seconds
 			# FIXME test things are called at the right offsets
+			jasmine.Clock.useMock()
 			spyOn(fake_mapper, 'map')
 			spyOn(fake_sounder, 'start')
 			spyOn(fake_sounder, 'frequency')
 			spyOn(fake_sounder, 'stop')
-			result = 42
-
-			runs ->
-				result = player.play()
-
-			waits 5000  # FIXME got to be a quicker way to wait for stop()
-
-			runs ->
-				expect(fake_mapper.map.callCount).toBe test_call_count
-				expect(fake_sounder.start).toHaveBeenCalled()
-				expect(fake_sounder.frequency.callCount).toBe test_call_count
-				expect(fake_sounder.stop).toHaveBeenCalled()
-				if use_callback
-					expect(fake_callback.callCount).toBe test_call_count
+			player.play()
+			jasmine.Clock.tick 5000
+			expect(fake_mapper.map.callCount).toBe test_call_count
+			expect(fake_sounder.start).toHaveBeenCalled()
+			expect(fake_sounder.frequency.callCount).toBe test_call_count
+			expect(fake_sounder.stop).toHaveBeenCalled()
+			if use_callback
+				expect(fake_callback.callCount).toBe test_call_count
 
 
 mixin_data_wrapper = (msg, test_data_class, test_interval, test_call_count) ->

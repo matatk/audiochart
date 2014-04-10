@@ -75,18 +75,16 @@
       });
     });
     it('changes frequency with an offset', function() {
-      var fake_oscillator;
+      var delay, fake_oscillator, sounder;
       fake_oscillator = null;
-      runs(function() {
-        var sounder;
-        sounder = new ac.WebAudioSounder(fake_audio_context);
-        fake_oscillator = sounder.oscillator;
-        expect(fake_oscillator.frequency.value).toBe(0);
-        return sounder.frequency(84, 250);
-      });
-      return waitsFor(function() {
-        return fake_oscillator.frequency.value === 84;
-      });
+      jasmine.Clock.useMock();
+      delay = 250;
+      sounder = new ac.WebAudioSounder(fake_audio_context);
+      fake_oscillator = sounder.oscillator;
+      expect(fake_oscillator.frequency.value).toBe(0);
+      sounder.frequency(84, delay);
+      jasmine.Clock.tick(delay);
+      return expect(fake_oscillator.frequency.value).toBe(84);
     });
     return it('stops its oscillator', function() {});
   });
