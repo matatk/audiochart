@@ -1,5 +1,5 @@
 class DataWrapper
-	constructor: (@data) -> throw new Error 'please use a derived class'  # TODO: test
+	constructor: (@data) -> throw new Error 'please use a derived class'
 	num_series: ->
 	series_names: ->
 	series_min: (series) ->
@@ -10,26 +10,58 @@ class DataWrapper
 class GoogleDataWrapper extends DataWrapper
 	# Note: We assume that the first column in the data table is there simply
 	# to provide values for the x axis, as for line and scatter plots.
-
 	constructor: (@data) ->
-
 	num_series: ->
 		@data.getNumberOfColumns() - 1
-
 	series_names: ->
 		@data.getColumnLabel i for i in [1 .. @data.getNumberOfColumns() - 1]
-
 	series_min: (series) ->
 		@data.getColumnRange(series + 1)['min']
-
 	series_max: (series) ->
 		@data.getColumnRange(series + 1)['max']
-
 	series_value: (series, index) ->
 		@data.getValue index, (series + 1)
-
 	series_length: (series) ->
 		@data.getNumberOfRows()
+
+class JSONDataWrapper extends DataWrapper
+	constructor: (json) ->
+		if typeof json == 'string'
+			@object = JSON.parse json
+		else if typeof json == 'object'
+			@object = json
+		else
+			throw new Error "Please provide a JSON string or derived object."
+	num_series: -> @object.data.length
+	series_names: -> chunk.series for chunk in @object.data
+	# TODO why is it that if I change "['values']" to ".values" below,
+	#      it will pass tests but not function in Safari/Chrome?
+	series_min: (series) -> Math.min.apply @, @object.data[series]['values']
+	series_max: (series) -> Math.max.apply @, @object.data[series]['values']
+	series_value: (series, index) -> @object.data[series]['values'][index]
+	series_length: (series) -> @object.data[series]['values'].length
+
+class HTMLTableDataWrapper
+	constructor: (doc, id) ->
+		@table = doc.getElementById id
+		if not @table?
+			throw new Error 'Failed to find table with id "' + id + '".'
+	num_series: -> @table.getElementsByTagName('tr')[0].children.length
+	series_names: ->
+		element.textContent for element in @table.getElementsByTagName 'th'
+	_series_floats: (series) ->
+		parseFloat element.textContent \
+			for element in @table.getElementsByTagName 'td'
+	series_min: (series) ->
+		Math.min.apply @, @_series_floats series
+	series_max: (series) ->
+		Math.max.apply @, @_series_floats series
+	series_value: (series, index) ->
+		parseFloat(@table
+			.getElementsByTagName('tr')[index + 1]
+			.children[series]
+			.textContent)
+	series_length: (series) -> @table.getElementsByTagName('tr').length - 1
 
 
 class PitchMapper
@@ -102,7 +134,7 @@ class Player
 			offset = @interval * i
 			# Visual
 			if @visual_callback?
-				@highlight_enqueue 0, i, offset
+				@_highlight_enqueue 0, i, offset
 			# Audio
 			@sounder.frequency \
 				@pitch_mapper.map(@data.series_value 0, i),
@@ -112,8 +144,7 @@ class Player
 		return
 
 	# Due to scoping behaviour, this has to be separate from the loop
-	# TODO try making it a private member function (may not work due to var)
-	highlight_enqueue: (series, row, offset) ->
+	_highlight_enqueue: (series, row, offset) ->
 		callback = =>
 			@visual_callback(series, row)
 			return
@@ -122,28 +153,64 @@ class Player
 
 
 class AudioChart
-	constructor: (data, chart) ->
-		# This is presently un(-mechanically-)tested at integration level
-		fail = "Sorry, it seems your browser doesn't support the Web Audio API."
-		data_wrapper = new GoogleDataWrapper data
-		freq_pitch_mapper = new FrequencyPitchMapper \
-			data_wrapper.series_min(0),
-			data_wrapper.series_max(0),
-			200,
-			600
-		context = audio_context_getter()
+	constructor: (options) ->
+		# Structure of options object:
+		#	type: 'google', 'json', 'html_table'
+		#	===
+		#	data: pointer to data
+		#		e.g. GoogleDataTable object, JSON string or object
+		#	chart: Google Chart object
+		#	---
+		#	html_document: pointer to HTML document object
+		#	html_table_id: string that is the ID of the HTML table
+		#	===
+		#	duration: milliseconds
+		#	frequency_low: Hz
+		#	frequency_high: Hz
+
+		# TODO: This is presently un(-mechanically-)tested at integration level
+
+		error_support = 
+			"Sorry, it seems your browser doesn't support the Web Audio API."
+		context = _audio_context_getter()
 		if not context?
 			alert fail
 			throw new Error fail
+
+		# TODO check for options.data, options.chart, ...
+		error_type = "Invalid data type '#{options.type}' given."
+		data_wrapper = null
+		callback = null
+		switch options.type
+			when 'google'
+				data_wrapper = new GoogleDataWrapper options.data
+				if options['chart']?
+					callback = _google_visual_callback_maker options['chart']
+			when 'json'
+				data_wrapper = new JSONDataWrapper options.data
+			when 'html_table'
+				data_wrapper = new HTMLTableDataWrapper \
+					options['html_document'],
+					options['html_table_id']
+			else
+				alert error_type
+				throw new Error error_type
+
+		# TODO check options
+		frequency_pitch_mapper = new FrequencyPitchMapper \
+			data_wrapper.series_min(0),
+			data_wrapper.series_max(0),
+			options['frequency_low'],
+			options['frequency_high']
+
 		sounder = new WebAudioSounder context
-		callback = google_visual_callback_maker chart
 		player = new Player \
-			data_wrapper, freq_pitch_mapper, sounder, callback
+			data_wrapper, frequency_pitch_mapper, sounder, callback
 		player.play()
 
 
 # Helper needed to even out cross-browser differences
-audio_context_getter = ->
+_audio_context_getter = ->
 	if AudioContext?
 		return new AudioContext
 	else if webkitAudioContext?
@@ -154,7 +221,7 @@ audio_context_getter = ->
 
 # Callback generator ensures that setSelection will be called with the
 # correct arguments and that the Player doesn't need to know about the chart.
-google_visual_callback_maker = (chart) ->
+_google_visual_callback_maker = (chart) ->
 	return (series, row) ->
 		chart.setSelection([{'row': row, 'column': series + 1}])
 		return
@@ -164,19 +231,23 @@ if exports?
 	exports.AudioChart = AudioChart
 	exports.DataWrapper = DataWrapper  # base
 	exports.GoogleDataWrapper = GoogleDataWrapper
+	exports.JSONDataWrapper = JSONDataWrapper
+	exports.HTMLTableDataWrapper = HTMLTableDataWrapper
 	exports.PitchMapper = PitchMapper  # base
 	exports.FrequencyPitchMapper = FrequencyPitchMapper
 	exports.NotePitchMapper = NotePitchMapper
 	exports.WebAudioSounder = WebAudioSounder
 	exports.Player = Player
-	exports.google_visual_callback_maker = google_visual_callback_maker
+	exports._google_visual_callback_maker = _google_visual_callback_maker
 else
 	this['AudioChart'] = AudioChart
 	this['DataWrapper'] = DataWrapper  # base
 	this['GoogleDataWrapper'] = GoogleDataWrapper
+	this['JSONDataWrapper'] = JSONDataWrapper
+	this['HTMLTableDataWrapper'] = HTMLTableDataWrapper
 	this['PitchMapper'] = PitchMapper  # base
 	this['FrequencyPitchMapper'] = FrequencyPitchMapper
 	this['NotePitchMapper'] = NotePitchMapper
 	this['WebAudioSounder'] = WebAudioSounder
 	this['Player'] = Player
-	this['google_visual_callback_maker'] = google_visual_callback_maker
+	this['_google_visual_callback_maker'] = _google_visual_callback_maker

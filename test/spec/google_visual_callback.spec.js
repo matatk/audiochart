@@ -23,7 +23,7 @@
     fake_visual_callback = null;
     beforeEach(function() {
       fake_chart = new FakeChart;
-      fake_visual_callback = ac.google_visual_callback_maker(fake_chart);
+      fake_visual_callback = ac._google_visual_callback_maker(fake_chart);
       return spyOn(fake_chart, 'setSelection');
     });
     it('correctly munges its parameters (1a)', function() {

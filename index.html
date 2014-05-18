@@ -22,26 +22,27 @@
 				AudioChart uses the Web Audio API, which has <a href="http://caniuse.com/audio-api">increasing support amongst browsers</a>, but is not yet supported by Internet Explorer.
 			</p>
 			<h2>Tutorial and Examples</h2>
+			<p>
+			  Steps to create the <a href="hello-world.html">"Hello, world" example</a> are described in the <a href="https://github.com/matatk/audiochart/blob/gh-pages/README.md">README</a>.
+			</p>
+			<p>
+				The <a href="example-charts.html">Examples Gallery</a> contains line and bar Google Charts, JSON- and HTML table-based examples.
+			</p>
+			<h2>Features</h2>
 			<ul>
-				<li><a href="hello-world.html">"Hello, world" example</a>&mdash;steps to create this are described in the <a href="https://github.com/matatk/audiochart/blob/gh-pages/README.md">README</a>.</li>
-				<li><a href="example-google-charts.html">Line and bar charts</a> (all examples play for five seconds and cannot currently be stopped).</li>
+				<li>Supports charts made with Google Charts API as well as JSON structures and HTML tables.</li>
+				<li>Can highlight the data visually on the chart during playback (Google Charts only).</li>
 			</ul>
-			<h2>Currently supports charts&hellip;</h2>
-			<ul>
-				<li>&hellip;made with Google Charts.</li>
-				<li>&hellip;with one data series per plot.</li>
-			</ul>
-			<h2>Future</h2>
-			<ul>
-				<li>Visually show which part of the chart is playing audibly.</li>
-				<li>Allow exploration (play, rewind etc.) via keyboard and mouse.</li>
-			</ul>
-			<h2>Testing</h2>
-			<p>You can <a href="test/">run the unit tests in-browser</a> in-browser or via the command line if you have <code>jasmine-node</code> installed.</p>
-			<h2>Known Bugs</h2>
-			<ul>
-				<li>Sometimes, if you hear no audio when trying to play one of the examples, you have to reload the page (because the audio context gets locked up).  This is probably down to my code not clearing up properly.</li>
-			</ul>
+			<p>
+				More information (including planned work) can be found <a href="https://github.com/matatk/audiochart/blob/gh-pages/README.md">in the README</a>.
+			</p>
+			<h2>Testing and known bugs</h2>
+			<p>
+				You can <a href="test/">run the unit tests in-browser</a> in-browser or via the command line if you have <code>jasmine-node</code> installed.
+			</p>
+			<p>
+				Sometimes, if you hear no audio when trying to play one of the examples, you have to reload the page (because the audio context gets locked up).  This is probably down to my code not clearing up properly.
+			</p>
 		</main>
 	</body>
 </html>

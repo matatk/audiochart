@@ -1,0 +1,10 @@
+{
+	"name": "AudioChart",
+	"version": "0.0.0",
+	"repository": "https://github.com/matatk/audiochart.git",
+	"devDependencies": {
+		"coffee-script": ">=1.6.0",
+		"jasmine-node": ">=1.14.0",
+		"jsdom": ">=0.10.5"
+	}
+}

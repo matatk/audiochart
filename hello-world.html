@@ -54,13 +54,23 @@
 				//
 
 				document.getElementById('play').onclick = function() {
-					new AudioChart(data, chart);
+					new AudioChart({
+						'type': 'google',      // (see the docs)
+						'data': data,          // the GoogleDataTable
+						'chart': chart,        // the Google Chart object
+						'duration': 5000,      // milliseconds
+						'frequency_low': 200,  // Hz
+						'frequency_high': 600  // Hz
+					});
 				}
 			}
 		</script>
 	</head>
 	<body>
 		<h1>Hello, AudioChart</h1>
+		<p>
+		  This example/tutorial shows how AudioChart can be used with the Google Charts API; the <a href="https://github.com/matatk/audiochart/blob/gh-pages/README.md">README describes how</a>.  AudioChart can also be used with JSON and HTML table data sources.
+		</p>
 		<div id="chart"></div>
 		<button id="play">Play</button>
 	</body>

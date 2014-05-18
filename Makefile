@@ -10,10 +10,12 @@ GCT_EXTERNS=google_viz_api_v1.0.js
 ifeq ($(OS),Windows_NT)
 	RM := cmd /C del
 	MKDIR := cmd /C md
+	CP := # FIXME
 else
 	RM=rm -f
 	RMDIR=rmdir
 	MKDIR=mkdir -p
+	CP=cp
 endif
 
 CURL=curl
@@ -44,6 +46,7 @@ $(BUILD)/$(AUDIOCHART)-min.js: $(BUILD)/$(AUDIOCHART).js
 
 specs:
 	$(COFFEE) --output $(SPECOUTPUT) --compile $(SPECS)
+	$(CP) $(SPECS)/*.fixtures.html $(SPECOUTPUT)/
 
 test:
 	$(JASMINE) --coffee --verbose $(SPECS)
@@ -52,5 +55,6 @@ clean:
 	$(RM) \
 		$(GCT_EXTERNS) \
 		$(BUILD)/*.js \
-		$(SPECOUTPUT)/*.spec.js
+		$(SPECOUTPUT)/*.spec.js \
+		$(SPECOUTPUT)/*.fixtures.html
 	$(RMDIR) $(BUILD) $(SPECOUTPUT)

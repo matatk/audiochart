@@ -2,3 +2,4 @@
 *.swp
 _site
 google_viz_api_v1.0.js
+node_modules

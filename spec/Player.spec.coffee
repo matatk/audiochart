@@ -4,7 +4,7 @@ else
 	ac = window
 
 
-# TODO: DRY this wrt GoogleDataWrapper?
+# TODO: Ensure this interface is kept up-to-date wrt DataWrappers
 class BaseFakeDataWrapper
 	#constructor: (@data) -> @fakedata = [ . . . ]
 	num_series: -> 1
@@ -59,6 +59,7 @@ mixin_data_wrapper_core = (msg, test_data_class, use_callback, test_interval, te
 		it 'makes calls appropriate to play the sound', ->
 			# FIXME assumes play time is five seconds
 			# FIXME test things are called at the right offsets
+			# FIXME test that callback was called with correct params
 			jasmine.Clock.useMock()
 			spyOn(fake_mapper, 'map')
 			spyOn(fake_sounder, 'start')

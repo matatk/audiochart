@@ -14,7 +14,7 @@ describe 'google_visual_callback', ->
 
 	beforeEach ->
 		fake_chart = new FakeChart
-		fake_visual_callback = ac.google_visual_callback_maker fake_chart
+		fake_visual_callback = ac._google_visual_callback_maker fake_chart
 		spyOn fake_chart, 'setSelection'
 
 	it 'correctly munges its parameters (1a)', ->
