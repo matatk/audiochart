@@ -18,7 +18,7 @@ What sort of charts/data does it work with?
  * JSON (the format is detailed in the examples gallery).
  * HTML tables.
 
-Some [example charts infused with AudioChart](http://matatk.agrip.org.uk/audiochart/example-charts.html) are available (covering Google Charts, JSON and HTML tables).
+The [examples gallery](http://matatk.agrip.org.uk/audiochart/example-charts.html) covers using AudioChart with Google Charts, JSON and HTML tables.
 
 "Hello, World" Tutorial (for use with Google Charts)
 -----------------------------------------------------

@@ -4,7 +4,7 @@ SPECS=spec
 SPECOUTPUT=$(TEST)/spec
 AUDIOCHART=audiochart
 WAAPI_EXTERNS=/usr/local/Cellar/closure-compiler/20130823/libexec/contrib/externs/w3c_audio.js
-GCT_EXTERNS_PATH=https://raw.github.com/vicb/VisuGps3/master/src/vgps3/plugins/chart/externs
+GCT_EXTERNS_PATH=https://raw.githubusercontent.com/vicb/VisuGps3/master/src/vgps3/plugins/chart/externs
 GCT_EXTERNS=google_viz_api_v1.0.js
 
 ifeq ($(OS),Windows_NT)

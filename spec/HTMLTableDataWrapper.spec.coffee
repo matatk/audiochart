@@ -1,7 +1,8 @@
 if exports?
 	ac = require '../audiochart'
 	dw = require './DataWrappers.common.spec'
-	jsdom = require 'jsdom'
+	fs = require 'fs'
+	jsdom = require('jsdom').jsdom
 	headless = true
 else
 	ac = window
@@ -22,15 +23,9 @@ run_tests = (doc) ->
 
 
 if headless
-	# FIXME for some reason the tests run but don't show up in Jasmine's
-	#       output in the console. I have tried using asyncWait() and
-	#       asyncSpecDone() but that doesn't make it print out the test
-	#       passes either.
-	jsdom.env {
-		file: __dirname + '/' + HTML_FILE_NAME,
-		done: (errors, window) ->
-			run_tests window.document
-	}
+	html_string = fs.readFileSync __dirname + '/' + HTML_FILE_NAME
+	document = jsdom html_string
+	run_tests document
 else
-	loadFixtures '/spec/' + HTML_FILE_NAME
+	loadFixtures 'spec/' + HTML_FILE_NAME
 	run_tests window.document
