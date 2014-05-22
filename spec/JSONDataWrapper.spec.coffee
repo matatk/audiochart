@@ -27,11 +27,11 @@ test_neg = '{
 
 
 dw.data_wrappers_test_core \
-	'JSONDataWrapper -- starting from string',
+	'JSONDataWrapper, starting from string',
 	new ac.JSONDataWrapper(test_one),
 	new ac.JSONDataWrapper(test_neg)
 
 dw.data_wrappers_test_core \
-	'JSONDataWrapper -- starting from object',
+	'JSONDataWrapper, starting from object',
 	new ac.JSONDataWrapper(JSON.parse test_one),
 	new ac.JSONDataWrapper(JSON.parse test_neg)

@@ -94,7 +94,7 @@ More details on this can be found in the [Google Charts documentation](https://d
  1. Load AudioChart.
 
 	```html
-	<script src="https://raw.github.com/matatk/audiochart/gh-pages/build/audiochart-min.js"></script>
+	<script src="https://raw.githubusercontent.com/matatk/audiochart/gh-pages/build/audiochart-min.js"></script>
 	```
 
  2. Have an element in your document to trigger audio playback.
@@ -103,7 +103,7 @@ More details on this can be found in the [Google Charts documentation](https://d
 	<button id="play">Play</button>
 	```
 
- 3. Wire up the button to AudioChart (and the data table object above).  The `chart` is passed in so that AudioChart can visually highlight the chart data points during playback (this is optional).
+ 3. Wire up the button, data table and chart to AudioChart.  The `chart` is passed in so that AudioChart can visually highlight the chart data points during playback (this is optional).
 
 	```javascript
 	document.getElementById('play').onclick = function() {
@@ -166,7 +166,7 @@ Optional dependencies (for terminal-based testing) are:
  
 **Note:** jsdom is apparently tricky to install on Windows, so you may want to skip it and just use the in-browser testing.
 
-Development set-up steps for Mac users with [homebrew](http://brew.sh):
+Development set-up steps for Mac users with [Homebrew](http://brew.sh):
 
  1. `git clone` or otherwise download this repository.
  2. `brew install closure-compiler`
