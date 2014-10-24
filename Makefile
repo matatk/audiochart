@@ -22,7 +22,7 @@ CURL=curl
 COFFEE=coffee
 JASMINE=jasmine-node
 # Requires closure-compiler -- <https://developers.google.com/closure/compiler/> or from homebrew etc.
-MINIFY=closure-compiler \
+MINIFY=/Library/Internet\ Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin/java -jar /usr/local/Cellar/closure-compiler/20130823/libexec/build/compiler.jar \
 	--compilation_level ADVANCED_OPTIMIZATIONS \
 	--externs $(WAAPI_EXTERNS) \
 	--externs $(GCT_EXTERNS) \

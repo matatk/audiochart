@@ -1,6 +1,6 @@
 data_wrappers_test_core = (thing, wrapper1, wrapper2) ->
 	describe "#{thing} (via common interface)", ->
-		describe 'when storing non-negative data', ->
+		describe 'when storing positive-valued data', ->
 			data = null
 
 			beforeEach ->
@@ -25,7 +25,7 @@ data_wrappers_test_core = (thing, wrapper1, wrapper2) ->
 			it 'gets the length of a series', ->
 				expect(data.series_length 0).toBe 4
 
-		describe 'when storing negative data', ->
+		describe 'when storing negative-valued data', ->
 			data = null
 
 			beforeEach ->

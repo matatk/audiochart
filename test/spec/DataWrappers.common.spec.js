@@ -4,7 +4,7 @@
 
   data_wrappers_test_core = function(thing, wrapper1, wrapper2) {
     return describe("" + thing + " (via common interface)", function() {
-      describe('when storing non-negative data', function() {
+      describe('when storing positive-valued data', function() {
         var data;
         data = null;
         beforeEach(function() {
@@ -30,7 +30,7 @@
           return expect(data.series_length(0)).toBe(4);
         });
       });
-      return describe('when storing negative data', function() {
+      return describe('when storing negative-valued data', function() {
         var data;
         data = null;
         beforeEach(function() {

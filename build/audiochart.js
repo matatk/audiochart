@@ -7,7 +7,7 @@
   DataWrapper = (function() {
     function DataWrapper(data) {
       this.data = data;
-      throw new Error('please use a derived class');
+      throw new Error('Please use a derived class');
     }
 
     DataWrapper.prototype.num_series = function() {};
@@ -114,7 +114,9 @@
 
   })(DataWrapper);
 
-  HTMLTableDataWrapper = (function() {
+  HTMLTableDataWrapper = (function(_super) {
+    __extends(HTMLTableDataWrapper, _super);
+
     function HTMLTableDataWrapper(doc, id) {
       this.table = doc.getElementById(id);
       if (this.table == null) {
@@ -166,7 +168,7 @@
 
     return HTMLTableDataWrapper;
 
-  })();
+  })(DataWrapper);
 
   PitchMapper = (function() {
     function PitchMapper(minimum_datum, maximum_datum) {

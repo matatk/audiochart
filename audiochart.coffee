@@ -1,5 +1,5 @@
 class DataWrapper
-	constructor: (@data) -> throw new Error 'please use a derived class'
+	constructor: (@data) -> throw new Error 'Please use a derived class'
 	num_series: ->
 	series_names: ->
 	series_min: (series) ->
@@ -41,7 +41,7 @@ class JSONDataWrapper extends DataWrapper
 	series_value: (series, index) -> @object.data[series]['values'][index]
 	series_length: (series) -> @object.data[series]['values'].length
 
-class HTMLTableDataWrapper
+class HTMLTableDataWrapper extends DataWrapper
 	constructor: (doc, id) ->
 		@table = doc.getElementById id
 		if not @table?

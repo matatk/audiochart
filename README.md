@@ -20,8 +20,8 @@ What sort of charts/data does it work with?
 
 The [examples gallery](http://matatk.agrip.org.uk/audiochart/example-charts.html) covers using AudioChart with Google Charts, JSON and HTML tables.
 
-"Hello, World" Tutorial (for use with Google Charts)
------------------------------------------------------
+"Hello, World" Tutorial (using Google Charts)
+----------------------------------------------
 
 You can check out the finished ["hello, world" HTML file](http://matatk.agrip.org.uk/audiochart/hello-world.html).
 
@@ -141,7 +141,7 @@ The following objects are present in AudioChart ([JS code](https://github.com/ma
 Development
 ------------
 
-AudioChart is developed in [CoffeeScript](http://coffeescript.org), which is translated into JS as part of the build process.  You do not need to know CoffeeScript to use AudioChart, as a built JS version is present in this repository.  A Makefile is provided to automate the translation and run tests.  [Unit tests can be run in-browser](http://matatk.agrip.org.uk/audiochart/test/) or directly (on the CoffeeScript code, printing output to the terminal) via jasmine-node.
+AudioChart is developed in [CoffeeScript](http://coffeescript.org), which is translated into JS as part of the build process.  **You do not need to know CoffeeScript (or have it installed) to use AudioChart, as a built JS version is present in this repository.**  A Makefile is provided to automate the translation and run tests.  [Unit tests can be run in-browser](http://matatk.agrip.org.uk/audiochart/test/) or directly on the code, printing output to the terminal, via jasmine-node.
 
 Development is carried out in a [test-driven](http://en.wikipedia.org/wiki/Test-driven_development) manner.  The `pre-commit` hook can be used to ensure only code that passes tests is committed.  You can make a symlink from the `.git/hooks/` directory to it and it'll be run before you are asked for a commit message.
 
@@ -152,17 +152,17 @@ Useful commands for development:
 
 ### Setting up for development
 
-Required dependencies are:
+Recommended dependencies are:
 
- * `make`
- * [`curl`](http://curl.haxx.se) (used to download the Web Audio API externs for Google Closure Compiler)
- * [CoffeeScript](https://github.com/jashkenas/coffee-script); therefore [node](https://github.com/joyent/node)
- * [Google Closure Compiler](https://github.com/google/closure-compiler)
+ * `make` for automating the running of unit tests and translation of CoffeeScript code (and tests, for running in-browser) to JS
+ * [`curl`](http://curl.haxx.se) for downloading the Web Audio API externs for Google Closure Compiler (you could skip this if you download the file yourself)
+ * [CoffeeScript](https://github.com/jashkenas/coffee-script); therefore [node](https://github.com/joyent/node) for translating to JS
+ * [Google Closure Compiler](https://github.com/google/closure-compiler) for minifying the JS code
 
 Optional dependencies (for terminal-based testing) are:
 
- * [jasmine-node](https://github.com/mhevery/jasmine-node)
- * [jsdom](https://github.com/tmpvar/jsdom)
+ * [jasmine-node](https://github.com/mhevery/jasmine-node) for running the tests
+ * [jsdom](https://github.com/tmpvar/jsdom) for simulating a DOM environment
  
 **Note:** jsdom is apparently tricky to install on Windows, so you may want to skip it and just use the in-browser testing.
 
@@ -171,9 +171,9 @@ Development set-up steps for Mac users with [Homebrew](http://brew.sh):
  1. `git clone` or otherwise download this repository.
  2. `brew install closure-compiler`
  3. `brew install node` (comes with `npm`)
- 4. `npm install` (grabs AudioChart's dependencies)
+ 4. `npm install` (grabs `coffee-script`, `jasmine-node` and `jsdom` for you, as instructed by `package.json` in this repository)
 
-Instructions for Windows are forthcomming (sorry for for the wait).
+Instructions for Windows are forthcomming (sorry for the wait).
 
 Future Work Ideas
 ------------------
