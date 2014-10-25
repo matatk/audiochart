@@ -154,21 +154,8 @@ class Player
 
 class AudioChart
 	constructor: (options) ->
-		# Structure of options object:
-		#	type: 'google', 'json', 'html_table'
-		#	===
-		#	data: pointer to data
-		#		e.g. GoogleDataTable object, JSON string or object
-		#	chart: Google Chart object
-		#	---
-		#	html_document: pointer to HTML document object
-		#	html_table_id: string that is the ID of the HTML table
-		#	===
-		#	duration: milliseconds
-		#	frequency_low: Hz
-		#	frequency_high: Hz
-
 		# TODO: This is presently un(-mechanically-)tested at integration level
+		# Structure of options object is detailed in REFERENCE.md
 
 		error_support = 
 			"Sorry, it seems your browser doesn't support the Web Audio API."

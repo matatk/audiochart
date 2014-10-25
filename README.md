@@ -120,12 +120,12 @@ More details on this can be found in the [Google Charts documentation](https://d
 
 #### Other Chart Types and Options
 
-TBD
+The [REFERENCE](REFERENCE.md) details all the options you can pass to AudioChart.
 
 Components
 -----------
 
-The following objects are present in AudioChart ([JS code](https://github.com/matatk/audiochart/blob/gh-pages/build/audiochart.js), [CoffeeScript code](https://github.com/matatk/audiochart/blob/gh-pages/audiochart.coffee)).
+The following objects are present in AudioChart ([JS code](build/audiochart.js), [CoffeeScript code](audiochart.coffee)).
 
  * A `DataWrapper` interface wraps third-party chart library/other data sources.
     - `GoogleDataWrapper` wraps Google Charts `DataTable` objects.
@@ -183,8 +183,7 @@ Patches for and feedback on the following are welcome!
  * Static/Periodic features such as grid/timing beats.
  * Play speed and direction.
  * Mouse hover "audition" mode.
- * HTML tables and JSON as data source (won't render the chart).
- * Rendering a visual highlight element for chart APIs that don't provide this.
+ * Rendering a visual highlight element for chart APIs that don't provide this (i.e. JSON and HTML tables).
  * Multiple plots/data series per chart.
  * Instruments as different sound types.
  * Support for development on Windows.

@@ -8,7 +8,74 @@
 				font-size: 1.2em;
 				line-height: 1.5em;
 			}
+
+			#chartContainer {
+				float: right;
+				border: 1px solid black;
+				padding: 1em;
+				margin-left: 1em;
+			}
+			#chartContainer button {
+				float: right;
+			}
+
+			button {
+				font-size: inherit;
+			}
 		</style>
+		<script src="https://www.google.com/jsapi"></script>
+		<script src="build/audiochart-min.js"></script>
+		<script>
+			google.load('visualization', '1.0', {'packages':['corechart']});
+			google.setOnLoadCallback(draw_chart);
+
+			function draw_chart() {
+				//
+				// Google Charts Stuff
+				//
+
+				var data = new google.visualization.DataTable();
+
+				// Populate the table
+				data.addColumn('string', 'Top Secret Evil Project');
+				data.addColumn('number', 'Watermelons');
+				data.addRows([
+					['Alpha',   293],
+					['Beta',	329],
+					['Gamma',   261],
+					['Delta',   130],
+					['Epsilon', 196],
+					['Zeta',	196],
+				]);
+
+				// Prepare chart options, then create and draw the chart
+				var chart_options = {
+					'title': 'Evil Project Efficacy',
+					'width': 600,
+					'height': 338,
+					'curveType': 'function'
+				};
+
+				var chart = new google.visualization.LineChart(
+					document.getElementById('chart'));
+				chart.draw(data, chart_options);
+
+				//
+				// AudioChart Stuff
+				//
+
+				document.getElementById('play').onclick = function() {
+					new AudioChart({
+						'type': 'google',      // (see the docs)
+						'data': data,          // the GoogleDataTable
+						'chart': chart,        // the Google Chart object
+						'duration': 5000,      // milliseconds
+						'frequency_low': 200,  // Hz
+						'frequency_high': 600  // Hz
+					});
+				}
+			}
+		</script>
 	</head>
 	<body>
 		<header>
@@ -21,12 +88,13 @@
 			<p>
 				AudioChart uses the Web Audio API, which has <a href="http://caniuse.com/audio-api">increasing support amongst browsers</a>, but is not yet supported by Internet Explorer.
 			</p>
+			<div id='chartContainer'>
+				<div id="chart"></div>
+				<button id="play">Play</button>
+			</div>
 			<h2>Tutorial and Examples</h2>
 			<p>
-			  Steps to create the <a href="hello-world.html">"Hello, world" example</a> are described in the <a href="https://github.com/matatk/audiochart/blob/gh-pages/README.md">README</a>.
-			</p>
-			<p>
-				The <a href="example-charts.html">Examples Gallery</a> contains line and bar Google Charts, JSON- and HTML table-based examples.
+			  Steps to create the <a href="hello-world.html">Google Charts-based "Hello, world" example</a> are described in the <a href="https://github.com/matatk/audiochart/blob/gh-pages/README.md">README</a>.  The <a href="example-charts.html">Examples Gallery</a> contains line and bar Google Charts, JSON- and HTML table-based examples.
 			</p>
 			<h2>Features</h2>
 			<ul>
