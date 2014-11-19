@@ -24,7 +24,7 @@
 			}
 		</style>
 		<script src="https://www.google.com/jsapi"></script>
-		<script src="build/audiochart-min.js"></script>
+		<script src="build/audiochart.min.js"></script>
 		<script>
 			google.load('visualization', '1.0', {'packages':['corechart']});
 			google.setOnLoadCallback(draw_chart);
@@ -83,7 +83,7 @@
 		</header>
 		<main role="main">
 			<p>
-				Allows the user to explore charts on web pages using sound and the keyboard rather than, or in conjunction with, visually and with the mouse.  Thanks to <a href="http://paciellogroup.com">The Paciello Group</a> for allowing me to share this with you.  The code is <a href="https://github.com/matatk/audiochart">hosted on GitHub</a>.
+				Allows the user to explore charts on web pages using sound and the keyboard rather than, or in conjunction with, visually and with the mouse.  The code is <a href="https://github.com/matatk/audiochart">hosted on GitHub</a>.  Thanks to <a href="http://paciellogroup.com">The Paciello Group</a> for allowing me to share this with you.
 			</p>
 			<p>
 				AudioChart uses the Web Audio API, which has <a href="http://caniuse.com/audio-api">increasing support amongst browsers</a>, but is not yet supported by Internet Explorer.
@@ -92,18 +92,22 @@
 				<div id="chart"></div>
 				<button id="play">Play</button>
 			</div>
-			<h2>Tutorial and Examples</h2>
-			<p>
-			  Steps to create the <a href="hello-world.html">Google Charts-based "Hello, world" example</a> are described in the <a href="https://github.com/matatk/audiochart/blob/gh-pages/README.md">README</a>.  The <a href="example-charts.html">Examples Gallery</a> contains line and bar Google Charts, JSON- and HTML table-based examples.
-			</p>
-			<h2>Features</h2>
+
+			<h2>What does it do for you?</h2>
+			<p>It augments charts you may already have on your page (or those that you create) with sounds that represent the data in the chart.</p>
 			<ul>
 				<li>Supports charts made with Google Charts API as well as JSON structures and HTML tables.</li>
 				<li>Can highlight the data visually on the chart during playback (Google Charts only).</li>
 			</ul>
 			<p>
-				More information (including planned work) can be found <a href="https://github.com/matatk/audiochart/blob/gh-pages/README.md">in the README</a>.
+				More information (including planned work) can be found <a href="https://github.com/matatk/audiochart#audiochart">in the README</a>.
 			</p>
+
+			<h2>Tutorial and Examples</h2>
+			<p>
+			    The <a href="example-charts.html">Examples Gallery</a> contains line and bar Google Charts, JSON- and HTML table-based examples.  Steps to create the <a href="hello-world.html">Google Charts-based "Hello, world" example</a> are described in the <a href="https://github.com/matatk/audiochart#audiochart">README</a>.
+			</p>
+
 			<h2>Testing and known bugs</h2>
 			<p>
 				You can <a href="test/">run the unit tests in-browser</a> in-browser or via the command line if you have <code>jasmine-node</code> installed.

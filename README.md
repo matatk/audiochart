@@ -94,7 +94,7 @@ More details on this can be found in the [Google Charts documentation](https://d
  1. Load AudioChart.
 
 	```html
-	<script src="https://raw.githubusercontent.com/matatk/audiochart/gh-pages/build/audiochart-min.js"></script>
+	<script src="https://raw.githubusercontent.com/matatk/audiochart/gh-pages/build/audiochart.min.js"></script>
 	```
 
  2. Have an element in your document to trigger audio playback.
@@ -145,46 +145,46 @@ AudioChart is developed in [CoffeeScript](http://coffeescript.org), which is tra
 
 Development is carried out in a [test-driven](http://en.wikipedia.org/wiki/Test-driven_development) manner.  The `pre-commit` hook can be used to ensure only code that passes tests is committed.  You can make a symlink from the `.git/hooks/` directory to it and it'll be run before you are asked for a commit message.
 
-Useful commands for development:
-
- * `make test` runs the tests from the command line.
- * `make` translates the code to JS and produces a minified JS version too.
-
 ### Setting up for development
 
-Recommended dependencies are:
+The build process uses [Grunt](http://gruntjs.com) (and therefore [node](https://github.com/joyent/node)).  The following tools/libraries will be installed automatically for you:
 
- * `make` for automating the running of unit tests and translation of CoffeeScript code (and tests, for running in-browser) to JS
- * [`curl`](http://curl.haxx.se) for downloading the Web Audio API externs for Google Closure Compiler (you could skip this if you download the file yourself)
- * [CoffeeScript](https://github.com/jashkenas/coffee-script); therefore [node](https://github.com/joyent/node) for translating to JS
- * [Google Closure Compiler](https://github.com/google/closure-compiler) for minifying the JS code
-
-Optional dependencies (for terminal-based testing) are:
-
- * [jasmine-node](https://github.com/mhevery/jasmine-node) for running the tests
- * [jsdom](https://github.com/tmpvar/jsdom) for simulating a DOM environment
+ * [CoffeeScript](https://github.com/jashkenas/coffee-script) for translating to JS.
+ * [jasmine-node](https://github.com/mhevery/jasmine-node) for running the tests.
+ * [jsdom](https://github.com/tmpvar/jsdom) for simulating a DOM environment.
  
-**Note:** jsdom is apparently tricky to install on Windows, so you may want to skip it and just use the in-browser testing.
+**Note:** jsdom is apparently tricky to install on Windows, so you may want to skip it and just use the in-browser testing.  You can disable the use of jsdom by removing it from `package.json` and removing the `jasmine_node` task from the Gruntfile.
 
 Development set-up steps for Mac users with [Homebrew](http://brew.sh):
 
- 1. `git clone` or otherwise download this repository.
- 2. `brew install closure-compiler`
- 3. `brew install node` (comes with `npm`)
- 4. `npm install` (grabs `coffee-script`, `jasmine-node` and `jsdom` for you, as instructed by `package.json` in this repository)
+ 1. `brew install node` (comes with `npm`).
+ 2. `npm -g install grunt-cli` in order to be able to conveniently run the grunt command (this will not globally install any other tools/libraries).
+ 3. `git clone` or otherwise download this repository.
+ 4. `npm install` in the newly-cloned repository grabs all required tools and libraries and stores them in the local `node_modules` directory.
+ 5. `grunt` will run the tests using jasmine-node, convert the CoffeeScript code and tests to JS and minify the JS library.
 
 Instructions for Windows are forthcomming (sorry for the wait).
+
+### Hosting the AudioChart Site and Examples Locally
+
+You can use [Jekyll](http://jekyllrb.com) to host the AudioChart site locally and run the in-browser tests.  You can just use `sudo gem install jekyll` on OS X, but this installs Jekyll on top of the system's Ruby; some prefer to install a more local Ruby e.g. via Homebrew, as follows.
+
+ 1. `brew install ruby` gives you a local ruby installation.  You may need to close your current terminal session before `/usr/local/bin/ruby` and `/usr/local/bin/gem` will supersede the system ones.
+ 2. `gem install jekyll` will grab jekyll (you will not need sudo if you're successfully using the Homebrew version).
+ 3. `jekyll serve --watch` to serve the site locally; the URL will be given in the terminal window.  Changes to files will be reflected when you reload a page in the browser.
 
 Future Work Ideas
 ------------------
 
 Patches for and feedback on the following are welcome!
 
+ * Play speed/duration.
+ * Support [D3.js](http://d3js.org) and SVG charts.
  * Static/Periodic features such as grid/timing beats.
- * Play speed and direction.
  * Mouse hover "audition" mode.
  * Rendering a visual highlight element for chart APIs that don't provide this (i.e. JSON and HTML tables).
  * Multiple plots/data series per chart.
  * Instruments as different sound types.
  * Support for development on Windows.
  * Create a browser extension to enable AudioChart on charts/tables for sites that don't provide it themselves.
+ * Allow modular builds to be created, with only support for data sources relevant to your site/application.
