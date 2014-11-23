@@ -39,7 +39,7 @@
             return {
                 // Fill in 'type'
                 // Fill in 'data' and 'chart'
-				//	or 'html_document' and 'html_table_id'
+                //  or 'html_document' and 'html_table_id'
                 'duration': 5000,
                 'frequency_low': 200,
                 'frequency_high': 600
@@ -91,7 +91,7 @@
             var chart = new klass(document.getElementById(chart_id));
             chart.draw(data, google_options);
 
-			// Wire up to AudioChart
+            // Wire up to AudioChart
             document.getElementById(btn).onclick = function() {
                 var audiochart_options = make_audiochart_options();
                 audiochart_options['type'] = 'google';
@@ -269,7 +269,7 @@
     <button id="btn_sales_annotated">Play</button>
     <hr>
 
-    <h1>JSON<h1>
+    <h1>JSON</h1>
     <h2 id='json'>Example</h2>
     <pre id='json1'>{
   "data": [

@@ -1,120 +1,153 @@
 <!DOCTYPE html>
 <html lang="en-GB">
-	<head>
-		<title>AudioChart</title>
-		<style>
-			body {
-				font-family: Verdana, sans-serif;
-				font-size: 1.2em;
-				line-height: 1.5em;
-			}
+  <head>
+  	<title>AudioChart</title>
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<style>
+  		@viewport, @-ms-viewport {
+  			zoom: 1.0;
+  			width: extend-to-zoom;
+  		}
 
-			#chartContainer {
-				float: right;
-				border: 1px solid black;
-				padding: 1em;
-				margin-left: 1em;
-			}
-			#chartContainer button {
-				float: right;
-			}
+  		body {
+  			font-family: Verdana, sans-serif;
+  			line-height: 1.5em;
+  			font-size: 1.2em;
+  		}
 
-			button {
-				font-size: inherit;
-			}
-		</style>
-		<script src="https://www.google.com/jsapi"></script>
-		<script src="build/audiochart.min.js"></script>
-		<script>
-			google.load('visualization', '1.0', {'packages':['corechart']});
-			google.setOnLoadCallback(draw_chart);
+  		button {
+  			font-size: inherit;
+  		}
 
-			function draw_chart() {
-				//
-				// Google Charts Stuff
-				//
+  		#chart {
+  			/* Thanks to http://stackoverflow.com/a/17672214 */
+  			width: 100vw;
+  			height: 50vw;
+  		}
 
-				var data = new google.visualization.DataTable();
+  		@media screen and (min-width: 60em) {
+  			#chart {
+  				width: 50vw;
+  				height: 25vw;
+  			}
 
-				// Populate the table
-				data.addColumn('string', 'Top Secret Evil Project');
-				data.addColumn('number', 'Watermelons');
-				data.addRows([
-					['Alpha',   293],
-					['Beta',	329],
-					['Gamma',   261],
-					['Delta',   130],
-					['Epsilon', 196],
-					['Zeta',	196],
-				]);
+  			#chartContainer {
+  				float: right;
+  				border: 1px solid black;
+  				padding: 1em;
+  				margin-left: 1em;
+  			}
 
-				// Prepare chart options, then create and draw the chart
-				var chart_options = {
-					'title': 'Evil Project Efficacy',
-					'width': 600,
-					'height': 338,
-					'curveType': 'function'
-				};
+  			#chartContainer button {
+  				float: right;
+  			}
+  		}
+  	</style>
+  	<script src="https://www.google.com/jsapi"></script>
+  	<script src="build/audiochart.min.js"></script>
+  	<script>
+  		google.load('visualization', '1.0', {'packages':['corechart']});
+  		google.setOnLoadCallback(draw_chart);
 
-				var chart = new google.visualization.LineChart(
-					document.getElementById('chart'));
-				chart.draw(data, chart_options);
+  		function draw_chart() {
+  			//
+  			// Google Charts Stuff
+  			//
 
-				//
-				// AudioChart Stuff
-				//
+  			var data = new google.visualization.DataTable();
 
-				document.getElementById('play').onclick = function() {
-					new AudioChart({
-						'type': 'google',      // (see the docs)
-						'data': data,          // the GoogleDataTable
-						'chart': chart,        // the Google Chart object
-						'duration': 5000,      // milliseconds
-						'frequency_low': 200,  // Hz
-						'frequency_high': 600  // Hz
-					});
-				}
-			}
-		</script>
-	</head>
-	<body>
-		<header>
-			<h1>AudioChart</h1>
-		</header>
-		<main role="main">
-			<p>
-				Allows the user to explore charts on web pages using sound and the keyboard rather than, or in conjunction with, visually and with the mouse.  The code is <a href="https://github.com/matatk/audiochart">hosted on GitHub</a>.  Thanks to <a href="http://paciellogroup.com">The Paciello Group</a> for allowing me to share this with you.
-			</p>
-			<p>
-				AudioChart uses the Web Audio API, which has <a href="http://caniuse.com/audio-api">increasing support amongst browsers</a>, but is not yet supported by Internet Explorer.
-			</p>
-			<div id='chartContainer'>
-				<div id="chart"></div>
-				<button id="play">Play</button>
-			</div>
+  			// Populate the table
+  			data.addColumn('string', 'Top Secret Evil Project');
+  			data.addColumn('number', 'Watermelons');
+  			data.addRows([
+  				['Alpha',   293],
+  				['Beta',    329],
+  				['Gamma',   261],
+  				['Delta',   130],
+  				['Epsilon', 196],
+  				['Zeta',    196],
+  			]);
 
-			<h2>What does it do for you?</h2>
-			<p>It augments charts you may already have on your page (or those that you create) with sounds that represent the data in the chart.</p>
-			<ul>
-				<li>Supports charts made with Google Charts API as well as JSON structures and HTML tables.</li>
-				<li>Can highlight the data visually on the chart during playback (Google Charts only).</li>
-			</ul>
-			<p>
-				More information (including planned work) can be found <a href="https://github.com/matatk/audiochart#audiochart">in the README</a>.
-			</p>
+  			// Prepare chart options, then create and draw the chart
+  			var chart_options = {
+  				'title': 'Evil Project Efficacy',
+  				'curveType': 'function'
+  			};
 
-			<h2>Tutorial and Examples</h2>
-			<p>
-			    The <a href="example-charts.html">Examples Gallery</a> contains line and bar Google Charts, JSON- and HTML table-based examples.  Steps to create the <a href="hello-world.html">Google Charts-based "Hello, world" example</a> are described in the <a href="https://github.com/matatk/audiochart#audiochart">README</a>.
-			</p>
+  			var chart = new google.visualization.LineChart(
+  				document.getElementById('chart'));
 
-			<h2>Testing and known bugs</h2>
-			<p>
-				You can <a href="test/">run the unit tests in-browser</a> in-browser or via the command line if you have <code>jasmine-node</code> installed.
-			</p>
-			<p>
-				Sometimes, if you hear no audio when trying to play one of the examples, you have to reload the page (because the audio context gets locked up).  This is probably down to my code not clearing up properly.
-			</p>
-		</main>
-	</body>
+  			resizeChart();  // initial draw
+
+  			// Resizing; thanks, http://stackoverflow.com/a/23594901
+  			function resizeChart () {
+  				chart.draw(data, chart_options);
+  			}
+  			if (document.addEventListener) {
+  				window.addEventListener('resize', resizeChart);
+  			}
+  			else if (document.attachEvent) {
+  				window.attachEvent('onresize', resizeChart);
+  			}
+  			else {
+  				window.resize = resizeChart;
+  			}
+
+  			//
+  			// AudioChart Stuff
+  			//
+
+  			document.getElementById('play').onclick = function() {
+  				new AudioChart({
+  					'type': 'google',      // (see the docs)
+  					'data': data,          // the GoogleDataTable
+  					'chart': chart,        // the Google Chart object
+  					'duration': 5000,      // milliseconds
+  					'frequency_low': 200,  // Hz
+  					'frequency_high': 600  // Hz
+  				});
+  			}
+  		}
+  	</script>
+  </head>
+  <body>
+  	<header>
+  		<h1>AudioChart</h1>
+  	</header>
+  	<main role="main">
+  		<p>
+  			Allows the user to explore charts on web pages using sound and the keyboard rather than, or in conjunction with, visually and with the mouse.  The code is <a href="https://github.com/matatk/audiochart">hosted on GitHub</a>.  Thanks to <a href="http://paciellogroup.com">The Paciello Group</a> for allowing me to share this with you.
+  		</p>
+  		<div id="chartContainer">
+  			<div id="chart"></div>
+  			<button id="play">Play</button>
+  		</div>
+  		<p>
+  			AudioChart uses the Web Audio API, which has <a href="http://caniuse.com/audio-api">increasing support amongst browsers</a>, but is not yet supported by Internet Explorer.
+  		</p>
+
+  		<h2>What does it do for you?</h2>
+  		<p>It augments charts you may already have on your page (or those that you create) with sounds that represent the data in the chart.</p>
+  		<ul>
+  			<li>Supports charts made with Google Charts API as well as JSON structures and HTML tables.</li>
+  			<li>Can highlight the data visually on the chart during playback (Google Charts only).</li>
+  		</ul>
+  		<p>
+  			More information (including planned work) can be found <a href="https://github.com/matatk/audiochart#audiochart">in the README</a>.
+  		</p>
+
+  		<h2>Tutorial and Examples</h2>
+  		<p>
+  			The <a href="example-charts.html">Examples Gallery</a> contains line and bar Google Charts, JSON- and HTML table-based examples.  Steps to create the <a href="hello-world.html">Google Charts-based "Hello, world" example</a> are described in the <a href="https://github.com/matatk/audiochart#audiochart">README</a>.
+  		</p>
+
+  		<h2>Testing and known bugs</h2>
+  		<p>
+  			You can <a href="test/">run the unit tests in-browser</a> in-browser or via the command line if you have <code>jasmine-node</code> installed.
+  		</p>
+  		<p>
+  			Sometimes, if you hear no audio when trying to play one of the examples, you have to reload the page (because the audio context gets locked up).  This is probably down to my code not clearing up properly.
+  		</p>
+  	</main>
+  </body>
 </html>
