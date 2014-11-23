@@ -54,7 +54,7 @@ More details on this can be found in the [Google Charts documentation](https://d
 	}
 	```
 
-	The rest of the JS code in this section goes inside `draw_chart()`.
+	The rest of the JavaScript code in this section goes inside `draw_chart()`.
 
  4. Create a Google Charts API `DataTable` and populate it with some data.
 
@@ -125,7 +125,7 @@ The [REFERENCE](REFERENCE.md) details all the options you can pass to AudioChart
 Components
 -----------
 
-The following objects are present in AudioChart ([JS code](build/audiochart.js), [CoffeeScript code](audiochart.coffee)).
+The following objects are present in AudioChart ([JavaScript code](build/audiochart.js), [CoffeeScript code](audiochart.coffee)).
 
  * A `DataWrapper` interface wraps third-party chart library/other data sources.
     - `GoogleDataWrapper` wraps Google Charts `DataTable` objects.
@@ -141,7 +141,7 @@ The following objects are present in AudioChart ([JS code](build/audiochart.js),
 Development
 ------------
 
-AudioChart is developed in [CoffeeScript](http://coffeescript.org), which is translated into JS as part of the build process.  **You do not need to know CoffeeScript (or have it installed) to use AudioChart, as a built JS version is present in this repository.**  A Makefile is provided to automate the translation and run tests.  [Unit tests can be run in-browser](http://matatk.agrip.org.uk/audiochart/test/) or directly on the code, printing output to the terminal, via jasmine-node.
+AudioChart is developed in [CoffeeScript](http://coffeescript.org), which is translated into JavaScript as part of the build process.  **You do not need to know CoffeeScript (or have it installed) to use AudioChart, as a built JavaScript version is present in this repository.**  A Makefile is provided to automate the translation and run tests.  [Unit tests can be run in-browser](http://matatk.agrip.org.uk/audiochart/test/) or directly on the code, printing output to the terminal, via jasmine-node.
 
 Development is carried out in a [test-driven](http://en.wikipedia.org/wiki/Test-driven_development) manner.  The `pre-commit` hook can be used to ensure only code that passes tests is committed.  You can make a symlink from the `.git/hooks/` directory to it and it'll be run before you are asked for a commit message.
 
@@ -149,7 +149,7 @@ Development is carried out in a [test-driven](http://en.wikipedia.org/wiki/Test-
 
 The build process uses [Grunt](http://gruntjs.com) (and therefore [node](https://github.com/joyent/node)).  The following tools/libraries will be installed automatically for you:
 
- * [CoffeeScript](https://github.com/jashkenas/coffee-script) for translating to JS.
+ * [CoffeeScript](https://github.com/jashkenas/coffee-script) for translating to JavaScript
  * [jasmine-node](https://github.com/mhevery/jasmine-node) for running the tests.
  * [jsdom](https://github.com/tmpvar/jsdom) for simulating a DOM environment.
  
@@ -161,7 +161,7 @@ Development set-up steps for Mac users with [Homebrew](http://brew.sh):
  2. `npm -g install grunt-cli` in order to be able to conveniently run the grunt command (this will not globally install any other tools/libraries).
  3. `git clone` or otherwise download this repository.
  4. `npm install` in the newly-cloned repository grabs all required tools and libraries and stores them in the local `node_modules` directory.
- 5. `grunt` will run the tests using jasmine-node, convert the CoffeeScript code and tests to JS and minify the JS library.
+ 5. `grunt` will run the tests using jasmine-node, convert the CoffeeScript code and tests to JavaScript and minify the JavaScript library.
 
 Instructions for Windows are forthcomming (sorry for the wait).
 
