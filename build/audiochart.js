@@ -295,8 +295,8 @@
 
   AudioChart = (function() {
     function AudioChart(options) {
-      var callback, context, data_wrapper, error_support, error_type, frequency_pitch_mapper, player, sounder;
-      error_support = "Sorry, it seems your browser doesn't support the Web Audio API.";
+      var callback, context, data_wrapper, error_type, fail, frequency_pitch_mapper, player, sounder;
+      fail = "Sorry, it seems your browser doesn't support the Web Audio API.";
       context = _audio_context_getter();
       if (context == null) {
         alert(fail);

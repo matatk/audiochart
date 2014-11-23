@@ -208,8 +208,7 @@ class AudioChart
         # TODO: This is presently un(-mechanically-)tested at integration level
         # Structure of options object is detailed in REFERENCE.md
 
-        error_support =
-            "Sorry, it seems your browser doesn't support the Web Audio API."
+        fail = "Sorry, it seems your browser doesn't support the Web Audio API."
         context = _audio_context_getter()
         if not context?
             alert fail
