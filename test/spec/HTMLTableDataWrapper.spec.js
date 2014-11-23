@@ -3,7 +3,7 @@
 
   if (typeof exports !== "undefined" && exports !== null) {
     ac = require('../audiochart');
-    dw = require('./DataWrappers.common.spec');
+    dw = require('./DataWrappers-common.spec');
     fs = require('fs');
     jsdom = require('jsdom').jsdom;
     headless = true;

@@ -1,6 +1,6 @@
 if exports?
 	ac = require '../audiochart'
-	dw = require './DataWrappers.common.spec'
+	dw = require './DataWrappers-common.spec'
 else
 	ac = window
 	dw = window
