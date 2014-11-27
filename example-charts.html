@@ -3,207 +3,236 @@
   <head>
     <meta charset="utf-8">
     <title>Example Charts</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body {
-            font-family: Verdana, sans-serif;
-            font-size: 1.2em;
-            line-height: 1.5em;
-        }
+      @viewport, @-ms-viewport {
+        zoom: 1.0;
+        width: extend-to-zoom;
+      }
 
-        button {
-            font-size: inherit;
-        }
+      body {
+        font-family: Verdana, sans-serif;
+        font-size: 1.2em;
+        line-height: 1.5em;
+      }
 
-        table {
-            border-collapse: collapse;
-            margin-bottom: 0.5em;
-        }
+      button {
+        font-size: inherit;
+      }
 
-        th {
-            background-color: black;
-            color: white;
-        }
+      table {
+        border-collapse: collapse;
+        margin-bottom: 0.5em;
+      }
 
-        th, td {
-            border: 1px solid black;
-            padding: 0.5em;
-        }
+      th {
+        background-color: black;
+        color: white;
+      }
+
+      th, td {
+        border: 1px solid black;
+        padding: 0.5em;
+      }
+
+      .audiochart-current {
+        background-color: yellow;
+      }
+
+      div.google-chart {
+        width: 75vw;
+        height: 40vw;
+      }
     </style>
     <script src="https://www.google.com/jsapi"></script>
     <script src="build/audiochart.min.js"></script>
     <script>
-        google.load('visualization', '1.0', {'packages':['corechart']});
-        google.setOnLoadCallback(init);
+      google.load('visualization', '1.0', {'packages':['corechart']});
+      google.setOnLoadCallback(init);
 
-        function make_audiochart_options() {
-            return {
-                // Fill in 'type'
-                // Fill in 'data' and 'chart'
-                //  or 'html_document' and 'html_table_id'
-                'duration': 5000,
-                'frequency_low': 200,
-                'frequency_high': 600
-            }
+      function make_audiochart_options() {
+        return {
+          // Fill in 'type'
+          // Fill in 'data' and 'chart'
+          //  or 'html_document' and 'html_table_id'
+          'duration': 5000,
+          'frequency_low': 200,
+          'frequency_high': 600
+        }
+      }
+
+      function init() {
+        // Google Charts
+        draw_line();
+        draw_gradient();
+        draw_sine();
+        draw_sales_line();
+        draw_sales_annotated();
+
+        // JSON
+        document.getElementById('btn_json1').onclick = function() {
+          var options = make_audiochart_options();
+          options['type'] = 'json';
+          options['data'] = document.getElementById('json1').textContent;
+          new AudioChart(options);
+        };
+
+        // HTML Table
+        document.getElementById('btn_table1').onclick = function() {
+          var options = make_audiochart_options();
+          options['type'] = 'html_table';
+          options['html_document'] = document;
+          options['html_table_id'] = 'table1';
+          options['html_table_highlight_class'] = 'audiochart-current';
+          new AudioChart(options);
+        };
+      }
+
+      function _draw_line_chart_core(data, id, btn) {
+        _draw_core(google.visualization.LineChart, data, id, btn);
+      }
+
+      function _draw_bar_chart_core(data, id, btn) {
+        _draw_core(google.visualization.BarChart, data, id, btn);
+      }
+
+      function _draw_core(klass, data, chart_id, btn) {
+        // Instantiate and draw our chart, passing in some options
+        var google_options = {
+          'title': 'Example',
+          'curveType': 'function'
+        };
+        var chart = new klass(document.getElementById(chart_id));
+
+        resizeChart();  // initial draw
+
+        // Resizing; thanks, http://stackoverflow.com/a/23594901
+        function resizeChart() {
+          chart.draw(data, google_options);
+        }
+        if (document.addEventListener) {
+          window.addEventListener('resize', resizeChart);
+        }
+        else if (document.attachEvent) {
+          window.attachEvent('onresize', resizeChart);
+        }
+        else {
+          window.resize = resizeChart;
         }
 
-        function init() {
-            // Google Charts
-            draw_line();
-            draw_gradient();
-            draw_sine();
-            draw_sales_line();
-            draw_sales_annotated();
+        // Wire up to AudioChart
+        document.getElementById(btn).onclick = function() {
+          var audiochart_options = make_audiochart_options();
+          audiochart_options['type'] = 'google';
+          audiochart_options['data'] = data;
+          audiochart_options['chart'] = chart;
+          new AudioChart(audiochart_options);
+        };
+      }
 
-            // JSON
-            document.getElementById('btn_json1').onclick = function() {
-                var options = make_audiochart_options();
-                options['type'] = 'json';
-                options['data'] = document.getElementById('json1').textContent;
-                new AudioChart(options);
-            };
+      function draw_line() {
+        // Create the data table.
+        var data = new google.visualization.DataTable();
 
-            // HTML Table
-            document.getElementById('btn_table1').onclick = function() {
-                var options = make_audiochart_options();
-                options['type'] = 'html_table';
-                options['html_document'] = document;
-                options['html_table_id'] = 'table1';
-                new AudioChart(options);
-            };
+        var MIN = 0
+        var MAX = 1
+        var DELTA = 0.1;
+        var results = [];
+        var index = 0;
+        for( var i = MIN; i <= MAX; i = i + DELTA ) {
+          results[index] = [i, 42];
+          index++;
         }
 
-        function _draw_line_chart_core(data, id, btn) {
-            _draw_core(google.visualization.LineChart, data, id, btn);
+        data.addColumn('number', 'blah');
+        data.addColumn('number', 'blah');
+        data.addRows(results);
+
+        _draw_line_chart_core(data, 'chart_line', 'btn_line');
+      }
+
+      function draw_gradient() {
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+
+        var MIN = 0
+        var MAX = 1
+        var DELTA = 0.01;
+        var results = [];
+        var index = 0;
+        for( var i = MIN; i <= MAX; i += DELTA ) {
+          results[index] = [i, i];
+          index++;
         }
 
-        function _draw_bar_chart_core(data, id, btn) {
-            _draw_core(google.visualization.BarChart, data, id, btn);
+        data.addColumn('number', 'blah');
+        data.addColumn('number', 'blah');
+        data.addRows(results);
+
+        _draw_line_chart_core(data, 'chart_gradient', 'btn_gradient');
+      }
+
+      function draw_sine() {
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+
+        var MIN = -Math.PI;
+        var MAX = Math.PI;
+        var DELTA = 0.01;
+        var results = [];
+        var index = 0;
+        for( var i = MIN; i <= MAX; i = i + DELTA ) {
+          results[index] = [i, Math.sin(i)];
+          index++;
         }
 
-        function _draw_core(klass, data, chart_id, btn) {
-            // Instantiate and draw our chart, passing in some options
-            var google_options = {
-                'title': 'Example',
-                'width': 400,
-                'height': 300,
-                'curveType': 'function'
-            };
-            var chart = new klass(document.getElementById(chart_id));
-            chart.draw(data, google_options);
+        data.addColumn('number', 'Radians');
+        data.addColumn('number', 'Sine');
+        data.addRows(results);
 
-            // Wire up to AudioChart
-            document.getElementById(btn).onclick = function() {
-                var audiochart_options = make_audiochart_options();
-                audiochart_options['type'] = 'google';
-                audiochart_options['data'] = data;
-                audiochart_options['chart'] = chart;
-                new AudioChart(audiochart_options);
-            };
-        }
+        _draw_line_chart_core(data, 'chart_sine', 'btn_sine');
+      }
 
-        function draw_line() {
-            // Create the data table.
-            var data = new google.visualization.DataTable();
-
-            var MIN = 0
-            var MAX = 1
-            var DELTA = 0.1;
-            var results = [];
-            var index = 0;
-            for( var i = MIN; i <= MAX; i = i + DELTA ) {
-                results[index] = [i, 42];
-                index++;
-            }
-
-            data.addColumn('number', 'blah');
-            data.addColumn('number', 'blah');
-            data.addRows(results);
-
-            _draw_line_chart_core(data, 'chart_line', 'btn_line');
-        }
-
-        function draw_gradient() {
-            // Create the data table.
-            var data = new google.visualization.DataTable();
-
-            var MIN = 0
-            var MAX = 1
-            var DELTA = 0.01;
-            var results = [];
-            var index = 0;
-            for( var i = MIN; i <= MAX; i += DELTA ) {
-                results[index] = [i, i];
-                index++;
-            }
-
-            data.addColumn('number', 'blah');
-            data.addColumn('number', 'blah');
-            data.addRows(results);
-
-            _draw_line_chart_core(data, 'chart_gradient', 'btn_gradient');
-        }
-
-        function draw_sine() {
-            // Create the data table.
-            var data = new google.visualization.DataTable();
-
-            var MIN = -Math.PI;
-            var MAX = Math.PI;
-            var DELTA = 0.01;
-            var results = [];
-            var index = 0;
-            for( var i = MIN; i <= MAX; i = i + DELTA ) {
-                results[index] = [i, Math.sin(i)];
-                index++;
-            }
-
-            data.addColumn('number', 'Radians');
-            data.addColumn('number', 'Sine');
-            data.addRows(results);
-
-            _draw_line_chart_core(data, 'chart_sine', 'btn_sine');
-        }
-
-        function draw_sales_line() {
-            // Create the data table.
-            var data = new google.visualization.DataTable();
-            data.addColumn('string', 'Month'); // Implicit domain label col.
-            data.addColumn('number', 'Sales'); // Implicit series 1 data col.
-            data.addRows([
-                ['April',1000],
-                ['May',  1170],
-                ['June',  660],
-                ['July', 1030]
+      function draw_sales_line() {
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Month'); // Implicit domain label col.
+        data.addColumn('number', 'Sales'); // Implicit series 1 data col.
+        data.addRows([
+            ['April',1000],
+            ['May',  1170],
+            ['June',  660],
+            ['July', 1030]
             ]);
 
-            _draw_line_chart_core(data, 'chart_sales_line', 'btn_sales_line');
-            _draw_bar_chart_core(data, 'chart_sales_bar', 'btn_sales_bar');
-        }
+        _draw_line_chart_core(data, 'chart_sales_line', 'btn_sales_line');
+        _draw_bar_chart_core(data, 'chart_sales_bar', 'btn_sales_bar');
+      }
 
-        function draw_sales_annotated() {
-            // Create the data table.
-            var data = new google.visualization.DataTable();
-            data.addColumn('string', 'Month'); // Implicit domain label col.
-            data.addColumn('number', 'Sales'); // Implicit series 1 data col.
-            data.addColumn({type:'number', role:'interval'});
-                // interval role col.
-            data.addColumn({type:'number', role:'interval'});
-                // interval role col.
-            data.addColumn({type:'string', role:'annotation'});
-                // annotation role col.
-            data.addColumn({type:'string', role:'annotationText'});
-                // annotationText col.
-            data.addColumn({type:'boolean',role:'certainty'});
-                // certainty col.
-            data.addRows([
-                ['April',1000,  900, 1100,  'A','Stolen data', true],
-                ['May',  1170, 1000, 1200,  'B','Coffee spill', true],
-                ['June',  660,  550,  800,  'C','Wumpus attack', true],
-                ['July', 1030, null, null, null, null, false]
+      function draw_sales_annotated() {
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Month'); // Implicit domain label col.
+        data.addColumn('number', 'Sales'); // Implicit series 1 data col.
+        data.addColumn({type:'number', role:'interval'});
+        // interval role col.
+        data.addColumn({type:'number', role:'interval'});
+        // interval role col.
+        data.addColumn({type:'string', role:'annotation'});
+        // annotation role col.
+        data.addColumn({type:'string', role:'annotationText'});
+        // annotationText col.
+        data.addColumn({type:'boolean',role:'certainty'});
+        // certainty col.
+        data.addRows([
+            ['April',1000,  900, 1100,  'A','Stolen data', true],
+            ['May',  1170, 1000, 1200,  'B','Coffee spill', true],
+            ['June',  660,  550,  800,  'C','Wumpus attack', true],
+            ['July', 1030, null, null, null, null, false]
             ]);
 
-            _draw_line_chart_core(data, 'chart_sales_annotated', 'btn_sales_annotated');
-        }
+        _draw_line_chart_core(data, 'chart_sales_annotated', 'btn_sales_annotated');
+      }
     </script>
   </head>
   <body>
@@ -235,37 +264,37 @@
     <h1>Google Charts</h1>
     <h2 id='horizontal-line'>Horizontal Line</h2>
     <p>This one has many data points.</p>
-    <div id="chart_line"></div>
+    <div class="google-chart" id="chart_line"></div>
     <button id="btn_line">Play</button>
     <hr>
 
     <h2 id='gradient'>Gradient</h2>
     <p>This one has many data points.</p>
-    <div id="chart_gradient"></div>
+    <div class="google-chart" id="chart_gradient"></div>
     <button id="btn_gradient">Play</button>
     <hr>
 
     <h2 id='sine'>Sine</h2>
     <p>This one has many data points.</p>
-    <div id="chart_sine"></div>
+    <div class="google-chart" id="chart_sine"></div>
     <button id="btn_sine">Play</button>
     <hr>
 
     <h2 id='sales'>Sales&mdash;Line Chart</h2>
     <p>This one has few data points.</p>
-    <div id="chart_sales_line"></div>
+    <div class="google-chart" id="chart_sales_line"></div>
     <button id="btn_sales_line">Play</button>
     <hr>
 
     <h2 id='sales-bar'>Sales&mdash;Bar Chart</h2>
     <p>This one has few data points.</p>
-    <div id="chart_sales_bar"></div>
+    <div class="google-chart" id="chart_sales_bar"></div>
     <button id="btn_sales_bar">Play</button>
     <hr>
 
     <h2 id='sales-annotated'>Sales&mdash;Line Chart with Annotations</h2>
     <p>This one has few data points.</p>
-    <div id="chart_sales_annotated"></div>
+    <div class="google-chart" id="chart_sales_annotated"></div>
     <button id="btn_sales_annotated">Play</button>
     <hr>
 

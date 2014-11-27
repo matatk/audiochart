@@ -23,27 +23,25 @@ The [examples gallery](http://matatk.agrip.org.uk/audiochart/example-charts.html
 "Hello, World" Tutorial (using Google Charts)
 ----------------------------------------------
 
-You can check out the finished ["hello, world" HTML file](http://matatk.agrip.org.uk/audiochart/hello-world.html).
-
-You can also use AudioChart with JSON and HTML tables (there are examples to demonstrate this), and other chart types may be supported in future.
+You can check out the finished ["hello, world" HTML file](http://matatk.agrip.org.uk/audiochart/hello-world.html).  Note that you can also use AudioChart with JSON and HTML tables (there are [examples](http://matatk.agrip.org.uk/audiochart/example-charts.html) to demonstrate this).
 
 ### Google Charts Bits
 
 More details on this can be found in the [Google Charts documentation](https://developers.google.com/chart/).
 
- 1. Load Google Charts API.
+ 1. Load the Google Charts API.
 
 	```html
 	<script src="https://www.google.com/jsapi"></script>
 	```
 
- 2. Have an element in your document that will contain the chart.
+ 2. Have an element in your document to contain the chart.
 
 	```html
 	<div id="chart"></div>
 	```
 
- 3. Instantiate Google Charts API and hook it up to a function to draw the chart when the page has loaded.
+ 3. Instantiate the Google Charts API and hook it up to a function to draw the chart when the page has loaded (you could put this code in a `<script>` element in your document's `<head>`, for example).
 
 	```javascript
 	google.load('visualization', '1.0', {'packages':['corechart']});
@@ -54,7 +52,7 @@ More details on this can be found in the [Google Charts documentation](https://d
 	}
 	```
 
-	The rest of the JavaScript code in this section goes inside `draw_chart()`.
+	The rest of the JavaScript code goes inside `draw_chart()`.
 
  4. Create a Google Charts API `DataTable` and populate it with some data.
 
@@ -97,13 +95,13 @@ More details on this can be found in the [Google Charts documentation](https://d
 	<script src="https://raw.githubusercontent.com/matatk/audiochart/gh-pages/build/audiochart.min.js"></script>
 	```
 
- 2. Have an element in your document to trigger audio playback.
+ 2. Create an element in your document to trigger audio playback.
 
 	```html
 	<button id="play">Play</button>
 	```
 
- 3. Wire up the button, data table and chart to AudioChart.  The `chart` is passed in so that AudioChart can visually highlight the chart data points during playback (this is optional).
+ 3. Wire up the button, data table and chart to AudioChart; include the following code in `draw_chart()`.  The `chart` is passed in so that AudioChart can visually highlight the chart data points during playback (this is optional).
 
 	```javascript
 	document.getElementById('play').onclick = function() {
@@ -152,7 +150,7 @@ The build process uses [Grunt](http://gruntjs.com) (and therefore [node](https:/
  * [CoffeeScript](https://github.com/jashkenas/coffee-script) for translating to JavaScript
  * [jasmine-node](https://github.com/mhevery/jasmine-node) for running the tests.
  * [jsdom](https://github.com/tmpvar/jsdom) for simulating a DOM environment.
- 
+
 **Note:** jsdom is apparently tricky to install on Windows, so you may want to skip it and just use the in-browser testing.  You can disable the use of jsdom by removing it from `package.json` and removing the `jasmine_node` task from the Gruntfile.
 
 Development set-up steps for Mac users with [Homebrew](http://brew.sh):

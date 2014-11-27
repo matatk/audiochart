@@ -1,77 +1,111 @@
 <!DOCTYPE html>
 <html lang="en-GB">
-	<head>
-		<style>
-			body {
-				font-family: Verdana, sans-serif;
-				font-size: 1.2em;
-				line-height: 1.5em;
-			}
+  <head>
+    <meta charset="utf-8">
+    <title>Hello, AudioChart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      @viewport, @-ms-viewport {
+        zoom: 1.0;
+        width: extend-to-zoom;
+      }
 
-			button {
-				font-size: inherit;
-			}
-		</style>
-		<script src="https://www.google.com/jsapi"></script>
-		<script src="build/audiochart.min.js"></script>
-		<script>
-			google.load('visualization', '1.0', {'packages':['corechart']});
-			google.setOnLoadCallback(draw_chart);
+      body {
+        font-family: Verdana, sans-serif;
+        font-size: 1.2em;
+        line-height: 1.5em;
+      }
 
-			function draw_chart() {
-				//
-				// Google Charts Stuff
-				//
+      button {
+        font-size: inherit;
+      }
 
-				var data = new google.visualization.DataTable();
+      #chart {
+        width: 75vw;
+        height: 40vw;
+      }
+    </style>
+    <script src="https://www.google.com/jsapi"></script>
+    <script src="build/audiochart.min.js"></script>
+    <script>
+      google.load('visualization', '1.0', {'packages':['corechart']});
+      google.setOnLoadCallback(draw_chart);
 
-				// Populate the table
-				data.addColumn('string', 'Top Secret Evil Project');
-				data.addColumn('number', 'Watermelons');
-				data.addRows([
-					['Alpha',   293],
-					['Beta',    329],
-					['Gamma',   261],
-					['Delta',   130],
-					['Epsilon', 196],
-					['Zeta',    196],
-				]);
+      function draw_chart() {
+        //
+        // Google Charts Stuff
+        //
 
-				// Prepare chart options, then create and draw the chart
-				var chart_options = {
-					'title': 'Evil Project Efficacy',
-					'width': 800,
-					'height': 450,
-					'curveType': 'function'
-				};
+        var data = new google.visualization.DataTable();
 
-				var chart = new google.visualization.LineChart(
-					document.getElementById('chart'));
-				chart.draw(data, chart_options);
+        // Populate the table
+        data.addColumn('string', 'Top Secret Evil Project');
+        data.addColumn('number', 'Watermelons');
+        data.addRows([
+          ['Alpha',   293],
+          ['Beta',    329],
+          ['Gamma',   261],
+          ['Delta',   130],
+          ['Epsilon', 196],
+          ['Zeta',    196],
+        ]);
 
-				//
-				// AudioChart Stuff
-				//
+        // Prepare chart options, then create and draw the chart
+        var chart_options = {
+          'title': 'Evil Project Efficacy',
+          // By default, the chart will fill its container.
+          // You can specify dimensions in pixels here, or use (as this
+          // example does) CSS to control the sizing.
+          //'width': 800,
+          //'height': 450,
+          'curveType': 'function'
+        };
 
-				document.getElementById('play').onclick = function() {
-					new AudioChart({
-						'type': 'google',      // (see the docs)
-						'data': data,          // the GoogleDataTable
-						'chart': chart,        // the Google Chart object
-						'duration': 5000,      // milliseconds
-						'frequency_low': 200,  // Hz
-						'frequency_high': 600  // Hz
-					});
-				}
-			}
-		</script>
-	</head>
-	<body>
-		<h1>Hello, AudioChart</h1>
-		<p>
-		  This example/tutorial shows how AudioChart can be used with the Google Charts API; the <a href="https://github.com/matatk/audiochart/blob/gh-pages/README.md">README describes how</a>.  AudioChart can also be used with JSON and HTML table data sources.
-		</p>
-		<div id="chart"></div>
-		<button id="play">Play</button>
-	</body>
+        var chart = new google.visualization.LineChart(
+          document.getElementById('chart'));
+
+        // In order to support responsive design, we need a function
+        // to trigger the chart to resize (actually just redraw) itself
+        // should the viewport change
+        resizeChart();  // initial draw
+
+        // Resizing; thanks, http://stackoverflow.com/a/23594901
+        function resizeChart() {
+          chart.draw(data, chart_options);
+        }
+        if (document.addEventListener) {
+          window.addEventListener('resize', resizeChart);
+        }
+        else if (document.attachEvent) {
+          window.attachEvent('onresize', resizeChart);
+        }
+        else {
+          window.resize = resizeChart;
+        }
+
+        //
+        // AudioChart Stuff
+        //
+
+        document.getElementById('play').onclick = function() {
+          new AudioChart({
+            'type': 'google',      // (see the REFERENCE file)
+            'data': data,          // the GoogleDataTable
+            'chart': chart,        // the Google Chart object
+            'duration': 5000,      // milliseconds
+            'frequency_low': 200,  // Hz
+            'frequency_high': 600  // Hz
+          });
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Hello, AudioChart</h1>
+    <p>
+      This example/tutorial shows how AudioChart can be used with the Google Charts API; the <a href="https://github.com/matatk/audiochart/blob/gh-pages/README.md">README describes how</a>.  AudioChart can also be used with JSON and HTML table data sources.
+    </p>
+    <div id="chart"></div>
+    <button id="play">Play</button>
+  </body>
 </html>
