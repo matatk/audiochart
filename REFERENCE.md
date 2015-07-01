@@ -4,7 +4,7 @@ AudioChart Reference
 Example Options Objects
 ------------------------
 
-The 'options' object is passed to the `AudioChart()` constructor.  Here is an example options object being passed to AudioChart in the [Google Charts "Hello, World" example](http://matatk.agrip.org.uk/audiochart/hello-world.html).
+The 'options' object is passed to the `AudioChart()` constructor.  Here is an example options object being passed to AudioChart in the [Google Charts "Hello, World" example](http://matatk.agrip.org.uk/audiochart/hello-world-tutorial.html).
 
 ```html
 document.getElementById('play').onclick = function() {
@@ -19,7 +19,7 @@ document.getElementById('play').onclick = function() {
 }
 ```
 
-Here's an exmple from the [HTML table demo](http://matatk.agrip.org.uk/audiochart/example-charts.html#table).
+Here's an exmple from the [HTML table demo](http://matatk.agrip.org.uk/audiochart/examples-gallery.html#table).
 
 ```javascript
 {
@@ -45,7 +45,7 @@ Chart Types and Type-specific Options
 
 ### Google Charts Options
 
-The steps to create the [Google Charts "Hello, World" example](http://matatk.agrip.org.uk/audiochart/hello-world.html) are detailed in the [README](https://github.com/matatk/audiochart/blob/gh-pages/README.md).
+The steps to create the [Google Charts "Hello, World" example](http://matatk.agrip.org.uk/audiochart/hello-world-tutorial.html) are detailed in the [README](https://github.com/matatk/audiochart/blob/gh-pages/README.md).
 
  * **`type` (string):** "google"
  * **`data` (object):** the [`GoogleDataTable`](https://developers.google.com/chart/interactive/docs/reference#DataTable) behind the chart.
@@ -53,14 +53,14 @@ The steps to create the [Google Charts "Hello, World" example](http://matatk.agr
 
 ### JSON Options
 
-There is [a JSON example](http://matatk.agrip.org.uk/audiochart/example-charts.html#json) in the examples gallery.
+There is [a JSON example](http://matatk.agrip.org.uk/audiochart/examples-gallery.html#json) in the examples gallery.
 
  * **`type` (string):** "json"
  * **`data` (JSON string or object):** The JSON fragment, as a string or an object.
 
 ### HTML Table Options
 
-There is [an HTML example](http://matatk.agrip.org.uk/audiochart/example-charts.html#table) in the examples gallery.
+There is [an HTML example](http://matatk.agrip.org.uk/audiochart/examples-gallery.html#table) in the examples gallery.
 
  * **`type` (string):** "html_table"
  * **`html_document` (object):** the HTML `document` object

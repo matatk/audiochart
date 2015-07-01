@@ -1,12 +1,13 @@
 ---
 layout: base
-title: Examples Gallery
+title: AudioChart Examples Gallery
 ---
 <div id="hackContainer">
 	<p>
 	All examples play for five seconds and cannot be stopped.
 	</p>
-	<h2>Google Charts</h2>
+	<h2>Contents</h2>
+	<h3>Google Charts</h3>
 	<ul>
 		<li><a href='#horizontal-line'>Horizontal Line</a></li>
 		<li><a href='#gradient'>Gradient</a></li>
@@ -17,55 +18,55 @@ title: Examples Gallery
 			<a href='#sales-annotated'>Sales&mdash;Line Chart with Annotations</a>
 		</li>
 	</ul>
-	<h2>JSON</h2>
+	<h3>JSON</h3>
 	<ul>
 		<li><a href='#json'>Example</a></li>
 	</ul>
-	<h2>HTML Tables</h2>
+	<h3>HTML Tables</h3>
 	<ul>
 		<li><a href='#table'>Example</a></li>
 	</ul>
 	<hr>
 
-	<h1>Google Charts</h1>
-	<h2 id='horizontal-line'>Horizontal Line</h2>
+	<h2>Google Charts</h2>
+	<h3 id='horizontal-line'>Horizontal Line</h3>
 	<p>This one has many data points.</p>
 	<div class="google-chart" id="chart_line"></div>
 	<button id="btn_line">Play</button>
 	<hr>
 
-	<h2 id='gradient'>Gradient</h2>
+	<h3 id='gradient'>Gradient</h3>
 	<p>This one has many data points.</p>
 	<div class="google-chart" id="chart_gradient"></div>
 	<button id="btn_gradient">Play</button>
 	<hr>
 
-	<h2 id='sine'>Sine</h2>
+	<h3 id='sine'>Sine</h3>
 	<p>This one has many data points.</p>
 	<div class="google-chart" id="chart_sine"></div>
 	<button id="btn_sine">Play</button>
 	<hr>
 
-	<h2 id='sales'>Sales&mdash;Line Chart</h2>
+	<h3 id='sales'>Sales&mdash;Line Chart</h3>
 	<p>This one has few data points.</p>
 	<div class="google-chart" id="chart_sales_line"></div>
 	<button id="btn_sales_line">Play</button>
 	<hr>
 
-	<h2 id='sales-bar'>Sales&mdash;Bar Chart</h2>
+	<h3 id='sales-bar'>Sales&mdash;Bar Chart</h3>
 	<p>This one has few data points.</p>
 	<div class="google-chart" id="chart_sales_bar"></div>
 	<button id="btn_sales_bar">Play</button>
 	<hr>
 
-	<h2 id='sales-annotated'>Sales&mdash;Line Chart with Annotations</h2>
+	<h3 id='sales-annotated'>Sales&mdash;Line Chart with Annotations</h3>
 	<p>This one has few data points.</p>
 	<div class="google-chart" id="chart_sales_annotated"></div>
 	<button id="btn_sales_annotated">Play</button>
 	<hr>
 
-	<h1>JSON</h1>
-	<h2 id='json'>Example</h2>
+	<h2>JSON</h2>
+	<h3 id='json'>Example</h3>
 	<pre id='json1'>{
   "data": [
 	{
@@ -77,8 +78,8 @@ title: Examples Gallery
 	<button id="btn_json1">Play</button>
 	<hr>
 
-	<h1>HTML Tables</h1>
-	<h2 id='table'>Example</h2>
+	<h2>HTML Tables</h2>
+	<h3 id='table'>Example</h3>
 	<table id='table1'>
 		<tr><th>Test Series</th></tr>
 		<tr><td>0</td></tr>
@@ -180,9 +181,9 @@ function draw_line() {
 	// Create the data table.
 	var data = new google.visualization.DataTable();
 
-	var MIN = 0
-		var MAX = 1
-		var DELTA = 0.1;
+	var MIN = 0;
+	var MAX = 1;
+	var DELTA = 0.1;
 	var results = [];
 	var index = 0;
 	for( var i = MIN; i <= MAX; i = i + DELTA ) {
@@ -201,9 +202,9 @@ function draw_gradient() {
 	// Create the data table.
 	var data = new google.visualization.DataTable();
 
-	var MIN = 0
-		var MAX = 1
-		var DELTA = 0.01;
+	var MIN = 0;
+	var MAX = 1;
+	var DELTA = 0.01;
 	var results = [];
 	var index = 0;
 	for( var i = MIN; i <= MAX; i += DELTA ) {
