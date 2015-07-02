@@ -1,0 +1,5 @@
+exclude: [node_modules]
+# GitHub defaults
+safe: true
+lsi: false
+highlighter: pygments
