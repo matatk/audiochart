@@ -2,7 +2,7 @@
   var data_wrappers_test_core;
 
   data_wrappers_test_core = function(thing, wrapper1, wrapper2) {
-    return describe("" + thing + " (via common interface)", function() {
+    return describe(thing + " (via common interface)", function() {
       describe('when storing positive-valued data', function() {
         var data;
         data = null;

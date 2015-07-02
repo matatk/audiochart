@@ -51,7 +51,7 @@ module.exports = (grunt) ->
 
     # Loading Tasks
     grunt.loadNpmTasks "grunt-coffeelint"
-    grunt.loadNpmTasks "grunt-jasmine-node"
+    grunt.loadNpmTasks "grunt-jasmine-node-new"
     grunt.loadNpmTasks "grunt-contrib-coffee"
     grunt.loadNpmTasks "grunt-contrib-uglify"
     grunt.loadNpmTasks "grunt-contrib-copy"

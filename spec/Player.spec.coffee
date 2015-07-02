@@ -4,11 +4,11 @@ else
   ac = window
 
 
-# FIXME assumes 5000 milliseconds
-expected_frequency_calls = (series_length) ->
-  # What are the paramaters of the expectec calls to set the
+expected_frequency_calls = (playback_time, series_length) ->
+  # What are the paramaters of the expected calls to set the
   # frequency of the notes generated during playback?
-  interval = 5000 / series_length
+  # Note: we're pretending that the frequency mapper will always return 21Hz.
+  interval = playback_time / series_length
   out = []
   # The first call won't make use of the optional offset parameter
   out.push [ 21 ]
@@ -46,10 +46,10 @@ class FakeSounder
   stop: ->
 
 
-# FIXME test fake visual callback was called with correct params
+# TODO: test fake visual callback was called with correct params
 # at correct times!
-mixin_data_wrapper_core = (message, test_data_class, use_visual_callback,
-  test_interval, test_call_count) ->
+mixin_data_wrapper_core = (message, test_data_class, test_duration,
+  test_call_count, test_interval, use_visual_callback) ->
   # Check that the Player makes the right calls to its mapper, sounder
   # and visual callback (if applicable)
   describe message, ->
@@ -67,90 +67,105 @@ mixin_data_wrapper_core = (message, test_data_class, use_visual_callback,
       if use_visual_callback
         fake_visual_callback = jasmine.createSpy 'fake_visual_callback'
         player = new ac.Player \
-          fake_data, fake_mapper, fake_sounder, fake_visual_callback
+          test_duration, fake_data, fake_mapper, fake_sounder,
+            fake_visual_callback
       else
         player = new ac.Player \
-          fake_data, fake_mapper, fake_sounder
+          test_duration, fake_data, fake_mapper, fake_sounder
 
     it 'works out for how long to sound each datum', ->
-      # FIXME assumes play time is five seconds
       expect(player.interval).toBe test_interval
 
     it 'starts the sounder', ->
       jasmine.Clock.useMock()
       spyOn(fake_sounder, 'start')
       player.play()
-      jasmine.Clock.tick 5000
+      jasmine.Clock.tick test_duration
       expect(fake_sounder.start.callCount).toBe 1
 
     it 'stops the sounder', ->
       jasmine.Clock.useMock()
       spyOn(fake_sounder, 'stop')
       player.play()
-      jasmine.Clock.tick 5000
+      jasmine.Clock.tick test_duration
       expect(fake_sounder.stop.callCount).toBe 1
 
     it 'makes the correct number of map calls', ->
-      # FIXME assumes play time is five seconds
       jasmine.Clock.useMock()
       spyOn(fake_mapper, 'map')
       player.play()
-      jasmine.Clock.tick 5000
+      jasmine.Clock.tick test_duration
       expect(fake_mapper.map.callCount).toBe test_call_count
 
     it 'makes the right number of calls to the sounder', ->
-      # FIXME assumes play time is five seconds
       jasmine.Clock.useMock()
       spyOn(fake_sounder, 'frequency')
       player.play()
-      jasmine.Clock.tick 5000
+      jasmine.Clock.tick test_duration
       expect(fake_sounder.frequency.callCount).toBe test_call_count
 
     it 'calls the sounder with the correct arguments each time', ->
-      # FIXME assumes play time is five seconds
       jasmine.Clock.useMock()
       spyOn(fake_sounder, 'frequency')
       player.play()
-      jasmine.Clock.tick 5000
+      jasmine.Clock.tick test_duration
       expect(fake_sounder.frequency.argsForCall)
-        .toEqual(expected_frequency_calls test_call_count)
+        .toEqual(expected_frequency_calls test_duration, test_call_count)
 
     if use_visual_callback
       it 'makes the correct number of visual callback calls', ->
-        # FIXME assumes play time is five seconds
         jasmine.Clock.useMock()
         player.play()
-        jasmine.Clock.tick 5000
+        jasmine.Clock.tick test_duration
         expect(fake_visual_callback.callCount).toBe test_call_count
 
 
-mixin_data_wrapper = (message, test_data_class, test_interval,
-  test_call_count) ->
+mixin_data_wrapper = (message, test_data_class, test_duration, test_call_count,
+  test_interval) ->
   # Test the Player with and without the simulated visual callback
   describe message, ->
     mixin_data_wrapper_core \
       'when not having a callback',
       test_data_class,
-      false,
+      test_duration,
+      test_call_count,
       test_interval,
-      test_call_count
+      false
+
     mixin_data_wrapper_core \
       'when having a callback',
       test_data_class,
-      true,
+      test_duration,
+      test_call_count,
       test_interval,
-      test_call_count
+      true
 
 
 describe 'Player', ->
   mixin_data_wrapper \
-    'instantiated with short fake data source',
+    'instantiated with short fake data source for 5000ms',
     ShortFakeDataWrapper,
-    1250,
-    4
+    5000,
+    4,
+    1250
 
   mixin_data_wrapper \
-    'instantiated with long fake data source',
+    'instantiated with short fake data source for 3000ms',
+    ShortFakeDataWrapper,
+    3000,
+    4,
+    750
+
+  mixin_data_wrapper \
+    'instantiated with long fake data source for 5000ms',
     LongFakeDataWrapper,
-    50,
-    100
+    5000,
+    100,
+    50
+
+  mixin_data_wrapper \
+    'instantiated with long fake data source for 2500ms',
+    LongFakeDataWrapper,
+    2500,
+    100,
+    25

@@ -1,7 +1,7 @@
 (function() {
   var AudioChart, DataWrapper, FrequencyPitchMapper, GoogleDataWrapper, HTMLTableDataWrapper, JSONDataWrapper, NotePitchMapper, PitchMapper, Player, WebAudioSounder, _audio_context_getter, _google_visual_callback_maker,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
 
   DataWrapper = (function() {
     function DataWrapper(data) {
@@ -25,8 +25,8 @@
 
   })();
 
-  GoogleDataWrapper = (function(_super) {
-    __extends(GoogleDataWrapper, _super);
+  GoogleDataWrapper = (function(superClass) {
+    extend(GoogleDataWrapper, superClass);
 
     function GoogleDataWrapper(data) {
       this.data = data;
@@ -37,12 +37,12 @@
     };
 
     GoogleDataWrapper.prototype.series_names = function() {
-      var i, _i, _ref, _results;
-      _results = [];
-      for (i = _i = 1, _ref = this.data.getNumberOfColumns() - 1; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-        _results.push(this.data.getColumnLabel(i));
+      var i, j, ref, results;
+      results = [];
+      for (i = j = 1, ref = this.data.getNumberOfColumns() - 1; 1 <= ref ? j <= ref : j >= ref; i = 1 <= ref ? ++j : --j) {
+        results.push(this.data.getColumnLabel(i));
       }
-      return _results;
+      return results;
     };
 
     GoogleDataWrapper.prototype.series_min = function(series) {
@@ -65,8 +65,8 @@
 
   })(DataWrapper);
 
-  JSONDataWrapper = (function(_super) {
-    __extends(JSONDataWrapper, _super);
+  JSONDataWrapper = (function(superClass) {
+    extend(JSONDataWrapper, superClass);
 
     function JSONDataWrapper(json) {
       if (typeof json === 'string') {
@@ -83,14 +83,14 @@
     };
 
     JSONDataWrapper.prototype.series_names = function() {
-      var chunk, _i, _len, _ref, _results;
-      _ref = this.object.data;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        chunk = _ref[_i];
-        _results.push(chunk.series);
+      var chunk, j, len, ref, results;
+      ref = this.object.data;
+      results = [];
+      for (j = 0, len = ref.length; j < len; j++) {
+        chunk = ref[j];
+        results.push(chunk.series);
       }
-      return _results;
+      return results;
     };
 
     JSONDataWrapper.prototype.series_min = function(series) {
@@ -113,8 +113,8 @@
 
   })(DataWrapper);
 
-  HTMLTableDataWrapper = (function(_super) {
-    __extends(HTMLTableDataWrapper, _super);
+  HTMLTableDataWrapper = (function(superClass) {
+    extend(HTMLTableDataWrapper, superClass);
 
     function HTMLTableDataWrapper(doc, id) {
       this.table = doc.getElementById(id);
@@ -128,25 +128,25 @@
     };
 
     HTMLTableDataWrapper.prototype.series_names = function() {
-      var element, _i, _len, _ref, _results;
-      _ref = this.table.getElementsByTagName('th');
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        element = _ref[_i];
-        _results.push(element.textContent);
+      var element, j, len, ref, results;
+      ref = this.table.getElementsByTagName('th');
+      results = [];
+      for (j = 0, len = ref.length; j < len; j++) {
+        element = ref[j];
+        results.push(element.textContent);
       }
-      return _results;
+      return results;
     };
 
     HTMLTableDataWrapper.prototype._series_floats = function(series) {
-      var element, _i, _len, _ref, _results;
-      _ref = this.table.getElementsByTagName('td');
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        element = _ref[_i];
-        _results.push(parseFloat(element.textContent));
+      var element, j, len, ref, results;
+      ref = this.table.getElementsByTagName('td');
+      results = [];
+      for (j = 0, len = ref.length; j < len; j++) {
+        element = ref[j];
+        results.push(parseFloat(element.textContent));
       }
-      return _results;
+      return results;
     };
 
     HTMLTableDataWrapper.prototype.series_min = function(series) {
@@ -170,9 +170,9 @@
   })(DataWrapper);
 
   PitchMapper = (function() {
-    function PitchMapper(minimum_datum, maximum_datum) {
-      this.minimum_datum = minimum_datum;
-      this.maximum_datum = maximum_datum;
+    function PitchMapper(minimum_datum1, maximum_datum1) {
+      this.minimum_datum = minimum_datum1;
+      this.maximum_datum = maximum_datum1;
       if (this.minimum_datum > this.maximum_datum) {
         throw new Error('minimum datum should be <= maximum datum');
       }
@@ -184,8 +184,8 @@
 
   })();
 
-  FrequencyPitchMapper = (function(_super) {
-    __extends(FrequencyPitchMapper, _super);
+  FrequencyPitchMapper = (function(superClass) {
+    extend(FrequencyPitchMapper, superClass);
 
     function FrequencyPitchMapper(minimum_datum, maximum_datum, minimum_frequency, maximum_frequency) {
       this.minimum_frequency = minimum_frequency;
@@ -211,8 +211,8 @@
 
   })(PitchMapper);
 
-  NotePitchMapper = (function(_super) {
-    __extends(NotePitchMapper, _super);
+  NotePitchMapper = (function(superClass) {
+    extend(NotePitchMapper, superClass);
 
     function NotePitchMapper() {
       return NotePitchMapper.__super__.constructor.apply(this, arguments);
@@ -223,8 +223,8 @@
   })(PitchMapper);
 
   WebAudioSounder = (function() {
-    function WebAudioSounder(context) {
-      this.context = context;
+    function WebAudioSounder(context1) {
+      this.context = context1;
       this.oscillator = this.context.createOscillator();
     }
 
@@ -252,16 +252,16 @@
   })();
 
   Player = (function() {
-    function Player(data, pitch_mapper, sounder, visual_callback) {
+    function Player(duration, data, pitch_mapper, sounder1, visual_callback) {
       this.data = data;
       this.pitch_mapper = pitch_mapper;
-      this.sounder = sounder;
+      this.sounder = sounder1;
       this.visual_callback = visual_callback != null ? visual_callback : null;
-      this.interval = (5 * 1000) / this.data.series_length(0);
+      this.interval = duration / this.data.series_length(0);
     }
 
     Player.prototype.play = function() {
-      var i, offset, series_length, series_max_index, _i;
+      var i, j, offset, ref, series_length, series_max_index;
       series_length = this.data.series_length(0);
       series_max_index = series_length - 1;
       this.sounder.start(0);
@@ -269,7 +269,7 @@
         this.visual_callback(0, 0);
       }
       this.sounder.frequency(this.pitch_mapper.map(this.data.series_value(0, 0)));
-      for (i = _i = 1; 1 <= series_max_index ? _i <= series_max_index : _i >= series_max_index; i = 1 <= series_max_index ? ++_i : --_i) {
+      for (i = j = 1, ref = series_max_index; 1 <= ref ? j <= ref : j >= ref; i = 1 <= ref ? ++j : --j) {
         offset = this.interval * i;
         if (this.visual_callback != null) {
           this._highlight_enqueue(0, i, offset);
@@ -324,7 +324,7 @@
       }
       frequency_pitch_mapper = new FrequencyPitchMapper(data_wrapper.series_min(0), data_wrapper.series_max(0), options['frequency_low'], options['frequency_high']);
       sounder = new WebAudioSounder(context);
-      player = new Player(data_wrapper, frequency_pitch_mapper, sounder, callback);
+      player = new Player(options['duration'], data_wrapper, frequency_pitch_mapper, sounder, callback);
       player.play();
     }
 

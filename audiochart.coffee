@@ -164,8 +164,9 @@ class WebAudioSounder
 #
 
 class Player
-  constructor: (@data, @pitch_mapper, @sounder, @visual_callback = null) ->
-    @interval = (5 * 1000) / @data.series_length 0
+  constructor: (duration, @data, @pitch_mapper, @sounder,
+    @visual_callback = null) ->
+    @interval = duration / @data.series_length 0
 
   play: ->
     series_length = @data.series_length 0
@@ -241,8 +242,11 @@ class AudioChart
       options['frequency_high']
 
     sounder = new WebAudioSounder context
+
+    # TODO check duration option
     player = new Player \
-      data_wrapper, frequency_pitch_mapper, sounder, callback
+      options['duration'], data_wrapper, frequency_pitch_mapper, sounder,
+        callback
     player.play()
 
 

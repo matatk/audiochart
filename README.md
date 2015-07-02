@@ -188,3 +188,5 @@ Patches for and feedback on the following are welcome!
  * Support for development on Windows.
  * Create a browser extension to enable AudioChart on charts/tables for sites that don't provide it themselves.
  * Allow modular builds to be created, with only support for data sources relevant to your site/application.
+ * Move to Jasmine 2.x.
+ * Move to something other than jsdom or Node, as jsdom 4.x doesn't support Node.
