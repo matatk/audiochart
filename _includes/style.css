@@ -1,0 +1,153 @@
+/*
+ * General
+ */
+
+@viewport, @-ms-viewport {
+	zoom: 1.0;
+	width: extend-to-zoom;
+}
+
+body {
+	font-family: Verdana, sans-serif;
+	line-height: 1.5em;
+	margin: 0;
+	padding: 0;
+}
+
+button {
+	font-size: inherit;
+}
+
+a:focus, button:focus, a:hover, button:hover {
+	outline: 4px solid yellow;
+}
+
+header {
+	width: auto;
+	padding: 2em;
+	margin: 0;
+	background-color: yellow;
+	text-align: center;
+}
+
+/* In order to have seamless background fills */
+#hackContainer, #intro {
+	margin: 0;
+}
+
+/* Now restore some sensible spacing around the content */
+#intro {
+	padding: 1em;
+}
+#hackContainer {
+	padding: 0.5em;
+}
+
+#intro {
+	background-color: #FFA;
+}
+
+#chart {
+	/* Thanks to http://stackoverflow.com/a/17672214 */
+	width: 95vw;
+	height: 50vw;
+}
+
+
+/*
+ * Enhancements
+ */
+
+/* Bit more padding, likely for big phones/tablets */
+@media screen and (min-width: 45em) {
+	body {
+		font-size: 1.2em;
+	}
+
+	#intro {
+		padding: 1.5em;
+	}
+	#hackContainer {
+		padding: 1em;
+	}
+}
+
+/* A slightly more exciting layout with chart floated,
+likely for landscape tablets and desktops */
+@media screen and (min-width: 60em) {
+	#chart {
+		width: 45vw;
+		height: 25vw;
+	}
+
+	#chartContainer {
+		float: right;
+		border: 1px solid black;
+		padding: 1em;
+		margin-left: 1em;
+		margin-bottom: 1em;
+		margin-top: 1em;
+	}
+
+	#chartContainer button {
+		float: right;
+	}
+}
+
+/* Wide margins for larger displays */
+@media screen and (min-width: 75em) {
+	#intro {
+		padding-left: 10vw;
+		padding-right: 10vw;
+	}
+	#hackContainer {
+		padding-left: 10vw;
+		padding-right: 10vw;
+	}
+}
+
+
+/*
+ * For Examples Gallery
+ */
+
+table {
+	border-collapse: collapse;
+	margin-bottom: 0.5em;
+}
+
+th {
+	background-color: black;
+	color: white;
+}
+
+th, td {
+	border: 1px solid black;
+	padding: 0.5em;
+}
+
+.audiochart-current {
+	background-color: yellow;
+}
+
+div.google-chart {
+	width: 75vw;
+	height: 40vw;
+}
+
+hr {
+	height: 0;
+	border: 4px solid yellow;
+	/* These don't seem to have an effect... */
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+div.form-field label {
+	display: inline-block;
+	width: 10em;
+}
+
+div.form-field label:after {
+	content: ": ";
+}

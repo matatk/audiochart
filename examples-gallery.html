@@ -3,10 +3,11 @@ layout: base
 title: AudioChart Examples Gallery
 ---
 <div id="hackContainer">
-	<p>
-	All examples play for five seconds and cannot be stopped.
-	</p>
 	<h2>Contents</h2>
+	<h3>Options</h3>
+	<ul>
+		<li><a href='#options'>Set Audio Options</a></li>
+	</ul>
 	<h3>Google Charts</h3>
 	<ul>
 		<li><a href='#horizontal-line'>Horizontal Line</a></li>
@@ -20,49 +21,73 @@ title: AudioChart Examples Gallery
 	</ul>
 	<h3>JSON</h3>
 	<ul>
-		<li><a href='#json'>Example</a></li>
+		<li><a href='#json'>JSON example</a></li>
 	</ul>
 	<h3>HTML Tables</h3>
 	<ul>
-		<li><a href='#table'>Example</a></li>
+		<li><a href='#table'>HTML table example</a></li>
 	</ul>
+	<hr>
+
+	<h2 id="options">Set Audio Options</h2>
+	<div class="form-field">
+		<label for="opt-duration">Duration</label>
+		<select id="opt-duration" aria-describedby="opt-duration-desc">
+			<option value="1">1</option>
+			<option value="3" selected>3</option>
+			<option value="5">5</option>
+			<option value="10">10</option>
+		</select>
+		<span id="opt-duration-desc">second(s)</span>
+	</div>
+	<div class="form-field">
+		<label for="opt-freq-low">Lowest frequency</label>
+		<input id="opt-freq-low" type="number" min="50" max="5000" step="1" value="200" aria-describedby="opt-freq-low-unit"/>
+		<span id="opt-freq-low-unit">Hz</span>
+	</div>
+	<div class="form-field">
+		<label for="opt-freq-high">Highest frequency</label>
+		<input id="opt-freq-high" type="number" min="50" max="5000" step="1" value="1000" aria-describedby="opt-freq-high-unit"/>
+		<span id="opt-freq-high-unit">Hz</span>
+	</div>
+	<!--FIXME DETECT OVERLAPPING RANGE -->
 	<hr>
 
 	<h2>Google Charts</h2>
 	<h3 id='horizontal-line'>Horizontal Line</h3>
 	<p>This one has many data points.</p>
 	<div class="google-chart" id="chart_line"></div>
-	<button id="btn_line">Play</button>
+	<button id="btn_line">Play horizontal line (Google line chart)</button>
 	<hr>
 
 	<h3 id='gradient'>Gradient</h3>
 	<p>This one has many data points.</p>
 	<div class="google-chart" id="chart_gradient"></div>
-	<button id="btn_gradient">Play</button>
+	<button id="btn_gradient">Play gradient (Google line chart)</button>
 	<hr>
 
 	<h3 id='sine'>Sine</h3>
 	<p>This one has many data points.</p>
 	<div class="google-chart" id="chart_sine"></div>
-	<button id="btn_sine">Play</button>
+	<button id="btn_sine">Play sine wave (Google line chart)</button>
 	<hr>
 
 	<h3 id='sales'>Sales&mdash;Line Chart</h3>
 	<p>This one has few data points.</p>
 	<div class="google-chart" id="chart_sales_line"></div>
-	<button id="btn_sales_line">Play</button>
+	<button id="btn_sales_line">Play sales (Google line chart)</button>
 	<hr>
 
 	<h3 id='sales-bar'>Sales&mdash;Bar Chart</h3>
 	<p>This one has few data points.</p>
 	<div class="google-chart" id="chart_sales_bar"></div>
-	<button id="btn_sales_bar">Play</button>
+	<button id="btn_sales_bar">Play sales (Google bar chart)</button>
 	<hr>
 
 	<h3 id='sales-annotated'>Sales&mdash;Line Chart with Annotations</h3>
 	<p>This one has few data points.</p>
 	<div class="google-chart" id="chart_sales_annotated"></div>
-	<button id="btn_sales_annotated">Play</button>
+	<button id="btn_sales_annotated">Play sales (annotated Google line chart)</button>
 	<hr>
 
 	<h2>JSON</h2>
@@ -75,7 +100,7 @@ title: AudioChart Examples Gallery
 	}
   ]
 }</pre>
-	<button id="btn_json1">Play</button>
+	<button id="btn_json1">Play JSON</button>
 	<hr>
 
 	<h2>HTML Tables</h2>
@@ -90,194 +115,9 @@ title: AudioChart Examples Gallery
 		<tr><td>42</td></tr>
 		<tr><td>0</td></tr>
 	</table>
-	<button id="btn_table1">Play</button>
+	<button id="btn_table1">Play HTML table</button>
 	<hr>
 </div>
 <script>
-google.load('visualization', '1.0', {'packages':['corechart']});
-google.setOnLoadCallback(init);
-
-function make_audiochart_options() {
-	return {
-		// Fill in 'type'
-		// Fill in 'data' and 'chart'
-		//  or 'html_document' and 'html_table_id'
-		'duration': 5000,
-		'frequency_low': 200,
-		'frequency_high': 600
-	}
-}
-
-function init() {
-	// Google Charts
-	draw_line();
-	draw_gradient();
-	draw_sine();
-	draw_sales_line();
-	draw_sales_annotated();
-
-	// JSON
-	document.getElementById('btn_json1').onclick = function() {
-		var options = make_audiochart_options();
-		options['type'] = 'json';
-		options['data'] = document.getElementById('json1').textContent;
-		new AudioChart(options);
-	};
-
-	// HTML Table
-	document.getElementById('btn_table1').onclick = function() {
-		var options = make_audiochart_options();
-		options['type'] = 'html_table';
-		options['html_document'] = document;
-		options['html_table_id'] = 'table1';
-		options['html_table_highlight_class'] = 'audiochart-current';
-		new AudioChart(options);
-	};
-}
-
-function _draw_line_chart_core(data, id, btn) {
-	_draw_core(google.visualization.LineChart, data, id, btn);
-}
-
-function _draw_bar_chart_core(data, id, btn) {
-	_draw_core(google.visualization.BarChart, data, id, btn);
-}
-
-function _draw_core(klass, data, chart_id, btn) {
-	// Instantiate and draw our chart, passing in some options
-	var google_options = {
-		'title': 'Example',
-		'curveType': 'function'
-	};
-	var chart = new klass(document.getElementById(chart_id));
-
-	resizeChart();  // initial draw
-
-	// Resizing; thanks, http://stackoverflow.com/a/23594901
-	function resizeChart() {
-		chart.draw(data, google_options);
-	}
-	if (document.addEventListener) {
-		window.addEventListener('resize', resizeChart);
-	}
-	else if (document.attachEvent) {
-		window.attachEvent('onresize', resizeChart);
-	}
-	else {
-		window.resize = resizeChart;
-	}
-
-	// Wire up to AudioChart
-	document.getElementById(btn).onclick = function() {
-		var audiochart_options = make_audiochart_options();
-		audiochart_options['type'] = 'google';
-		audiochart_options['data'] = data;
-		audiochart_options['chart'] = chart;
-		new AudioChart(audiochart_options);
-	};
-}
-
-function draw_line() {
-	// Create the data table.
-	var data = new google.visualization.DataTable();
-
-	var MIN = 0;
-	var MAX = 1;
-	var DELTA = 0.1;
-	var results = [];
-	var index = 0;
-	for( var i = MIN; i <= MAX; i = i + DELTA ) {
-		results[index] = [i, 42];
-		index++;
-	}
-
-	data.addColumn('number', 'blah');
-	data.addColumn('number', 'blah');
-	data.addRows(results);
-
-	_draw_line_chart_core(data, 'chart_line', 'btn_line');
-}
-
-function draw_gradient() {
-	// Create the data table.
-	var data = new google.visualization.DataTable();
-
-	var MIN = 0;
-	var MAX = 1;
-	var DELTA = 0.01;
-	var results = [];
-	var index = 0;
-	for( var i = MIN; i <= MAX; i += DELTA ) {
-		results[index] = [i, i];
-		index++;
-	}
-
-	data.addColumn('number', 'blah');
-	data.addColumn('number', 'blah');
-	data.addRows(results);
-
-	_draw_line_chart_core(data, 'chart_gradient', 'btn_gradient');
-}
-
-function draw_sine() {
-	// Create the data table.
-	var data = new google.visualization.DataTable();
-
-	var MIN = -Math.PI;
-	var MAX = Math.PI;
-	var DELTA = 0.01;
-	var results = [];
-	var index = 0;
-	for( var i = MIN; i <= MAX; i = i + DELTA ) {
-		results[index] = [i, Math.sin(i)];
-		index++;
-	}
-
-	data.addColumn('number', 'Radians');
-	data.addColumn('number', 'Sine');
-	data.addRows(results);
-
-	_draw_line_chart_core(data, 'chart_sine', 'btn_sine');
-}
-
-function draw_sales_line() {
-	// Create the data table.
-	var data = new google.visualization.DataTable();
-	data.addColumn('string', 'Month'); // Implicit domain label col.
-	data.addColumn('number', 'Sales'); // Implicit series 1 data col.
-	data.addRows([
-			['April',1000],
-			['May',  1170],
-			['June',  660],
-			['July', 1030]
-	]);
-
-	_draw_line_chart_core(data, 'chart_sales_line', 'btn_sales_line');
-	_draw_bar_chart_core(data, 'chart_sales_bar', 'btn_sales_bar');
-}
-
-function draw_sales_annotated() {
-	// Create the data table.
-	var data = new google.visualization.DataTable();
-	data.addColumn('string', 'Month'); // Implicit domain label col.
-	data.addColumn('number', 'Sales'); // Implicit series 1 data col.
-	data.addColumn({type:'number', role:'interval'});
-	// interval role col.
-	data.addColumn({type:'number', role:'interval'});
-	// interval role col.
-	data.addColumn({type:'string', role:'annotation'});
-	// annotation role col.
-	data.addColumn({type:'string', role:'annotationText'});
-	// annotationText col.
-	data.addColumn({type:'boolean',role:'certainty'});
-	// certainty col.
-	data.addRows([
-			['April',1000,  900, 1100,  'A','Stolen data', true],
-			['May',  1170, 1000, 1200,  'B','Coffee spill', true],
-			['June',  660,  550,  800,  'C','Wumpus attack', true],
-			['July', 1030, null, null, null, null, false]
-	]);
-
-	_draw_line_chart_core(data, 'chart_sales_annotated', 'btn_sales_annotated');
-}
+{% include examples-gallery.js %}
 </script>
