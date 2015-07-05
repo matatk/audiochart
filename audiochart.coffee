@@ -57,9 +57,9 @@ class JSONDataWrapper extends DataWrapper
 
   # TODO why is it that if I change "['values']" to ".values" below,
   #      it will pass tests but not function in Safari/Chrome?
-  series_min: (series) -> Math.min.apply @, @object.data[series]['values']
+  series_min: (series) -> Math.min.apply(@, @object.data[series]['values'])
 
-  series_max: (series) -> Math.max.apply @, @object.data[series]['values']
+  series_max: (series) -> Math.max.apply(@, @object.data[series]['values'])
 
   series_value: (series, index) -> @object.data[series]['values'][index]
 
@@ -68,7 +68,7 @@ class JSONDataWrapper extends DataWrapper
 
 class HTMLTableDataWrapper extends DataWrapper
   constructor: (doc, id) ->
-    @table = doc.getElementById id
+    @table = doc.getElementById(id)
     if not @table?
       throw new Error 'Failed to find table with id "' + id + '".'
 
@@ -82,10 +82,10 @@ class HTMLTableDataWrapper extends DataWrapper
       for element in @table.getElementsByTagName 'td'
 
   series_min: (series) ->
-    Math.min.apply @, @_series_floats series
+    Math.min.apply(@, @_series_floats(series))
 
   series_max: (series) ->
-    Math.max.apply @, @_series_floats series
+    Math.max.apply(@, @_series_floats(series))
 
   series_value: (series, index) ->
     parseFloat(@table
@@ -115,7 +115,7 @@ class FrequencyPitchMapper extends PitchMapper
     maximum_datum,
     @minimum_frequency,
     @maximum_frequency) ->
-    super minimum_datum, maximum_datum
+    super(minimum_datum, maximum_datum)
     if @minimum_frequency > @maximum_frequency
       throw new Error 'minimum frequency should be <= maximum frequency'
     @data_range = @maximum_datum - @minimum_datum
@@ -143,19 +143,19 @@ class WebAudioSounder
     @oscillator = @context.createOscillator()
 
   start: ->
-    @oscillator.connect @context.destination
-    @oscillator.start 0
+    @oscillator.connect(@context.destination)
+    @oscillator.start(0)
     return
 
   frequency: (frequency, offset) ->
     callback = =>
       @oscillator.frequency.value = frequency
       return
-    setTimeout callback, offset
+    setTimeout(callback, offset)
     return
 
   stop: (offset) ->
-    @oscillator.stop offset
+    @oscillator.stop(offset)
     return
 
 
@@ -166,29 +166,29 @@ class WebAudioSounder
 class Player
   constructor: (duration, @data, @pitch_mapper, @sounder,
     @visual_callback = null) ->
-    @interval = duration / @data.series_length 0
+    @interval = duration / @data.series_length(0)
 
   play: ->
-    series_length = @data.series_length 0
+    series_length = @data.series_length(0)
     series_max_index = series_length - 1
-    @sounder.start 0
+    @sounder.start(0)
     # Initial datum
     if @visual_callback?
-      @visual_callback 0, 0
-    @sounder.frequency @pitch_mapper.map @data.series_value(0, 0)
+      @visual_callback(0, 0)
+    @sounder.frequency(@pitch_mapper.map(@data.series_value(0, 0)))
 
     # All the rest come after certain intervals
     for i in [1 .. series_max_index]
       offset = @interval * i
       # Visual
       if @visual_callback?
-        @_highlight_enqueue 0, i, offset
+        @_highlight_enqueue(0, i, offset)
       # Audio
-      @sounder.frequency \
-        @pitch_mapper.map(@data.series_value 0, i),
-        offset
+      @sounder.frequency(
+        @pitch_mapper.map(@data.series_value(0, i)),
+        offset)
 
-    @sounder.stop (series_length * @interval) / 1000
+    @sounder.stop((series_length * @interval) / 1000)
     return
 
   # Due to scoping behaviour, this has to be separate from the loop
@@ -196,7 +196,7 @@ class Player
     callback = =>
       @visual_callback(series, row)
       return
-    setTimeout callback, offset
+    setTimeout(callback, offset)
     return
 
 
@@ -212,7 +212,7 @@ class AudioChart
     fail = "Sorry, it seems your browser doesn't support the Web Audio API."
     context = _audio_context_getter()
     if not context?
-      alert fail
+      alert(fail)
       throw new Error fail
 
     # TODO check for options.data, options.chart, ...
@@ -221,32 +221,32 @@ class AudioChart
     callback = null
     switch options.type
       when 'google'
-        data_wrapper = new GoogleDataWrapper options.data
+        data_wrapper = new GoogleDataWrapper(options.data)
         if options['chart']?
           callback = _google_visual_callback_maker options['chart']
       when 'json'
-        data_wrapper = new JSONDataWrapper options.data
+        data_wrapper = new JSONDataWrapper(options.data)
       when 'html_table'
-        data_wrapper = new HTMLTableDataWrapper \
+        data_wrapper = new HTMLTableDataWrapper(
           options['html_document'],
-          options['html_table_id']
+          options['html_table_id'])
       else
         alert error_type
         throw new Error error_type
 
     # TODO check options
-    frequency_pitch_mapper = new FrequencyPitchMapper \
+    frequency_pitch_mapper = new FrequencyPitchMapper(
       data_wrapper.series_min(0),
       data_wrapper.series_max(0),
       options['frequency_low'],
-      options['frequency_high']
+      options['frequency_high'])
 
-    sounder = new WebAudioSounder context
+    sounder = new WebAudioSounder(context)
 
     # TODO check duration option
-    player = new Player \
+    player = new Player(
       options['duration'], data_wrapper, frequency_pitch_mapper, sounder,
-        callback
+        callback)
     player.play()
 
 
