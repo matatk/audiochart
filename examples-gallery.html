@@ -31,26 +31,30 @@ title: AudioChart Examples Gallery
 
 	<h2 id="options">Set Audio Options</h2>
 	<div class="form-field">
-		<label for="opt-duration">Duration</label>
-		<select id="opt-duration" aria-describedby="opt-duration-desc">
+		<label for="opt-duration">Duration (seconds):</label>
+		<select id="opt-duration">
 			<option value="1">1</option>
 			<option value="3" selected>3</option>
 			<option value="5">5</option>
 			<option value="10">10</option>
 		</select>
-		<span id="opt-duration-desc">second(s)</span>
 	</div>
 	<div class="form-field">
-		<label for="opt-freq-low">Lowest frequency</label>
-		<input id="opt-freq-low" type="number" min="50" max="5000" step="1" value="200" aria-describedby="opt-freq-low-unit"/>
-		<span id="opt-freq-low-unit">Hz</span>
+		<p>
+		<label for="opt-freq-low">Lowest frequency (Hz):</label>
+		<input id="opt-freq-low" type="number" value="200"
+										 min="50" max="5000" step="1">
+		</p>
+		<p class="hidden-error-message" id="opt-freq-low-err">Error: lowest frequency must be set lower than the highest frequency.</p>
 	</div>
 	<div class="form-field">
-		<label for="opt-freq-high">Highest frequency</label>
-		<input id="opt-freq-high" type="number" min="50" max="5000" step="1" value="1000" aria-describedby="opt-freq-high-unit"/>
-		<span id="opt-freq-high-unit">Hz</span>
+		<p>
+		<label for="opt-freq-high">Highest frequency (Hz):</label>
+		<input id="opt-freq-high" type="number" value="800"
+										  min="50" max="5000" step="1">
+		</p>
+		<p class="hidden-error-message" id="opt-freq-high-err">Error: highest frequency must be set higher than the lowest frequency.</p>
 	</div>
-	<!--FIXME DETECT OVERLAPPING RANGE -->
 	<hr>
 
 	<h2>Google Charts</h2>

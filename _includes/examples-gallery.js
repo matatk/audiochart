@@ -1,9 +1,47 @@
 google.load('visualization', '1.0', {'packages':['corechart']});
 google.setOnLoadCallback(init);
 
+
 //
 // Utility Functions
 //
+
+/* Check for errors */
+function error_check() {
+	var freq_low_input = document.getElementById('opt-freq-low');
+	var freq_high_input = document.getElementById('opt-freq-high');
+	if (freq_low_input.valueAsNumber >= freq_high_input.valueAsNumber) {
+		error_check_toggle('on');
+	} else {
+		error_check_toggle('off');
+	}
+}
+
+/* Toggle error message visibility and aria-invalid state on controls */
+function error_check_toggle(to_state) {
+	error_check_toggle_messages(to_state);
+	error_check_toggle_invalid(to_state);
+}
+
+/* Toggle error message visibility */
+function error_check_toggle_messages(to_state) {
+	var class_names = ['hidden-error-message', 'error-message'];
+	var current_class = (to_state == 'on') ? class_names[0] : class_names[1];
+	var desired_class = (to_state == 'on') ? class_names[1] : class_names[0];
+	var error_paras = document.querySelectorAll('p.' + current_class);
+	for (var i = 0; i < error_paras.length; i++ ) {
+		error_paras[i].className = desired_class;
+	}
+}
+
+/* Toggle aria-invalid on controls */
+function error_check_toggle_invalid(to_state) {
+	var number_inputs = document.querySelectorAll('input[type=number]');
+	for (var i = 0; i < number_inputs.length; i++ ) {
+		number_inputs[i].setAttribute("aria-invalid",
+				(to_state == 'on') ? "true" : "false");
+	}
+}
 
 /* Create a default options structure */
 function make_audiochart_options() {
@@ -11,14 +49,24 @@ function make_audiochart_options() {
 		// Fill in 'type'
 		// Fill in 'data' and 'chart'
 		//  or 'html_document' and 'html_table_id'
-		'duration': 5000,
-		'frequency_low': 200,
-		'frequency_high': 600
+		'duration':
+			parseInt(document.getElementById('opt-duration').value) * 1000,
+		'frequency_low':
+			document.getElementById('opt-freq-low').valueAsNumber,
+		'frequency_high':
+			document.getElementById('opt-freq-high').valueAsNumber
 	}
 }
 
-/* Draw all the charts on page load */
+/* Draw all the charts after the library has been loaded */
 function init() {
+	// Cheeky: wire up onchange events for the options controls here too
+	function change_handler(id) {
+		document.getElementById(id).addEventListener('change', error_check);
+	}
+	change_handler('opt-freq-low');
+	change_handler('opt-freq-high');
+
 	// Google Charts
 	draw_line();
 	draw_gradient();
@@ -45,7 +93,7 @@ function init() {
 	};
 }
 
-/* Library functions for drawing Google charts... */
+/* Library functions for drawing Google charts and handling events */
 
 function _draw_line_chart_core(data, id, btn) {
 	_draw_core(google.visualization.LineChart, data, id, btn);

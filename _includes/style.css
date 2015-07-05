@@ -14,11 +14,13 @@ body {
 	padding: 0;
 }
 
-button {
+/* Needed for font-size and so Safari applies the :focus and :hover styles */
+button, input, select {
 	font-size: inherit;
 }
 
-a:focus, button:focus, a:hover, button:hover {
+a:focus, button:focus, input:focus, select:focus,
+a:hover, button:hover, input:hover, select:hover {
 	outline: 4px solid yellow;
 }
 
@@ -145,9 +147,17 @@ hr {
 
 div.form-field label {
 	display: inline-block;
-	width: 10em;
+	width: 13em;
 }
 
-div.form-field label:after {
-	content: ": ";
+p.error-message {
+	color: red;
+}
+
+p.hidden-error-message {
+	display: none;
+}
+
+input[aria-invalid=true] {
+	outline: 2px solid red;
 }
