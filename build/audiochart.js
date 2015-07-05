@@ -1,5 +1,5 @@
 (function() {
-  var AudioChart, DataWrapper, FrequencyPitchMapper, GoogleDataWrapper, HTMLTableDataWrapper, JSONDataWrapper, NotePitchMapper, PitchMapper, Player, WebAudioSounder, _audio_context_getter, _google_visual_callback_maker,
+  var AudioChart, DataWrapper, FrequencyPitchMapper, GoogleDataWrapper, HTMLTableDataWrapper, JSONDataWrapper, NotePitchMapper, PitchMapper, Player, WebAudioSounder, _audio_context_getter, _google_visual_callback_maker, _html_table_visual_callback_maker,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
@@ -353,6 +353,12 @@
     };
   };
 
+  _html_table_visual_callback_maker = function(table) {
+    return function(series, row) {
+      console.log("HTML Table visual callback: " + series + ", " + row);
+    };
+  };
+
   if (typeof exports !== "undefined" && exports !== null) {
     exports.AudioChart = AudioChart;
     exports.DataWrapper = DataWrapper;
@@ -365,6 +371,7 @@
     exports.WebAudioSounder = WebAudioSounder;
     exports.Player = Player;
     exports._google_visual_callback_maker = _google_visual_callback_maker;
+    exports._html_table_visual_callback_maker = _html_table_visual_callback_maker;
   } else {
     this['AudioChart'] = AudioChart;
     this['DataWrapper'] = DataWrapper;
@@ -377,6 +384,7 @@
     this['WebAudioSounder'] = WebAudioSounder;
     this['Player'] = Player;
     this['_google_visual_callback_maker'] = _google_visual_callback_maker;
+    this['_html_table_visual_callback_maker'] = _html_table_visual_callback_maker;
   }
 
 }).call(this);

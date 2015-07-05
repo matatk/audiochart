@@ -44,5 +44,5 @@ class FakeGoogleDataTable
 
 dw.data_wrappers_test_core \
   'GoogleDataWrapper',
-  new ac.GoogleDataWrapper(new FakeGoogleDataTable test_one),
-  new ac.GoogleDataWrapper(new FakeGoogleDataTable test_neg)
+  new ac.GoogleDataWrapper(new FakeGoogleDataTable(test_one)),
+  new ac.GoogleDataWrapper(new FakeGoogleDataTable(test_neg))

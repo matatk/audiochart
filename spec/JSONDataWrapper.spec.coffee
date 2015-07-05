@@ -33,5 +33,5 @@ dw.data_wrappers_test_core \
 
 dw.data_wrappers_test_core \
   'JSONDataWrapper, starting from object',
-  new ac.JSONDataWrapper(JSON.parse test_one),
-  new ac.JSONDataWrapper(JSON.parse test_neg)
+  new ac.JSONDataWrapper(JSON.parse(test_one)),
+  new ac.JSONDataWrapper(JSON.parse(test_neg))

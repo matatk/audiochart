@@ -75,11 +75,11 @@ class HTMLTableDataWrapper extends DataWrapper
   num_series: -> @table.getElementsByTagName('tr')[0].children.length
 
   series_names: ->
-    element.textContent for element in @table.getElementsByTagName 'th'
+    element.textContent for element in @table.getElementsByTagName('th')
 
   _series_floats: (series) ->
     parseFloat element.textContent \
-      for element in @table.getElementsByTagName 'td'
+      for element in @table.getElementsByTagName('td')
 
   series_min: (series) ->
     Math.min.apply(@, @_series_floats(series))
@@ -209,6 +209,7 @@ class AudioChart
     # TODO: This is presently un(-mechanically-)tested at integration level
     # Structure of options object is detailed in REFERENCE.md
 
+    # Check for Web Audio API support
     fail = "Sorry, it seems your browser doesn't support the Web Audio API."
     context = _audio_context_getter()
     if not context?
@@ -223,7 +224,7 @@ class AudioChart
       when 'google'
         data_wrapper = new GoogleDataWrapper(options.data)
         if options['chart']?
-          callback = _google_visual_callback_maker options['chart']
+          callback = _google_visual_callback_maker(options['chart'])
       when 'json'
         data_wrapper = new JSONDataWrapper(options.data)
       when 'html_table'
@@ -268,6 +269,13 @@ _google_visual_callback_maker = (chart) ->
     return
 
 
+# Callback generator for visual indication of HTML table playback
+_html_table_visual_callback_maker = (table) ->
+  return (series, row) ->
+    console.log("HTML Table visual callback: #{series}, #{row}")
+    return
+
+
 if exports?
   exports.AudioChart = AudioChart
   exports.DataWrapper = DataWrapper  # base
@@ -280,6 +288,7 @@ if exports?
   exports.WebAudioSounder = WebAudioSounder
   exports.Player = Player
   exports._google_visual_callback_maker = _google_visual_callback_maker
+  exports._html_table_visual_callback_maker = _html_table_visual_callback_maker
 else
   this['AudioChart'] = AudioChart
   this['DataWrapper'] = DataWrapper  # base
@@ -292,3 +301,4 @@ else
   this['WebAudioSounder'] = WebAudioSounder
   this['Player'] = Player
   this['_google_visual_callback_maker'] = _google_visual_callback_maker
+  this['_html_table_visual_callback_maker'] = _html_table_visual_callback_maker

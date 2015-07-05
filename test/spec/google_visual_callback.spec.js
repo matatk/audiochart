@@ -17,16 +17,16 @@
   })();
 
   describe('google_visual_callback', function() {
-    var fake_chart, fake_visual_callback;
+    var fake_chart, google_visual_callback;
     fake_chart = null;
-    fake_visual_callback = null;
+    google_visual_callback = null;
     beforeEach(function() {
       fake_chart = new FakeChart;
-      fake_visual_callback = ac._google_visual_callback_maker(fake_chart);
+      google_visual_callback = ac._google_visual_callback_maker(fake_chart);
       return spyOn(fake_chart, 'setSelection');
     });
     it('correctly munges its parameters (1a)', function() {
-      fake_visual_callback(0, 0);
+      google_visual_callback(0, 0);
       return expect(fake_chart.setSelection).toHaveBeenCalledWith([
         {
           'row': 0,
@@ -35,7 +35,7 @@
       ]);
     });
     it('correctly munges its parameters (1b)', function() {
-      fake_visual_callback(0, 1);
+      google_visual_callback(0, 1);
       return expect(fake_chart.setSelection).toHaveBeenCalledWith([
         {
           'row': 1,
@@ -44,7 +44,7 @@
       ]);
     });
     it('correctly munges its parameters (1c)', function() {
-      fake_visual_callback(0, 2);
+      google_visual_callback(0, 2);
       return expect(fake_chart.setSelection).toHaveBeenCalledWith([
         {
           'row': 2,
@@ -53,7 +53,7 @@
       ]);
     });
     return it('correctly munges its parameters (2)', function() {
-      fake_visual_callback(1, 0);
+      google_visual_callback(1, 0);
       return expect(fake_chart.setSelection).toHaveBeenCalledWith([
         {
           'row': 0,

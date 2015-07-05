@@ -65,13 +65,13 @@ mixin_data_wrapper_core = (message, test_data_class, test_duration,
       fake_mapper = new FakeMapper
       fake_sounder = new FakeSounder
       if use_visual_callback
-        fake_visual_callback = jasmine.createSpy 'fake_visual_callback'
-        player = new ac.Player \
+        fake_visual_callback = jasmine.createSpy('fake_visual_callback')
+        player = new ac.Player(
           test_duration, fake_data, fake_mapper, fake_sounder,
-            fake_visual_callback
+            fake_visual_callback)
       else
-        player = new ac.Player \
-          test_duration, fake_data, fake_mapper, fake_sounder
+        player = new ac.Player(
+          test_duration, fake_data, fake_mapper, fake_sounder)
 
     it 'works out for how long to sound each datum', ->
       expect(player.interval).toBe test_interval
@@ -80,35 +80,35 @@ mixin_data_wrapper_core = (message, test_data_class, test_duration,
       jasmine.Clock.useMock()
       spyOn(fake_sounder, 'start')
       player.play()
-      jasmine.Clock.tick test_duration
+      jasmine.Clock.tick(test_duration)
       expect(fake_sounder.start.callCount).toBe 1
 
     it 'stops the sounder', ->
       jasmine.Clock.useMock()
       spyOn(fake_sounder, 'stop')
       player.play()
-      jasmine.Clock.tick test_duration
+      jasmine.Clock.tick(test_duration)
       expect(fake_sounder.stop.callCount).toBe 1
 
     it 'makes the correct number of map calls', ->
       jasmine.Clock.useMock()
       spyOn(fake_mapper, 'map')
       player.play()
-      jasmine.Clock.tick test_duration
+      jasmine.Clock.tick(test_duration)
       expect(fake_mapper.map.callCount).toBe test_call_count
 
     it 'makes the right number of calls to the sounder', ->
       jasmine.Clock.useMock()
       spyOn(fake_sounder, 'frequency')
       player.play()
-      jasmine.Clock.tick test_duration
+      jasmine.Clock.tick(test_duration)
       expect(fake_sounder.frequency.callCount).toBe test_call_count
 
     it 'calls the sounder with the correct arguments each time', ->
       jasmine.Clock.useMock()
       spyOn(fake_sounder, 'frequency')
       player.play()
-      jasmine.Clock.tick test_duration
+      jasmine.Clock.tick(test_duration)
       expect(fake_sounder.frequency.argsForCall)
         .toEqual(expected_frequency_calls test_duration, test_call_count)
 
@@ -116,7 +116,7 @@ mixin_data_wrapper_core = (message, test_data_class, test_duration,
       it 'makes the correct number of visual callback calls', ->
         jasmine.Clock.useMock()
         player.play()
-        jasmine.Clock.tick test_duration
+        jasmine.Clock.tick(test_duration)
         expect(fake_visual_callback.callCount).toBe test_call_count
 
 
@@ -124,48 +124,48 @@ mixin_data_wrapper = (message, test_data_class, test_duration, test_call_count,
   test_interval) ->
   # Test the Player with and without the simulated visual callback
   describe message, ->
-    mixin_data_wrapper_core \
+    mixin_data_wrapper_core(
       'when not having a callback',
       test_data_class,
       test_duration,
       test_call_count,
       test_interval,
-      false
+      false)
 
-    mixin_data_wrapper_core \
+    mixin_data_wrapper_core(
       'when having a callback',
       test_data_class,
       test_duration,
       test_call_count,
       test_interval,
-      true
+      true)
 
 
 describe 'Player', ->
-  mixin_data_wrapper \
+  mixin_data_wrapper(
     'instantiated with short fake data source for 5000ms',
     ShortFakeDataWrapper,
     5000,
     4,
-    1250
+    1250)
 
-  mixin_data_wrapper \
+  mixin_data_wrapper(
     'instantiated with short fake data source for 3000ms',
     ShortFakeDataWrapper,
     3000,
     4,
-    750
+    750)
 
-  mixin_data_wrapper \
+  mixin_data_wrapper(
     'instantiated with long fake data source for 5000ms',
     LongFakeDataWrapper,
     5000,
     100,
-    50
+    50)
 
-  mixin_data_wrapper \
+  mixin_data_wrapper(
     'instantiated with long fake data source for 2500ms',
     LongFakeDataWrapper,
     2500,
     100,
-    25
+    25)

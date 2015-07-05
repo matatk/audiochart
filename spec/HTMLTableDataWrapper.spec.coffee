@@ -20,17 +20,17 @@ run_tests = (doc) ->
 
   describe 'HTMLTableDataWrapper error-checking', ->
     it 'Throws when an invalid id is given', ->
-      expect(() -> new ac.HTMLTableDataWrapper doc, 'moo').toThrow()
+      expect(() -> new ac.HTMLTableDataWrapper(doc, 'moo')).toThrow()
 
     it 'Does not throw when a valid id is given', ->
       expect(
-        () -> new ac.HTMLTableDataWrapper doc, 'test_one').not.toThrow()
+        () -> new ac.HTMLTableDataWrapper(doc, 'test_one')).not.toThrow()
 
 
 if headless
-  html_string = fs.readFileSync __dirname + '/' + HTML_FILE_NAME
-  document = jsdom html_string
-  run_tests document
+  html_string = fs.readFileSync(__dirname + '/' + HTML_FILE_NAME)
+  document = jsdom(html_string)
+  run_tests(document)
 else
-  loadFixtures 'spec/' + HTML_FILE_NAME
-  run_tests window.document
+  loadFixtures('spec/' + HTML_FILE_NAME)
+  run_tests(window.document)
