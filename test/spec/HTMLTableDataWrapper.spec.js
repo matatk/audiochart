@@ -16,17 +16,12 @@
   HTML_FILE_NAME = 'HTMLTableDataWrapper.fixtures.html';
 
   run_tests = function(doc) {
-    dw.data_wrappers_test_core('HTMLTableDataWrapper', new ac.HTMLTableDataWrapper(doc, 'test_one'), new ac.HTMLTableDataWrapper(doc, 'test_neg'));
+    dw.data_wrappers_test_core('HTMLTableDataWrapper', new ac.HTMLTableDataWrapper(doc.getElementById('test_one')), new ac.HTMLTableDataWrapper(doc.getElementById('test_neg')));
     return describe('HTMLTableDataWrapper error-checking', function() {
-      it('Throws when an invalid id is given', function() {
+      return it('Throws when a null table is given', function() {
         return expect(function() {
-          return new ac.HTMLTableDataWrapper(doc, 'moo');
+          return new ac.HTMLTableDataWrapper(doc.getElementById('moo'));
         }).toThrow();
-      });
-      return it('Does not throw when a valid id is given', function() {
-        return expect(function() {
-          return new ac.HTMLTableDataWrapper(doc, 'test_one');
-        }).not.toThrow();
       });
     });
   };

@@ -86,9 +86,8 @@ function init() {
 	document.getElementById('btn_table1').onclick = function() {
 		var options = make_audiochart_options();
 		options['type'] = 'html_table';
-		options['html_document'] = document;
-		options['html_table_id'] = 'table1';
-		options['html_table_highlight_class'] = 'audiochart-current';
+		options['table'] = document.getElementById('table1');
+		options['highlight_class'] = 'current-datum';
 		new AudioChart(options);
 	};
 }

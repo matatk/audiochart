@@ -141,7 +141,7 @@ The following objects are present in AudioChart ([JavaScript code](build/audioch
 Development
 ------------
 
-AudioChart is developed in [CoffeeScript](http://coffeescript.org), which is translated into JavaScript as part of the build process.  **You do not need to know CoffeeScript (or have it installed) to use AudioChart, as a built JavaScript version is present in this repository.**  A Makefile is provided to automate the translation and run tests.  [Unit tests can be run in-browser](http://matatk.agrip.org.uk/audiochart/test/) or directly on the code, printing output to the terminal, via jasmine-node.
+AudioChart is developed in [CoffeeScript](http://coffeescript.org), which is translated into JavaScript as part of the build process.  **You do not need to know CoffeeScript (or have it installed) to use AudioChart, as a built JavaScript version is present in this repository.**  A Gruntfile is provided to automate the translation and run tests.  [Unit tests can be run in-browser](http://matatk.agrip.org.uk/audiochart/test/) or directly on the code, printing output to the terminal, via jasmine-node.
 
 Development is carried out in a [test-driven](http://en.wikipedia.org/wiki/Test-driven_development) manner.  The `pre-commit` hook can be used to ensure only code that passes tests is committed.  You can make a symlink from the `.git/hooks/` directory to it and it'll be run before you are asked for a commit message.
 

@@ -116,10 +116,10 @@
   HTMLTableDataWrapper = (function(superClass) {
     extend(HTMLTableDataWrapper, superClass);
 
-    function HTMLTableDataWrapper(doc, id) {
-      this.table = doc.getElementById(id);
-      if (this.table == null) {
-        throw new Error('Failed to find table with id "' + id + '".');
+    function HTMLTableDataWrapper(table1) {
+      this.table = table1;
+      if (!this.table) {
+        throw new Error("No table given.");
       }
     }
 
@@ -316,7 +316,10 @@
           data_wrapper = new JSONDataWrapper(options.data);
           break;
         case 'html_table':
-          data_wrapper = new HTMLTableDataWrapper(options['html_document'], options['html_table_id']);
+          data_wrapper = new HTMLTableDataWrapper(options.table);
+          if (options['highlight_class'] != null) {
+            callback = _html_table_visual_callback_maker(options.table, options['highlight_class']);
+          }
           break;
         default:
           alert(error_type);
@@ -353,9 +356,16 @@
     };
   };
 
-  _html_table_visual_callback_maker = function(table) {
+  _html_table_visual_callback_maker = function(table, class_name) {
     return function(series, row) {
-      console.log("HTML Table visual callback: " + series + ", " + row);
+      var cell, j, len, ref;
+      ref = table.getElementsByTagName('td');
+      for (j = 0, len = ref.length; j < len; j++) {
+        cell = ref[j];
+        cell.className = '';
+      }
+      cell = table.getElementsByTagName('td')[row];
+      cell.className = class_name;
     };
   };
 

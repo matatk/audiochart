@@ -67,10 +67,8 @@ class JSONDataWrapper extends DataWrapper
 
 
 class HTMLTableDataWrapper extends DataWrapper
-  constructor: (doc, id) ->
-    @table = doc.getElementById(id)
-    if not @table?
-      throw new Error 'Failed to find table with id "' + id + '".'
+  constructor: (@table) ->
+    throw new Error "No table given." unless @table
 
   num_series: -> @table.getElementsByTagName('tr')[0].children.length
 
@@ -228,9 +226,11 @@ class AudioChart
       when 'json'
         data_wrapper = new JSONDataWrapper(options.data)
       when 'html_table'
-        data_wrapper = new HTMLTableDataWrapper(
-          options['html_document'],
-          options['html_table_id'])
+        data_wrapper = new HTMLTableDataWrapper(options.table)
+        if options['highlight_class']?
+          callback = _html_table_visual_callback_maker(
+            options.table
+            options['highlight_class'])
       else
         alert error_type
         throw new Error error_type
@@ -270,9 +270,11 @@ _google_visual_callback_maker = (chart) ->
 
 
 # Callback generator for visual indication of HTML table playback
-_html_table_visual_callback_maker = (table) ->
+_html_table_visual_callback_maker = (table, class_name) ->
   return (series, row) ->
-    console.log("HTML Table visual callback: #{series}, #{row}")
+    cell.className = '' for cell in table.getElementsByTagName('td')
+    cell = table.getElementsByTagName('td')[row]
+    cell.className = class_name
     return
 
 

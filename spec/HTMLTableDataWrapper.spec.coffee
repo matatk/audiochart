@@ -15,16 +15,13 @@ HTML_FILE_NAME = 'HTMLTableDataWrapper.fixtures.html'
 run_tests = (doc) ->
   dw.data_wrappers_test_core \
     'HTMLTableDataWrapper',
-    new ac.HTMLTableDataWrapper(doc, 'test_one'),
-    new ac.HTMLTableDataWrapper(doc, 'test_neg')
+    new ac.HTMLTableDataWrapper(doc.getElementById('test_one')),
+    new ac.HTMLTableDataWrapper(doc.getElementById('test_neg'))
 
   describe 'HTMLTableDataWrapper error-checking', ->
-    it 'Throws when an invalid id is given', ->
-      expect(() -> new ac.HTMLTableDataWrapper(doc, 'moo')).toThrow()
-
-    it 'Does not throw when a valid id is given', ->
-      expect(
-        () -> new ac.HTMLTableDataWrapper(doc, 'test_one')).not.toThrow()
+    it 'Throws when a null table is given', ->
+      expect(() -> new ac.HTMLTableDataWrapper(doc.getElementById('moo')))
+        .toThrow()
 
 
 if headless
