@@ -1,7 +1,7 @@
 (function() {
   var BaseFakeDataWrapper, FakeMapper, FakeSounder, LongFakeDataWrapper, ShortFakeDataWrapper, ac, expected_frequency_calls, mixin_data_wrapper, mixin_data_wrapper_core,
-    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   if (typeof exports !== "undefined" && exports !== null) {
     ac = require('../audiochart');
@@ -10,11 +10,11 @@
   }
 
   expected_frequency_calls = function(playback_time, series_length) {
-    var i, interval, j, out, ref;
+    var i, interval, out, _i, _ref;
     interval = playback_time / series_length;
     out = [];
     out.push([21]);
-    for (i = j = 1, ref = series_length - 1; 1 <= ref ? j <= ref : j >= ref; i = 1 <= ref ? ++j : --j) {
+    for (i = _i = 1, _ref = series_length - 1; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
       out.push([21, interval * i]);
     }
     return out;
@@ -39,8 +39,8 @@
 
   })();
 
-  ShortFakeDataWrapper = (function(superClass) {
-    extend(ShortFakeDataWrapper, superClass);
+  ShortFakeDataWrapper = (function(_super) {
+    __extends(ShortFakeDataWrapper, _super);
 
     function ShortFakeDataWrapper() {
       return ShortFakeDataWrapper.__super__.constructor.apply(this, arguments);
@@ -54,8 +54,8 @@
 
   })(BaseFakeDataWrapper);
 
-  LongFakeDataWrapper = (function(superClass) {
-    extend(LongFakeDataWrapper, superClass);
+  LongFakeDataWrapper = (function(_super) {
+    __extends(LongFakeDataWrapper, _super);
 
     function LongFakeDataWrapper() {
       return LongFakeDataWrapper.__super__.constructor.apply(this, arguments);

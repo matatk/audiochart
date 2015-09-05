@@ -21,7 +21,7 @@ run_tests = (doc) ->
     beforeEach ->
       table = doc.getElementById('test_one')
       html_table_visual_callback =
-        ac._html_table_visual_callback_maker(table, 'audiochart-playing')
+        ac.html_table_visual_callback_maker(table, 'audiochart-playing')
 
     it 'does not add a class before it is called', ->
       first_data_cell = table.getElementsByTagName('td')[0]

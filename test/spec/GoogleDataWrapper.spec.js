@@ -35,7 +35,7 @@
     };
 
     FakeGoogleDataTable.prototype.getColumnRange = function(columnIndex) {
-      var i, len, max, min, ref, row, value;
+      var max, min, row, value, _i, _len, _ref;
       if (columnIndex === 0) {
         return {
           min: 0,
@@ -44,9 +44,9 @@
       } else {
         min = this.table[0][columnIndex];
         max = this.table[0][columnIndex];
-        ref = this.table;
-        for (i = 0, len = ref.length; i < len; i++) {
-          row = ref[i];
+        _ref = this.table;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          row = _ref[_i];
           value = row[columnIndex];
           if (min > value) {
             min = value;

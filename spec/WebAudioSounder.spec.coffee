@@ -13,8 +13,10 @@ class FakeOscillator
 
 
 class FakeAudioContext
+  constructor: ->
+    @currentTime = 42
   createOscillator: -> new FakeOscillator
-  destination: 42
+  destination: {}
 
 
 # TODO: check other pass-through calls too (i.e. stop() etc.)
@@ -32,8 +34,8 @@ describe 'WebAudioSounder', ->
   it 'connects and starts its oscillator', ->
     sounder = new ac.WebAudioSounder(fake_audio_context)
     fake_oscillator = sounder.oscillator  # guts!
-    spyOn fake_oscillator, 'connect'
-    spyOn fake_oscillator, 'start'
+    spyOn(fake_oscillator, 'connect')
+    spyOn(fake_oscillator, 'start')
     sounder.start()
     expect(fake_oscillator.connect)
       .toHaveBeenCalledWith fake_audio_context.destination
@@ -52,7 +54,6 @@ describe 'WebAudioSounder', ->
       fake_oscillator.frequency.value is 42
 
   it 'changes frequency with an offset', ->
-    fake_oscillator = null
     jasmine.Clock.useMock()
     delay = 250
     sounder = new ac.WebAudioSounder(fake_audio_context)
@@ -63,4 +64,17 @@ describe 'WebAudioSounder', ->
     expect(fake_oscillator.frequency.value).toBe 84
 
   it 'stops its oscillator', ->
-    # TODO test, with opt_offset!
+    sounder = new ac.WebAudioSounder(fake_audio_context)
+    fake_oscillator = sounder.oscillator  # guts!
+    spyOn(fake_oscillator, 'stop')
+    sounder.stop()
+    expect(fake_oscillator.stop).toHaveBeenCalled()
+
+  it 'stops its oscillator at a given time', ->
+    jasmine.Clock.useMock()
+    sounder = new ac.WebAudioSounder(fake_audio_context)
+    fake_oscillator = sounder.oscillator  # guts!
+    spyOn(fake_oscillator, 'stop')
+    sounder.stop(21)
+    expect(fake_oscillator.stop).toHaveBeenCalledWith(
+      fake_audio_context.currentTime + 21)

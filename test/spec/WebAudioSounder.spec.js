@@ -25,13 +25,15 @@
   })();
 
   FakeAudioContext = (function() {
-    function FakeAudioContext() {}
+    function FakeAudioContext() {
+      this.currentTime = 42;
+    }
 
     FakeAudioContext.prototype.createOscillator = function() {
       return new FakeOscillator;
     };
 
-    FakeAudioContext.prototype.destination = 42;
+    FakeAudioContext.prototype.destination = {};
 
     return FakeAudioContext;
 
@@ -75,7 +77,6 @@
     });
     it('changes frequency with an offset', function() {
       var delay, fake_oscillator, sounder;
-      fake_oscillator = null;
       jasmine.Clock.useMock();
       delay = 250;
       sounder = new ac.WebAudioSounder(fake_audio_context);
@@ -85,7 +86,23 @@
       jasmine.Clock.tick(delay);
       return expect(fake_oscillator.frequency.value).toBe(84);
     });
-    return it('stops its oscillator', function() {});
+    it('stops its oscillator', function() {
+      var fake_oscillator, sounder;
+      sounder = new ac.WebAudioSounder(fake_audio_context);
+      fake_oscillator = sounder.oscillator;
+      spyOn(fake_oscillator, 'stop');
+      sounder.stop();
+      return expect(fake_oscillator.stop).toHaveBeenCalled();
+    });
+    return it('stops its oscillator at a given time', function() {
+      var fake_oscillator, sounder;
+      jasmine.Clock.useMock();
+      sounder = new ac.WebAudioSounder(fake_audio_context);
+      fake_oscillator = sounder.oscillator;
+      spyOn(fake_oscillator, 'stop');
+      sounder.stop(21);
+      return expect(fake_oscillator.stop).toHaveBeenCalledWith(fake_audio_context.currentTime + 21);
+    });
   });
 
 }).call(this);

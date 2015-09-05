@@ -1,12 +1,12 @@
 (function() {
-  var AudioChart, DataWrapper, FrequencyPitchMapper, GoogleDataWrapper, HTMLTableDataWrapper, JSONDataWrapper, NotePitchMapper, PitchMapper, Player, WebAudioSounder, _audio_context_getter, _google_visual_callback_maker, _html_table_visual_callback_maker,
-    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
+  var AudioChart, AudioContextGetter, DataWrapper, FrequencyPitchMapper, GoogleDataWrapper, HTMLTableDataWrapper, JSONDataWrapper, NotePitchMapper, PitchMapper, Player, WebAudioSounder, google_visual_callback_maker, html_table_visual_callback_maker, root, _AudioChart,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   DataWrapper = (function() {
     function DataWrapper(data) {
       this.data = data;
-      throw new Error('Please use a derived class');
+      throw Error('Please use a derived class');
     }
 
     DataWrapper.prototype.num_series = function() {};
@@ -25,8 +25,8 @@
 
   })();
 
-  GoogleDataWrapper = (function(superClass) {
-    extend(GoogleDataWrapper, superClass);
+  GoogleDataWrapper = (function(_super) {
+    __extends(GoogleDataWrapper, _super);
 
     function GoogleDataWrapper(data) {
       this.data = data;
@@ -37,12 +37,12 @@
     };
 
     GoogleDataWrapper.prototype.series_names = function() {
-      var i, j, ref, results;
-      results = [];
-      for (i = j = 1, ref = this.data.getNumberOfColumns() - 1; 1 <= ref ? j <= ref : j >= ref; i = 1 <= ref ? ++j : --j) {
-        results.push(this.data.getColumnLabel(i));
+      var i, _i, _ref, _results;
+      _results = [];
+      for (i = _i = 1, _ref = this.data.getNumberOfColumns() - 1; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+        _results.push(this.data.getColumnLabel(i));
       }
-      return results;
+      return _results;
     };
 
     GoogleDataWrapper.prototype.series_min = function(series) {
@@ -65,8 +65,8 @@
 
   })(DataWrapper);
 
-  JSONDataWrapper = (function(superClass) {
-    extend(JSONDataWrapper, superClass);
+  JSONDataWrapper = (function(_super) {
+    __extends(JSONDataWrapper, _super);
 
     function JSONDataWrapper(json) {
       if (typeof json === 'string') {
@@ -74,7 +74,7 @@
       } else if (typeof json === 'object') {
         this.object = json;
       } else {
-        throw new Error("Please provide a JSON string or derived object.");
+        throw Error("Please provide a JSON string or derived object.");
       }
     }
 
@@ -83,14 +83,14 @@
     };
 
     JSONDataWrapper.prototype.series_names = function() {
-      var chunk, j, len, ref, results;
-      ref = this.object.data;
-      results = [];
-      for (j = 0, len = ref.length; j < len; j++) {
-        chunk = ref[j];
-        results.push(chunk.series);
+      var chunk, _i, _len, _ref, _results;
+      _ref = this.object.data;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        chunk = _ref[_i];
+        _results.push(chunk.series);
       }
-      return results;
+      return _results;
     };
 
     JSONDataWrapper.prototype.series_min = function(series) {
@@ -113,13 +113,13 @@
 
   })(DataWrapper);
 
-  HTMLTableDataWrapper = (function(superClass) {
-    extend(HTMLTableDataWrapper, superClass);
+  HTMLTableDataWrapper = (function(_super) {
+    __extends(HTMLTableDataWrapper, _super);
 
-    function HTMLTableDataWrapper(table1) {
-      this.table = table1;
+    function HTMLTableDataWrapper(table) {
+      this.table = table;
       if (!this.table) {
-        throw new Error("No table given.");
+        throw Error("No table given.");
       }
     }
 
@@ -128,25 +128,25 @@
     };
 
     HTMLTableDataWrapper.prototype.series_names = function() {
-      var element, j, len, ref, results;
-      ref = this.table.getElementsByTagName('th');
-      results = [];
-      for (j = 0, len = ref.length; j < len; j++) {
-        element = ref[j];
-        results.push(element.textContent);
+      var element, _i, _len, _ref, _results;
+      _ref = this.table.getElementsByTagName('th');
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        element = _ref[_i];
+        _results.push(element.textContent);
       }
-      return results;
+      return _results;
     };
 
     HTMLTableDataWrapper.prototype._series_floats = function(series) {
-      var element, j, len, ref, results;
-      ref = this.table.getElementsByTagName('td');
-      results = [];
-      for (j = 0, len = ref.length; j < len; j++) {
-        element = ref[j];
-        results.push(parseFloat(element.textContent));
+      var element, _i, _len, _ref, _results;
+      _ref = this.table.getElementsByTagName('td');
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        element = _ref[_i];
+        _results.push(parseFloat(element.textContent));
       }
-      return results;
+      return _results;
     };
 
     HTMLTableDataWrapper.prototype.series_min = function(series) {
@@ -170,11 +170,11 @@
   })(DataWrapper);
 
   PitchMapper = (function() {
-    function PitchMapper(minimum_datum1, maximum_datum1) {
-      this.minimum_datum = minimum_datum1;
-      this.maximum_datum = maximum_datum1;
+    function PitchMapper(minimum_datum, maximum_datum) {
+      this.minimum_datum = minimum_datum;
+      this.maximum_datum = maximum_datum;
       if (this.minimum_datum > this.maximum_datum) {
-        throw new Error('minimum datum should be <= maximum datum');
+        throw Error('minimum datum should be <= maximum datum');
       }
     }
 
@@ -184,15 +184,15 @@
 
   })();
 
-  FrequencyPitchMapper = (function(superClass) {
-    extend(FrequencyPitchMapper, superClass);
+  FrequencyPitchMapper = (function(_super) {
+    __extends(FrequencyPitchMapper, _super);
 
     function FrequencyPitchMapper(minimum_datum, maximum_datum, minimum_frequency, maximum_frequency) {
       this.minimum_frequency = minimum_frequency;
       this.maximum_frequency = maximum_frequency;
       FrequencyPitchMapper.__super__.constructor.call(this, minimum_datum, maximum_datum);
       if (this.minimum_frequency > this.maximum_frequency) {
-        throw new Error('minimum frequency should be <= maximum frequency');
+        throw Error('minimum frequency should be <= maximum frequency');
       }
       this.data_range = this.maximum_datum - this.minimum_datum;
     }
@@ -211,8 +211,8 @@
 
   })(PitchMapper);
 
-  NotePitchMapper = (function(superClass) {
-    extend(NotePitchMapper, superClass);
+  NotePitchMapper = (function(_super) {
+    __extends(NotePitchMapper, _super);
 
     function NotePitchMapper() {
       return NotePitchMapper.__super__.constructor.apply(this, arguments);
@@ -223,8 +223,8 @@
   })(PitchMapper);
 
   WebAudioSounder = (function() {
-    function WebAudioSounder(context1) {
-      this.context = context1;
+    function WebAudioSounder(context) {
+      this.context = context;
       this.oscillator = this.context.createOscillator();
     }
 
@@ -244,7 +244,7 @@
     };
 
     WebAudioSounder.prototype.stop = function(offset) {
-      this.oscillator.stop(offset);
+      this.oscillator.stop(this.context.currentTime + offset);
     };
 
     return WebAudioSounder;
@@ -252,16 +252,16 @@
   })();
 
   Player = (function() {
-    function Player(duration, data, pitch_mapper, sounder1, visual_callback) {
+    function Player(duration, data, pitch_mapper, sounder, visual_callback) {
       this.data = data;
       this.pitch_mapper = pitch_mapper;
-      this.sounder = sounder1;
+      this.sounder = sounder;
       this.visual_callback = visual_callback != null ? visual_callback : null;
       this.interval = duration / this.data.series_length(0);
     }
 
     Player.prototype.play = function() {
-      var i, j, offset, ref, series_length, series_max_index;
+      var i, offset, series_length, series_max_index, _i;
       series_length = this.data.series_length(0);
       series_max_index = series_length - 1;
       this.sounder.start(0);
@@ -269,7 +269,7 @@
         this.visual_callback(0, 0);
       }
       this.sounder.frequency(this.pitch_mapper.map(this.data.series_value(0, 0)));
-      for (i = j = 1, ref = series_max_index; 1 <= ref ? j <= ref : j >= ref; i = 1 <= ref ? ++j : --j) {
+      for (i = _i = 1; 1 <= series_max_index ? _i <= series_max_index : _i >= series_max_index; i = 1 <= series_max_index ? ++_i : --_i) {
         offset = this.interval * i;
         if (this.visual_callback != null) {
           this._highlight_enqueue(0, i, offset);
@@ -294,22 +294,35 @@
   })();
 
   AudioChart = (function() {
-    function AudioChart(options) {
-      var callback, context, data_wrapper, error_type, fail, frequency_pitch_mapper, player, sounder;
-      fail = "Sorry, it seems your browser doesn't support the Web Audio API.";
-      context = _audio_context_getter();
+    function AudioChart(options, context) {
+      var fail;
       if (context == null) {
-        alert(fail);
-        throw new Error(fail);
+        context = null;
       }
-      error_type = "Invalid data type '" + options.type + "' given.";
+      if (context === null) {
+        fail = "Sorry, it seems your browser doesn't support the Web Audio API.";
+        context = AudioContextGetter.get();
+        if (context == null) {
+          throw Error(fail);
+        }
+      }
+      return _AudioChart(options, context);
+    }
+
+    return AudioChart;
+
+  })();
+
+  _AudioChart = (function() {
+    function _AudioChart(options, context) {
+      var callback, data_wrapper, frequency_pitch_mapper, player, sounder;
       data_wrapper = null;
       callback = null;
       switch (options.type) {
         case 'google':
           data_wrapper = new GoogleDataWrapper(options.data);
           if (options['chart'] != null) {
-            callback = _google_visual_callback_maker(options['chart']);
+            callback = google_visual_callback_maker(options['chart']);
           }
           break;
         case 'json':
@@ -318,12 +331,13 @@
         case 'html_table':
           data_wrapper = new HTMLTableDataWrapper(options.table);
           if (options['highlight_class'] != null) {
-            callback = _html_table_visual_callback_maker(options.table, options['highlight_class']);
+            callback = html_table_visual_callback_maker(options.table, options['highlight_class']);
           }
           break;
+        case 'test':
+          return;
         default:
-          alert(error_type);
-          throw new Error(error_type);
+          throw Error("Invalid data type '" + options.type + "' given.");
       }
       frequency_pitch_mapper = new FrequencyPitchMapper(data_wrapper.series_min(0), data_wrapper.series_max(0), options['frequency_low'], options['frequency_high']);
       sounder = new WebAudioSounder(context);
@@ -331,21 +345,37 @@
       player.play();
     }
 
-    return AudioChart;
+    return _AudioChart;
 
   })();
 
-  _audio_context_getter = function() {
-    if (typeof AudioContext !== "undefined" && AudioContext !== null) {
-      return new AudioContext;
-    } else if (typeof webkitAudioContext !== "undefined" && webkitAudioContext !== null) {
-      return new webkitAudioContext;
-    } else {
-      return null;
-    }
-  };
+  AudioContextGetter = (function() {
+    var audio_context, _get_audio_context;
 
-  _google_visual_callback_maker = function(chart) {
+    function AudioContextGetter() {}
+
+    audio_context = null;
+
+    _get_audio_context = function() {
+      if (typeof window !== "undefined" && window !== null) {
+        if (window.AudioContext != null) {
+          return new window.AudioContext();
+        } else if (window.webkitAudioContext != null) {
+          return new window.webkitAudioContext();
+        }
+      }
+      return null;
+    };
+
+    AudioContextGetter.get = function() {
+      return audio_context != null ? audio_context : audio_context = _get_audio_context();
+    };
+
+    return AudioContextGetter;
+
+  })();
+
+  google_visual_callback_maker = function(chart) {
     return function(series, row) {
       chart.setSelection([
         {
@@ -356,12 +386,12 @@
     };
   };
 
-  _html_table_visual_callback_maker = function(table, class_name) {
+  html_table_visual_callback_maker = function(table, class_name) {
     return function(series, row) {
-      var cell, j, len, ref;
-      ref = table.getElementsByTagName('td');
-      for (j = 0, len = ref.length; j < len; j++) {
-        cell = ref[j];
+      var cell, _i, _len, _ref;
+      _ref = table.getElementsByTagName('td');
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        cell = _ref[_i];
         cell.className = '';
       }
       cell = table.getElementsByTagName('td')[row];
@@ -369,33 +399,35 @@
     };
   };
 
-  if (typeof exports !== "undefined" && exports !== null) {
-    exports.AudioChart = AudioChart;
-    exports.DataWrapper = DataWrapper;
-    exports.GoogleDataWrapper = GoogleDataWrapper;
-    exports.JSONDataWrapper = JSONDataWrapper;
-    exports.HTMLTableDataWrapper = HTMLTableDataWrapper;
-    exports.PitchMapper = PitchMapper;
-    exports.FrequencyPitchMapper = FrequencyPitchMapper;
-    exports.NotePitchMapper = NotePitchMapper;
-    exports.WebAudioSounder = WebAudioSounder;
-    exports.Player = Player;
-    exports._google_visual_callback_maker = _google_visual_callback_maker;
-    exports._html_table_visual_callback_maker = _html_table_visual_callback_maker;
-  } else {
-    this['AudioChart'] = AudioChart;
-    this['DataWrapper'] = DataWrapper;
-    this['GoogleDataWrapper'] = GoogleDataWrapper;
-    this['JSONDataWrapper'] = JSONDataWrapper;
-    this['HTMLTableDataWrapper'] = HTMLTableDataWrapper;
-    this['PitchMapper'] = PitchMapper;
-    this['FrequencyPitchMapper'] = FrequencyPitchMapper;
-    this['NotePitchMapper'] = NotePitchMapper;
-    this['WebAudioSounder'] = WebAudioSounder;
-    this['Player'] = Player;
-    this['_google_visual_callback_maker'] = _google_visual_callback_maker;
-    this['_html_table_visual_callback_maker'] = _html_table_visual_callback_maker;
-  }
+  root = typeof exports !== "undefined" && exports !== null ? exports : this;
+
+  root.AudioChart = AudioChart;
+
+  root._AudioChart = _AudioChart;
+
+  root.AudioContextGetter = AudioContextGetter;
+
+  root.DataWrapper = DataWrapper;
+
+  root.GoogleDataWrapper = GoogleDataWrapper;
+
+  root.JSONDataWrapper = JSONDataWrapper;
+
+  root.HTMLTableDataWrapper = HTMLTableDataWrapper;
+
+  root.PitchMapper = PitchMapper;
+
+  root.FrequencyPitchMapper = FrequencyPitchMapper;
+
+  root.NotePitchMapper = NotePitchMapper;
+
+  root.WebAudioSounder = WebAudioSounder;
+
+  root.Player = Player;
+
+  root.google_visual_callback_maker = google_visual_callback_maker;
+
+  root.html_table_visual_callback_maker = html_table_visual_callback_maker;
 
 }).call(this);
 

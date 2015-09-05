@@ -3,7 +3,7 @@
 #
 
 class DataWrapper
-  constructor: (@data) -> throw new Error 'Please use a derived class'
+  constructor: (@data) -> throw Error 'Please use a derived class'
 
   num_series: ->
 
@@ -49,7 +49,7 @@ class JSONDataWrapper extends DataWrapper
     else if typeof json == 'object'
       @object = json
     else
-      throw new Error "Please provide a JSON string or derived object."
+      throw Error "Please provide a JSON string or derived object."
 
   num_series: -> @object.data.length
 
@@ -68,7 +68,7 @@ class JSONDataWrapper extends DataWrapper
 
 class HTMLTableDataWrapper extends DataWrapper
   constructor: (@table) ->
-    throw new Error "No table given." unless @table
+    throw Error "No table given." unless @table
 
   num_series: -> @table.getElementsByTagName('tr')[0].children.length
 
@@ -102,7 +102,7 @@ class PitchMapper
   # TODO: test derived class thing?
   constructor: (@minimum_datum, @maximum_datum) ->
     if @minimum_datum > @maximum_datum
-      throw new Error 'minimum datum should be <= maximum datum'
+      throw Error 'minimum datum should be <= maximum datum'
 
   map: (datum) ->
 
@@ -115,7 +115,7 @@ class FrequencyPitchMapper extends PitchMapper
     @maximum_frequency) ->
     super(minimum_datum, maximum_datum)
     if @minimum_frequency > @maximum_frequency
-      throw new Error 'minimum frequency should be <= maximum frequency'
+      throw Error 'minimum frequency should be <= maximum frequency'
     @data_range = @maximum_datum - @minimum_datum
 
   map: (datum) ->
@@ -136,6 +136,10 @@ class NotePitchMapper extends PitchMapper
 # Web Audio Sounder
 #
 
+# - Wraps the Web Audio API.
+# - Takes care of the fact that AudioContext currentTime is ever-increasing,
+#   whereas Player time is relative to the time the Player was created.
+# - Manages the use of oscillators.
 class WebAudioSounder
   constructor: (@context) ->
     @oscillator = @context.createOscillator()
@@ -153,7 +157,7 @@ class WebAudioSounder
     return
 
   stop: (offset) ->
-    @oscillator.stop(offset)
+    @oscillator.stop(@context.currentTime + offset)
     return
 
 
@@ -202,38 +206,49 @@ class Player
 # AudioChart and Helpers
 #
 
+# This is a thin wrapper around the /real/ AudioChart object that either tries
+# to create/get an AudioContext (useful for when nothing else on the page is
+# using the Web Audio API) or will pass along an existing AudioContext to said
+# /real/ AudioChart object.
 class AudioChart
-  constructor: (options) ->
-    # TODO: This is presently un(-mechanically-)tested at integration level
+  constructor: (options, context = null) ->
+    #console.log 'AudioChart()', options, context
+    if context is null
+      # Check for Web Audio API support
+      fail = "Sorry, it seems your browser doesn't support the Web Audio API."
+      context = AudioContextGetter.get()
+      throw Error(fail) unless context?
+
+    return _AudioChart(options, context)
+
+
+# This is the /real/ AudioChart object
+class _AudioChart
+  constructor: (options, context) ->
+    #console.log '_AudioChart()', options, context
+    # FIXME: This is presently un(-mechanically-)tested at integration level
     # Structure of options object is detailed in REFERENCE.md
 
-    # Check for Web Audio API support
-    fail = "Sorry, it seems your browser doesn't support the Web Audio API."
-    context = _audio_context_getter()
-    if not context?
-      alert(fail)
-      throw new Error fail
-
     # TODO check for options.data, options.chart, ...
-    error_type = "Invalid data type '#{options.type}' given."
     data_wrapper = null
     callback = null
     switch options.type
       when 'google'
         data_wrapper = new GoogleDataWrapper(options.data)
         if options['chart']?
-          callback = _google_visual_callback_maker(options['chart'])
+          callback = google_visual_callback_maker(options['chart'])
       when 'json'
         data_wrapper = new JSONDataWrapper(options.data)
       when 'html_table'
         data_wrapper = new HTMLTableDataWrapper(options.table)
         if options['highlight_class']?
-          callback = _html_table_visual_callback_maker(
+          callback = html_table_visual_callback_maker(
             options.table
             options['highlight_class'])
+      when 'test'
+        return
       else
-        alert error_type
-        throw new Error error_type
+        throw Error "Invalid data type '#{options.type}' given."
 
     # TODO check options
     frequency_pitch_mapper = new FrequencyPitchMapper(
@@ -251,26 +266,33 @@ class AudioChart
     player.play()
 
 
-# Helper needed to even out cross-browser differences
-_audio_context_getter = ->
-  if AudioContext?
-    return new AudioContext
-  else if webkitAudioContext?
-    return new webkitAudioContext
-  else
-    return null
+# Helper needed to ensure only one context is ever requested, and to
+# even out cross-browser differences
+class AudioContextGetter
+  audio_context = null
+
+  _get_audio_context = ->
+    if window?  # needed to enable testing in jasmine-node
+      if window.AudioContext?
+        return new window.AudioContext()
+      else if window.webkitAudioContext?
+        return new window.webkitAudioContext()
+    return null  # terminates both if branches (window? and browser support)
+
+  @get: ->
+    return audio_context ?= _get_audio_context()
 
 
 # Callback generator ensures that setSelection will be called with the
 # correct arguments and that the Player doesn't need to know about the chart.
-_google_visual_callback_maker = (chart) ->
+google_visual_callback_maker = (chart) ->
   return (series, row) ->
     chart.setSelection([{'row': row, 'column': series + 1}])
     return
 
 
 # Callback generator for visual indication of HTML table playback
-_html_table_visual_callback_maker = (table, class_name) ->
+html_table_visual_callback_maker = (table, class_name) ->
   return (series, row) ->
     cell.className = '' for cell in table.getElementsByTagName('td')
     cell = table.getElementsByTagName('td')[row]
@@ -278,29 +300,18 @@ _html_table_visual_callback_maker = (table, class_name) ->
     return
 
 
-if exports?
-  exports.AudioChart = AudioChart
-  exports.DataWrapper = DataWrapper  # base
-  exports.GoogleDataWrapper = GoogleDataWrapper
-  exports.JSONDataWrapper = JSONDataWrapper
-  exports.HTMLTableDataWrapper = HTMLTableDataWrapper
-  exports.PitchMapper = PitchMapper  # base
-  exports.FrequencyPitchMapper = FrequencyPitchMapper
-  exports.NotePitchMapper = NotePitchMapper
-  exports.WebAudioSounder = WebAudioSounder
-  exports.Player = Player
-  exports._google_visual_callback_maker = _google_visual_callback_maker
-  exports._html_table_visual_callback_maker = _html_table_visual_callback_maker
-else
-  this['AudioChart'] = AudioChart
-  this['DataWrapper'] = DataWrapper  # base
-  this['GoogleDataWrapper'] = GoogleDataWrapper
-  this['JSONDataWrapper'] = JSONDataWrapper
-  this['HTMLTableDataWrapper'] = HTMLTableDataWrapper
-  this['PitchMapper'] = PitchMapper  # base
-  this['FrequencyPitchMapper'] = FrequencyPitchMapper
-  this['NotePitchMapper'] = NotePitchMapper
-  this['WebAudioSounder'] = WebAudioSounder
-  this['Player'] = Player
-  this['_google_visual_callback_maker'] = _google_visual_callback_maker
-  this['_html_table_visual_callback_maker'] = _html_table_visual_callback_maker
+root = exports ? this
+root.AudioChart = AudioChart
+root._AudioChart = _AudioChart
+root.AudioContextGetter = AudioContextGetter
+root.DataWrapper = DataWrapper  # base
+root.GoogleDataWrapper = GoogleDataWrapper
+root.JSONDataWrapper = JSONDataWrapper
+root.HTMLTableDataWrapper = HTMLTableDataWrapper
+root.PitchMapper = PitchMapper  # base
+root.FrequencyPitchMapper = FrequencyPitchMapper
+root.NotePitchMapper = NotePitchMapper
+root.WebAudioSounder = WebAudioSounder
+root.Player = Player
+root.google_visual_callback_maker = google_visual_callback_maker
+root.html_table_visual_callback_maker = html_table_visual_callback_maker

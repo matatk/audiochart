@@ -21,7 +21,7 @@
       table = null;
       beforeEach(function() {
         table = doc.getElementById('test_one');
-        return html_table_visual_callback = ac._html_table_visual_callback_maker(table, 'audiochart-playing');
+        return html_table_visual_callback = ac.html_table_visual_callback_maker(table, 'audiochart-playing');
       });
       it('does not add a class before it is called', function() {
         var first_data_cell;

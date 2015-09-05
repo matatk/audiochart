@@ -34,8 +34,8 @@ module.exports = (grunt) ->
     # Minify the built JavaScript
     uglify:
       options:
-        banner: '/*! <%= pkg.name %> ' \
-          + '<%= grunt.template.today("yyyy-mm-dd") %> */\n'
+        banner: '/*! <%= pkg.name %> ' +
+          '<%= grunt.template.today("yyyy-mm-dd") %> */\n'
         sourceMap: true
         sourceMapIn: "build/audiochart.js.map"
       build:
@@ -49,13 +49,29 @@ module.exports = (grunt) ->
         src: "spec/HTMLTableDataWrapper.fixtures.html"
         dest: "test/spec/HTMLTableDataWrapper.fixtures.html"
 
+    # Ensure there's a local version of jasmine-all
+    curl:
+      "test/jasmine-all-min.js":
+        "http://searls.github.io/jasmine-all/jasmine-all-min.js"
+      "test/jasmine-dom-fixtures.js":
+        "https://github.com/jeffwatkins/jasmine-dom/raw/master/lib/" +
+        "jasmine-dom-fixtures.js"
+
     # Loading Tasks
     grunt.loadNpmTasks "grunt-coffeelint"
     grunt.loadNpmTasks "grunt-jasmine-node-new"
     grunt.loadNpmTasks "grunt-contrib-coffee"
     grunt.loadNpmTasks "grunt-contrib-uglify"
     grunt.loadNpmTasks "grunt-contrib-copy"
+    grunt.loadNpmTasks "grunt-curl"
+    grunt.loadNpmTasks "grunt-if-missing"
 
     # Setting up Tasks
-    grunt.registerTask "default",
-      ["coffeelint", "jasmine_node", "coffee", "uglify", "copy"]
+    grunt.registerTask "default", [
+      "coffeelint",
+      "jasmine_node",
+      "coffee",
+      "uglify",
+      "copy",
+      "if-missing:curl"
+    ]
