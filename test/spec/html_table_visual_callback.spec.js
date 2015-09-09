@@ -2,7 +2,7 @@
 var HTML_FILE_NAME, ac, document, fs, headless, html_string, jsdom, run_tests;
 
 if (typeof exports !== "undefined" && exports !== null) {
-  ac = require('../audiochart');
+  ac = require('../../src/audiochart');
   fs = require('fs');
   jsdom = require('jsdom').jsdom;
   headless = true;
@@ -21,18 +21,18 @@ run_tests = function(doc) {
     table = null;
     beforeEach(function() {
       table = doc.getElementById('test_one');
-      return html_table_visual_callback = ac.html_table_visual_callback_maker(table, 'audiochart-playing');
+      html_table_visual_callback = ac.html_table_visual_callback_maker(table, 'audiochart-playing');
     });
     it('does not add a class before it is called', function() {
       var first_data_cell;
       first_data_cell = table.getElementsByTagName('td')[0];
-      return expect(first_data_cell.className).toBe('');
+      expect(first_data_cell.className).toBe('');
     });
     it('has added a class after it is called', function() {
       var first_data_cell;
       html_table_visual_callback(0, 0);
       first_data_cell = table.getElementsByTagName('td')[0];
-      return expect(first_data_cell.className).toBe(highlight_class_name);
+      expect(first_data_cell.className).toBe(highlight_class_name);
     });
     return it('has removes the class from one cell and adds it to another', function() {
       var first_data_cell, second_data_cell;

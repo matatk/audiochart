@@ -2,7 +2,7 @@
 var FakeChart, ac;
 
 if (typeof exports !== "undefined" && exports !== null) {
-  ac = require('../audiochart');
+  ac = require('../../src/audiochart');
 } else {
   ac = window;
 }
@@ -21,7 +21,7 @@ describe('google_visual_callback', function() {
   fake_chart = null;
   google_visual_callback = null;
   beforeEach(function() {
-    fake_chart = new FakeChart;
+    fake_chart = new FakeChart();
     google_visual_callback = ac.google_visual_callback_maker(fake_chart);
     return spyOn(fake_chart, 'setSelection');
   });

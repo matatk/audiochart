@@ -2,7 +2,7 @@
 var HTML_FILE_NAME, ac, document, dw, fs, headless, html_string, jsdom, run_tests;
 
 if (typeof exports !== "undefined" && exports !== null) {
-  ac = require('../audiochart');
+  ac = require('../../src/audiochart');
   dw = require('./DataWrappers-common.spec');
   fs = require('fs');
   jsdom = require('jsdom').jsdom;

@@ -2,17 +2,16 @@
 var ac, mixin_min_max;
 
 if (typeof exports !== "undefined" && exports !== null) {
-  ac = require('../audiochart');
+  ac = require('../../src/audiochart');
 } else {
   ac = window;
 }
 
 mixin_min_max = function(klass, test_min, test_max) {
   return describe('Minimum and Maximum data', function() {
-    var obj;
-    obj = null;
+    var obj = null;
     beforeEach(function() {
-      return obj = new klass(test_min, test_max);
+      obj = new klass(test_min, test_max);
     });
     it('stores a minimum data value [not intended for public use]', function() {
       return expect(obj.minimum_datum).toBe(test_min);

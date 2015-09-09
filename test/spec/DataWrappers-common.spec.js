@@ -4,10 +4,9 @@ var data_wrappers_test_core;
 data_wrappers_test_core = function(thing, wrapper1, wrapper2) {
   return describe(thing + " (via common interface)", function() {
     describe('when storing positive-valued data', function() {
-      var data;
-      data = null;
+      var data = null;
       beforeEach(function() {
-        return data = wrapper1;
+        data = wrapper1;
       });
       it('can get the number of series', function() {
         return expect(data.num_series()).toBe(1);
@@ -30,10 +29,9 @@ data_wrappers_test_core = function(thing, wrapper1, wrapper2) {
       });
     });
     return describe('when storing negative-valued data', function() {
-      var data;
-      data = null;
+      var data = null;
       beforeEach(function() {
-        return data = wrapper2;
+        data = wrapper2;
       });
       it('can get the number of series', function() {
         return expect(data.num_series()).toBe(1);
@@ -62,5 +60,5 @@ data_wrappers_test_core = function(thing, wrapper1, wrapper2) {
 if (typeof exports !== "undefined" && exports !== null) {
   exports.data_wrappers_test_core = data_wrappers_test_core;
 } else {
-  this['data_wrappers_test_core'] = data_wrappers_test_core;
+  this.data_wrappers_test_core = data_wrappers_test_core;
 }

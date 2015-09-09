@@ -1,33 +1,20 @@
 (function() {
-  var AudioChart, AudioContextGetter, DataWrapper, FrequencyPitchMapper, GoogleDataWrapper, HTMLTableDataWrapper, JSONDataWrapper, NotePitchMapper, PitchMapper, Player, WebAudioSounder, google_visual_callback_maker, html_table_visual_callback_maker, root, _AudioChart,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  DataWrapper = (function() {
+  var DataWrapper = (function() {
     function DataWrapper(data) {
       this.data = data;
       throw Error('Please use a derived class');
     }
 
     DataWrapper.prototype.num_series = function() {};
-
     DataWrapper.prototype.series_names = function() {};
-
     DataWrapper.prototype.series_min = function(series) {};
-
     DataWrapper.prototype.series_max = function(series) {};
-
     DataWrapper.prototype.series_value = function(series, index) {};
-
     DataWrapper.prototype.series_length = function(series) {};
-
     return DataWrapper;
-
   })();
 
-  GoogleDataWrapper = (function(_super) {
-    __extends(GoogleDataWrapper, _super);
-
+  var GoogleDataWrapper = (function() {
     function GoogleDataWrapper(data) {
       this.data = data;
     }
@@ -46,11 +33,11 @@
     };
 
     GoogleDataWrapper.prototype.series_min = function(series) {
-      return this.data.getColumnRange(series + 1)['min'];
+      return this.data.getColumnRange(series + 1).min;
     };
 
     GoogleDataWrapper.prototype.series_max = function(series) {
-      return this.data.getColumnRange(series + 1)['max'];
+      return this.data.getColumnRange(series + 1).max;
     };
 
     GoogleDataWrapper.prototype.series_value = function(series, index) {
@@ -62,12 +49,9 @@
     };
 
     return GoogleDataWrapper;
+  })();
 
-  })(DataWrapper);
-
-  JSONDataWrapper = (function(_super) {
-    __extends(JSONDataWrapper, _super);
-
+  var JSONDataWrapper = (function() {
     function JSONDataWrapper(json) {
       if (typeof json === 'string') {
         this.object = JSON.parse(json);
@@ -94,28 +78,25 @@
     };
 
     JSONDataWrapper.prototype.series_min = function(series) {
-      return Math.min.apply(this, this.object.data[series]['values']);
+      return Math.min.apply(this, this.object.data[series].values);
     };
 
     JSONDataWrapper.prototype.series_max = function(series) {
-      return Math.max.apply(this, this.object.data[series]['values']);
+      return Math.max.apply(this, this.object.data[series].values);
     };
 
     JSONDataWrapper.prototype.series_value = function(series, index) {
-      return this.object.data[series]['values'][index];
+      return this.object.data[series].values[index];
     };
 
     JSONDataWrapper.prototype.series_length = function(series) {
-      return this.object.data[series]['values'].length;
+      return this.object.data[series].values.length;
     };
 
     return JSONDataWrapper;
+  })();
 
-  })(DataWrapper);
-
-  HTMLTableDataWrapper = (function(_super) {
-    __extends(HTMLTableDataWrapper, _super);
-
+  var HTMLTableDataWrapper = (function() {
     function HTMLTableDataWrapper(table) {
       this.table = table;
       if (!this.table) {
@@ -166,10 +147,9 @@
     };
 
     return HTMLTableDataWrapper;
+  })();
 
-  })(DataWrapper);
-
-  PitchMapper = (function() {
+  var PitchMapper = (function() {
     function PitchMapper(minimum_datum, maximum_datum) {
       this.minimum_datum = minimum_datum;
       this.maximum_datum = maximum_datum;
@@ -179,23 +159,21 @@
     }
 
     PitchMapper.prototype.map = function(datum) {};
-
     return PitchMapper;
-
   })();
 
-  FrequencyPitchMapper = (function(_super) {
-    __extends(FrequencyPitchMapper, _super);
-
+  var FrequencyPitchMapper = (function() {
     function FrequencyPitchMapper(minimum_datum, maximum_datum, minimum_frequency, maximum_frequency) {
       this.minimum_frequency = minimum_frequency;
       this.maximum_frequency = maximum_frequency;
-      FrequencyPitchMapper.__super__.constructor.call(this, minimum_datum, maximum_datum);
+      PitchMapper.call(this, minimum_datum, maximum_datum);
       if (this.minimum_frequency > this.maximum_frequency) {
         throw Error('minimum frequency should be <= maximum frequency');
       }
       this.data_range = this.maximum_datum - this.minimum_datum;
     }
+
+	FrequencyPitchMapper.prototype = Object.create(PitchMapper.prototype);
 
     FrequencyPitchMapper.prototype.map = function(datum) {
       var ratio;
@@ -208,21 +186,16 @@
     };
 
     return FrequencyPitchMapper;
+  })();
 
-  })(PitchMapper);
-
-  NotePitchMapper = (function(_super) {
-    __extends(NotePitchMapper, _super);
-
+  var NotePitchMapper = (function() {
     function NotePitchMapper() {
-      return NotePitchMapper.__super__.constructor.apply(this, arguments);
+      return PitchMapper.apply(this, arguments);
     }
-
     return NotePitchMapper;
+  })();
 
-  })(PitchMapper);
-
-  WebAudioSounder = (function() {
+  var WebAudioSounder = (function() {
     function WebAudioSounder(context) {
       this.context = context;
       this.oscillator = this.context.createOscillator();
@@ -248,15 +221,14 @@
     };
 
     return WebAudioSounder;
-
   })();
 
-  Player = (function() {
+  var Player = (function() {
     function Player(duration, data, pitch_mapper, sounder, visual_callback) {
       this.data = data;
       this.pitch_mapper = pitch_mapper;
       this.sounder = sounder;
-      this.visual_callback = visual_callback != null ? visual_callback : null;
+      this.visual_callback = visual_callback !== null ? visual_callback : null;
       this.interval = duration / this.data.series_length(0);
     }
 
@@ -265,13 +237,13 @@
       series_length = this.data.series_length(0);
       series_max_index = series_length - 1;
       this.sounder.start(0);
-      if (this.visual_callback != null) {
+      if (this.visual_callback !== null) {
         this.visual_callback(0, 0);
       }
       this.sounder.frequency(this.pitch_mapper.map(this.data.series_value(0, 0)));
       for (i = _i = 1; 1 <= series_max_index ? _i <= series_max_index : _i >= series_max_index; i = 1 <= series_max_index ? ++_i : --_i) {
         offset = this.interval * i;
-        if (this.visual_callback != null) {
+        if (this.visual_callback !== null) {
           this._highlight_enqueue(0, i, offset);
         }
         this.sounder.frequency(this.pitch_mapper.map(this.data.series_value(0, i)), offset);
@@ -290,30 +262,26 @@
     };
 
     return Player;
-
   })();
 
-  AudioChart = (function() {
+  var AudioChart = (function() {
     function AudioChart(options, context) {
-      var fail;
-      if (context == null) {
+      var fail = "Sorry, it seems your browser doesn't support the Web Audio API.";
+      if (context === null) {
         context = null;
       }
       if (context === null) {
-        fail = "Sorry, it seems your browser doesn't support the Web Audio API.";
         context = AudioContextGetter.get();
-        if (context == null) {
+        if (context === null) {
           throw Error(fail);
         }
       }
       return _AudioChart(options, context);
     }
-
     return AudioChart;
-
   })();
 
-  _AudioChart = (function() {
+  var _AudioChart = (function() {
     function _AudioChart(options, context) {
       var callback, data_wrapper, frequency_pitch_mapper, player, sounder;
       data_wrapper = null;
@@ -321,8 +289,8 @@
       switch (options.type) {
         case 'google':
           data_wrapper = new GoogleDataWrapper(options.data);
-          if (options['chart'] != null) {
-            callback = google_visual_callback_maker(options['chart']);
+          if (options.chart !== null) {
+            callback = google_visual_callback_maker(options.chart);
           }
           break;
         case 'json':
@@ -330,8 +298,8 @@
           break;
         case 'html_table':
           data_wrapper = new HTMLTableDataWrapper(options.table);
-          if (options['highlight_class'] != null) {
-            callback = html_table_visual_callback_maker(options.table, options['highlight_class']);
+          if (options.highlight_class !== null) {
+            callback = html_table_visual_callback_maker(options.table, options.highlight_class);
           }
           break;
         case 'test':
@@ -339,28 +307,24 @@
         default:
           throw Error("Invalid data type '" + options.type + "' given.");
       }
-      frequency_pitch_mapper = new FrequencyPitchMapper(data_wrapper.series_min(0), data_wrapper.series_max(0), options['frequency_low'], options['frequency_high']);
+      frequency_pitch_mapper = new FrequencyPitchMapper(data_wrapper.series_min(0), data_wrapper.series_max(0), options.frequency_low, options.frequency_high);
       sounder = new WebAudioSounder(context);
-      player = new Player(options['duration'], data_wrapper, frequency_pitch_mapper, sounder, callback);
+      player = new Player(options.duration, data_wrapper, frequency_pitch_mapper, sounder, callback);
       player.play();
     }
-
     return _AudioChart;
-
   })();
 
-  AudioContextGetter = (function() {
-    var audio_context, _get_audio_context;
-
+  var AudioContextGetter = (function() {
     function AudioContextGetter() {}
 
-    audio_context = null;
+    var audio_context = null;
 
-    _get_audio_context = function() {
+    var _get_audio_context = function() {
       if (typeof window !== "undefined" && window !== null) {
-        if (window.AudioContext != null) {
+        if (window.AudioContext !== null) {
           return new window.AudioContext();
-        } else if (window.webkitAudioContext != null) {
+        } else if (window.webkitAudioContext !== null) {
           return new window.webkitAudioContext();
         }
       }
@@ -368,14 +332,13 @@
     };
 
     AudioContextGetter.get = function() {
-      return audio_context != null ? audio_context : audio_context = _get_audio_context();
+      return audio_context !== null ? audio_context : audio_context = _get_audio_context();
     };
 
     return AudioContextGetter;
-
   })();
 
-  google_visual_callback_maker = function(chart) {
+  var google_visual_callback_maker = function(chart) {
     return function(series, row) {
       chart.setSelection([
         {
@@ -386,7 +349,7 @@
     };
   };
 
-  html_table_visual_callback_maker = function(table, class_name) {
+  var html_table_visual_callback_maker = function(table, class_name) {
     return function(series, row) {
       var cell, _i, _len, _ref;
       _ref = table.getElementsByTagName('td');
@@ -400,35 +363,18 @@
   };
 
   root = typeof exports !== "undefined" && exports !== null ? exports : this;
-
   root.AudioChart = AudioChart;
-
   root._AudioChart = _AudioChart;
-
   root.AudioContextGetter = AudioContextGetter;
-
   root.DataWrapper = DataWrapper;
-
   root.GoogleDataWrapper = GoogleDataWrapper;
-
   root.JSONDataWrapper = JSONDataWrapper;
-
   root.HTMLTableDataWrapper = HTMLTableDataWrapper;
-
   root.PitchMapper = PitchMapper;
-
   root.FrequencyPitchMapper = FrequencyPitchMapper;
-
   root.NotePitchMapper = NotePitchMapper;
-
   root.WebAudioSounder = WebAudioSounder;
-
   root.Player = Player;
-
   root.google_visual_callback_maker = google_visual_callback_maker;
-
   root.html_table_visual_callback_maker = html_table_visual_callback_maker;
-
 }).call(this);
-
-//# sourceMappingURL=audiochart.js.map

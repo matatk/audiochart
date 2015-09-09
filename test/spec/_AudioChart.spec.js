@@ -2,7 +2,7 @@
 var ac;
 
 if (typeof exports !== "undefined" && exports !== null) {
-  ac = require('../audiochart');
+  ac = require('../../src/audiochart');
 } else {
   ac = window;
 }

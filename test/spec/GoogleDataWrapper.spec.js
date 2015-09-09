@@ -2,7 +2,7 @@
 var FakeGoogleDataTable, ac, dw, test_neg, test_one;
 
 if (typeof exports !== "undefined" && exports !== null) {
-  ac = require('../audiochart');
+  ac = require('../../src/audiochart');
   dw = require('./DataWrappers-common.spec');
 } else {
   ac = window;
