@@ -41,8 +41,6 @@ describe('WebAudioSounder', function() {
 
   beforeEach(function() {
     fake_audio_context = new FakeAudioContext();
-	console.log(fake_audio_context);
-	console.log(fake_audio_context.createOscillator);
   });
 
   it('creates an oscillator', function() {

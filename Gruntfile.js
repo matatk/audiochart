@@ -22,6 +22,8 @@ module.exports = function(grunt) {
           banner: '/*! <%= pkg.name %> ' +
             '<%= grunt.template.today("yyyy-mm-dd") %> */\n',
           sourceMap: true,
+          beautify: true,
+          mangle: false
         },
         files: {
           "lib/audiochart.min.js": ["src/audiochart.js"]

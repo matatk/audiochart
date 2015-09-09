@@ -173,7 +173,7 @@
       this.data_range = this.maximum_datum - this.minimum_datum;
     }
 
-	FrequencyPitchMapper.prototype = Object.create(PitchMapper.prototype);
+    FrequencyPitchMapper.prototype = Object.create(PitchMapper.prototype);
 
     FrequencyPitchMapper.prototype.map = function(datum) {
       var ratio;
@@ -192,6 +192,7 @@
     function NotePitchMapper() {
       return PitchMapper.apply(this, arguments);
     }
+
     return NotePitchMapper;
   })();
 
@@ -362,19 +363,18 @@
     };
   };
 
-  root = typeof exports !== "undefined" && exports !== null ? exports : this;
-  root.AudioChart = AudioChart;
-  root._AudioChart = _AudioChart;
-  root.AudioContextGetter = AudioContextGetter;
-  root.DataWrapper = DataWrapper;
-  root.GoogleDataWrapper = GoogleDataWrapper;
-  root.JSONDataWrapper = JSONDataWrapper;
-  root.HTMLTableDataWrapper = HTMLTableDataWrapper;
-  root.PitchMapper = PitchMapper;
-  root.FrequencyPitchMapper = FrequencyPitchMapper;
-  root.NotePitchMapper = NotePitchMapper;
-  root.WebAudioSounder = WebAudioSounder;
-  root.Player = Player;
-  root.google_visual_callback_maker = google_visual_callback_maker;
-  root.html_table_visual_callback_maker = html_table_visual_callback_maker;
-}).call(this);
+  window.AudioChart = AudioChart;
+  window._AudioChart = _AudioChart;
+  window.AudioContextGetter = AudioContextGetter;
+  window.DataWrapper = DataWrapper;
+  window.GoogleDataWrapper = GoogleDataWrapper;
+  window.JSONDataWrapper = JSONDataWrapper;
+  window.HTMLTableDataWrapper = HTMLTableDataWrapper;
+  window.PitchMapper = PitchMapper;
+  window.FrequencyPitchMapper = FrequencyPitchMapper;
+  window.NotePitchMapper = NotePitchMapper;
+  window.WebAudioSounder = WebAudioSounder;
+  window.Player = Player;
+  window.google_visual_callback_maker = google_visual_callback_maker;
+  window.html_table_visual_callback_maker = html_table_visual_callback_maker;
+})();

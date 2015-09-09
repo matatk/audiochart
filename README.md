@@ -94,7 +94,7 @@ More details on this can be found in the [Google Charts documentation](https://d
  1. Load AudioChart.
 
     ```html
-    <script src="https://raw.githubusercontent.com/matatk/audiochart/gh-pages/build/audiochart.min.js"></script>
+    <script src="https://raw.githubusercontent.com/matatk/audiochart/gh-pages/lib/audiochart.min.js"></script>
     ```
 
  2. Create an element in your document to trigger audio playback.
@@ -125,7 +125,7 @@ The [REFERENCE](REFERENCE.md) details all the options you can pass to AudioChart
 Components
 -----------
 
-The following objects are present in AudioChart ([JavaScript code](build/audiochart.js), [CoffeeScript code](audiochart.coffee)).
+The following objects are present in AudioChart ([JavaScript code](lib/audiochart.js), [CoffeeScript code](audiochart.coffee)).
 
  * A `DataWrapper` interface wraps third-party chart library/other data sources.
     - `GoogleDataWrapper` wraps Google Charts `DataTable` objects.
