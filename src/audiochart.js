@@ -2,7 +2,7 @@
   var DataWrapper = (function() {
     function DataWrapper(data) {
       this.data = data;
-      throw Error('Please use a derived class');
+      throw Error('Please use a derived class');  // TODO just be silent, and called as if a super()?
     }
 
     DataWrapper.prototype.num_series = function() {};

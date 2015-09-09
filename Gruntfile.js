@@ -4,31 +4,35 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON("package.json"),
-	jshint: {
+
+    jshint: {
       all: ['Gruntfile.js', 'src/*.js', 'test/spec/*.js']
-	},
-	jasmine: {
-      src: 'src/audiochart.js',
-	  options: {
-        specs: 'test/spec/*.spec.js'
-	  }
     },
+
+    jasmine: {
+      src: 'src/audiochart.js',
+      options: {
+        specs: 'test/spec/*.spec.js'
+      }
+    },
+
     uglify: {
-      build: {
+      lib: {
         options: {
-          banner: '/*! <%= pkg.name %> ' + '<%= grunt.template.today("yyyy-mm-dd") %> */\n',
+          banner: '/*! <%= pkg.name %> ' +
+            '<%= grunt.template.today("yyyy-mm-dd") %> */\n',
           sourceMap: true,
         },
         files: {
-          "build/audiochart.min.js": ["src/audiochart.js"]
+          "lib/audiochart.min.js": ["src/audiochart.js"]
         }
-	  }
-    },
+      }
+    }
   },
 
   grunt.registerTask("default", [
     "jshint",
     "jasmine",
-	"uglify"
+    "uglify"
   ]));
 };
