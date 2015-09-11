@@ -3,14 +3,18 @@ module.exports = function(grunt) {
   require('time-grunt')(grunt);
 
   grunt.initConfig({
-    pkg: grunt.file.readJSON("package.json"),
+    pkg: grunt.file.readJSON('package.json'),
+
+    clean: {
+      lib: 'lib/'
+    },
 
     jshint: {
       all: ['Gruntfile.js', 'src/*.js', 'test/spec/*.js']
     },
 
     jasmine: {
-      src: 'src/audiochart.js',
+      src: 'src/<%= pkg.name %>.js',
       options: {
         specs: 'test/spec/*.spec.js'
       }
@@ -19,22 +23,27 @@ module.exports = function(grunt) {
     uglify: {
       lib: {
         options: {
-          banner: '/*! <%= pkg.name %> ' +
-            '<%= grunt.template.today("yyyy-mm-dd") %> */\n',
-          sourceMap: true,
           beautify: true,
-          mangle: false
+          mangle: false,
+          banner: '/* <%= pkg.name %> ' +
+            '<%= grunt.template.today("yyyy-mm-dd") %> \n' +
+            '<%= pkg.license %> licence */\n',
+          sourceMap: true,
+          enclose: {
+            'window': 'exports'
+          }
         },
         files: {
-          "lib/audiochart.min.js": ["src/audiochart.js"]
+          'lib/<%= pkg.name %>.min.js': 'src/*.js'
         }
       }
     }
   },
 
-  grunt.registerTask("default", [
-    "jshint",
-    "jasmine",
-    "uglify"
+  grunt.registerTask('default', [
+    'clean',
+    'jshint',
+    'jasmine',
+    'uglify'
   ]));
 };
