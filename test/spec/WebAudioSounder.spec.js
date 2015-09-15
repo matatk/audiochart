@@ -52,14 +52,15 @@ describe('WebAudioSounder', function() {
 	});
 
 	it('changes frequency immediately', function() {
-		// FIXME change this to 'within 5ms' perhaps? Can this be done with
-		//       just the Jasmine 2 syntax?
 		var fake_oscillator = null;
 		var sounder = new ac.WebAudioSounder(fake_audio_context);
+		jasmine.clock().install();
 		fake_oscillator = sounder.oscillator;
 		expect(fake_oscillator.frequency.value).toBe(0);
 		sounder.frequency(42);
+		jasmine.clock().tick(1);
 		expect(fake_oscillator.frequency.value).toBe(42);
+		jasmine.clock().uninstall();
 	});
 
 	it('changes frequency with an offset', function() {

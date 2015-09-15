@@ -1,7 +1,6 @@
 var DataWrapper = (function() {
 	function DataWrapper(data) {
-		this.data = data;
-		throw Error('Please use a derived class');  // TODO just be silent, and called as if a super()?
+		throw Error('Please use a derived object.');
 	}
 
 	DataWrapper.prototype.num_series = function() {};
@@ -10,6 +9,7 @@ var DataWrapper = (function() {
 	DataWrapper.prototype.series_max = function(series) {};
 	DataWrapper.prototype.series_value = function(series, index) {};
 	DataWrapper.prototype.series_length = function(series) {};
+
 	return DataWrapper;
 })();
 
@@ -24,6 +24,7 @@ var GoogleDataWrapper = (function() {
 	};
 
 	GoogleDataWrapper.prototype.series_names = function() {
+		// FIXME
 		var i, _i, _ref, _results;
 		_results = [];
 		for (i = _i = 1, _ref = this.data.getNumberOfColumns() - 1; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
@@ -68,6 +69,7 @@ var JSONDataWrapper = (function() {
 	};
 
 	JSONDataWrapper.prototype.series_names = function() {
+		// FIXME
 		var chunk, _i, _len, _ref, _results;
 		_ref = this.object.data;
 		_results = [];
@@ -111,6 +113,7 @@ var HTMLTableDataWrapper = (function() {
 	};
 
 	HTMLTableDataWrapper.prototype.series_names = function() {
+		// FIXME
 		var element, _i, _len, _ref, _results;
 		_ref = this.table.getElementsByTagName('th');
 		_results = [];
@@ -122,6 +125,7 @@ var HTMLTableDataWrapper = (function() {
 	};
 
 	HTMLTableDataWrapper.prototype._series_floats = function(series) {
+		// FIXME
 		var element, _i, _len, _ref, _results;
 		_ref = this.table.getElementsByTagName('td');
 		_results = [];
@@ -161,7 +165,7 @@ var PitchMapper = (function() {
 		}
 	}
 
-	PitchMapper.prototype.map = function(datum) {};
+	PitchMapper.prototype.map = function(datum) {};  // FIXME naming conflict?
 	return PitchMapper;
 })();
 
@@ -178,6 +182,7 @@ var FrequencyPitchMapper = (function() {
 	}
 
 	FrequencyPitchMapper.prototype = Object.create(PitchMapper.prototype);
+	FrequencyPitchMapper.prototype.constructor = FrequencyPitchMapper;
 
 	FrequencyPitchMapper.prototype.map = function(datum) {
 		var ratio;
@@ -198,6 +203,9 @@ var NotePitchMapper = (function() {
 		return PitchMapper.apply(this, arguments);
 	}
 
+	NotePitchMapper.prototype = Object.create(PitchMapper.prototype);
+	NotePitchMapper.prototype.constructor = NotePitchMapper;
+
 	return NotePitchMapper;
 })();
 
@@ -214,10 +222,9 @@ var WebAudioSounder = (function() {
 	};
 
 	WebAudioSounder.prototype.frequency = function(frequency, offset) {
-		var callback;
-		callback = (function(_this) {
+		var callback = (function(that) {
 			return function() {
-				_this.oscillator.frequency.value = frequency;
+				that.oscillator.frequency.value = frequency;
 			};
 		})(this);
 		setTimeout(callback, offset);
@@ -236,11 +243,16 @@ var Player = (function() {
 		this.data = data;
 		this.pitch_mapper = pitch_mapper;
 		this.sounder = sounder;
-		this.visual_callback = visual_callback !== null ? visual_callback : null;
+		if (arguments.length < 5) {
+			this.visual_callback = null;
+		} else {
+			this.visual_callback = visual_callback;
+		}
 		this.interval = duration / this.data.series_length(0);
 	}
 
 	Player.prototype.play = function() {
+		// FIXME
 		var i, offset, series_length, series_max_index, _i;
 		series_length = this.data.series_length(0);
 		series_max_index = series_length - 1;
@@ -260,10 +272,9 @@ var Player = (function() {
 	};
 
 	Player.prototype._highlight_enqueue = function(series, row, offset) {
-		var callback;
-		callback = (function(_this) {
+		var callback = (function(that) {
 			return function() {
-				_this.visual_callback(series, row);
+				that.visual_callback(series, row);
 			};
 		})(this);
 		setTimeout(callback, offset);
@@ -360,6 +371,7 @@ var google_visual_callback_maker = function(chart) {
 
 var html_table_visual_callback_maker = function(table, class_name) {
 	return function(series, row) {
+		// FIXME tidy up
 		var cell, _i, _len, _ref;
 		_ref = table.getElementsByTagName('td');
 		for (_i = 0, _len = _ref.length; _i < _len; _i++) {
