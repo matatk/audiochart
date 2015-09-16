@@ -5,10 +5,16 @@
 		<title>{{ page.title }}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<style>
-		{% include style.css %}
+{% include style.css %}
 		</style>
-		<script src="https://www.google.com/jsapi"></script>
-		<script src="lib/audiochart.min.js"></script>
+		{% for css in page.extra-style %}
+		<style>
+{% include {{ css }}.css %}
+		</style>
+		{% endfor %}
+		{% for js in page.extra-script %}
+		<script src="{{ js }}"></script>
+		{% endfor %}
 	</head>
 	<body>
 		<header>
