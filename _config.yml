@@ -1,15 +1,17 @@
 exclude:
+ - Gemfile
+ - Gemfile.lock
  - Gruntfile.js
  - LICENCE
  - README.md
  - REFERENCE.md
- - jekyll-test.sh
  - node_modules
  - package.json
  - pre-commit
 include:
  - .grunt
+
 # GitHub defaults
+highlighter: pygments
 safe: true
 lsi: false
-highlighter: pygments
