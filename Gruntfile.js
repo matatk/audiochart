@@ -5,22 +5,23 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 
+		paths: {
+			test_vendor: 'test/vendor'
+		},
+
 		clean: {
 			lib: 'lib/*',
-			jasmine_jquery: [
-				'test/jquery.js',
-				'test/jasmine-jquery.js'
-			]
+			jasmine_jquery: '<%= paths.test_vendor %>',
 		},
 
 		curl: {
 			jquery: {
 				src: 'http://code.jquery.com/jquery-1.11.3.min.js',
-				dest: 'test/jquery.js'
+				dest: '<%= paths.test_vendor%>/jquery.js'
 			},
 			jasmine_jquery: {
 				src: 'https://raw.github.com/velesin/jasmine-jquery/master/lib/jasmine-jquery.js',
-				dest: 'test/jasmine-jquery.js'
+				dest: '<%= paths.test_vendor%>/jasmine-jquery.js'
 			}
 		},
 
@@ -32,8 +33,8 @@ module.exports = function(grunt) {
 			src: 'src/<%= pkg.name %>.js',
 			options: {
 				vendor: [
-					'test/jquery.js',
-					'test/jasmine-jquery.js'
+					'<%= paths.test_vendor%>/jquery.js',
+					'<%= paths.test_vendor%>/jasmine-jquery.js',
 				],
 				specs: 'test/spec/*.spec.js',
 				outfile: 'test/index.html',
