@@ -54,6 +54,6 @@ var FakeGoogleDataTable = (function() {
 })();
 
 data_wrappers_test_core(
-		'GoogleDataWrapper',
-		new window.GoogleDataWrapper(new FakeGoogleDataTable(test_one)),
-		new window.GoogleDataWrapper(new FakeGoogleDataTable(test_neg)));
+	'GoogleDataWrapper',
+	new window.GoogleDataWrapper(new FakeGoogleDataTable(test_one)),
+	new window.GoogleDataWrapper(new FakeGoogleDataTable(test_neg)));

@@ -36,13 +36,13 @@ describe('WebAudioSounder', function() {
 	it('creates an oscillator', function() {
 		var sounder;
 		spyOn(fake_audio_context, 'createOscillator');
-		sounder = new ac.WebAudioSounder(fake_audio_context);
+		sounder = new window.WebAudioSounder(fake_audio_context);
 		expect(fake_audio_context.createOscillator).toHaveBeenCalled();
 	});
 
 	it('connects and starts its oscillator', function() {
 		var fake_oscillator, sounder;
-		sounder = new ac.WebAudioSounder(fake_audio_context);
+		sounder = new window.WebAudioSounder(fake_audio_context);
 		fake_oscillator = sounder.oscillator;
 		spyOn(fake_oscillator, 'connect');
 		spyOn(fake_oscillator, 'start');
@@ -53,7 +53,7 @@ describe('WebAudioSounder', function() {
 
 	it('changes frequency immediately', function() {
 		var fake_oscillator = null;
-		var sounder = new ac.WebAudioSounder(fake_audio_context);
+		var sounder = new window.WebAudioSounder(fake_audio_context);
 		jasmine.clock().install();
 		fake_oscillator = sounder.oscillator;
 		expect(fake_oscillator.frequency.value).toBe(0);
@@ -67,7 +67,7 @@ describe('WebAudioSounder', function() {
 		var delay, fake_oscillator, sounder;
 		jasmine.clock().install();
 		delay = 250;
-		sounder = new ac.WebAudioSounder(fake_audio_context);
+		sounder = new window.WebAudioSounder(fake_audio_context);
 		fake_oscillator = sounder.oscillator;
 		expect(fake_oscillator.frequency.value).toBe(0);
 		sounder.frequency(84, delay);
@@ -78,7 +78,7 @@ describe('WebAudioSounder', function() {
 
 	it('stops its oscillator', function() {
 		var fake_oscillator, sounder;
-		sounder = new ac.WebAudioSounder(fake_audio_context);
+		sounder = new window.WebAudioSounder(fake_audio_context);
 		fake_oscillator = sounder.oscillator;
 		spyOn(fake_oscillator, 'stop');
 		sounder.stop();
@@ -87,7 +87,7 @@ describe('WebAudioSounder', function() {
 
 	it('stops its oscillator at a given time', function() {
 		var fake_oscillator, sounder;
-		sounder = new ac.WebAudioSounder(fake_audio_context);
+		sounder = new window.WebAudioSounder(fake_audio_context);
 		fake_oscillator = sounder.oscillator;
 		spyOn(fake_oscillator, 'stop');
 		sounder.stop(21);

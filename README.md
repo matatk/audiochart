@@ -172,6 +172,7 @@ Future Work Ideas
 Patches for and feedback on the following are welcome!
 
  * Play speed/duration.
+ * Support [Google Chart Web Component (Polymer)](https://github.com/GoogleWebComponents/google-chart) charts.
  * Support [C3.js](http://c3js.org) charts.
  * Support SVG charts.
  * Static/Periodic features such as grid/timing beats.

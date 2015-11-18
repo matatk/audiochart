@@ -49,6 +49,7 @@ describe('FrequencyPitchMapper', function() {
 			expect(fm.map(42)).toBe(1000);
 			expect(fm.map(21)).toBe(550);
 		});
+
 		it('test range 2', function() {
 			var fm = new window.FrequencyPitchMapper(0, 100, 0, 100);
 			expect(fm.map(0)).toBe(0);
@@ -58,6 +59,7 @@ describe('FrequencyPitchMapper', function() {
 			expect(fm.map(70)).toBe(70);
 			expect(fm.map(100)).toBe(100);
 		});
+
 		it('test range 3', function() {
 			var fm = new window.FrequencyPitchMapper(0, 100, 1, 101);
 			expect(fm.map(0)).toBe(1);
@@ -67,6 +69,7 @@ describe('FrequencyPitchMapper', function() {
 			expect(fm.map(70)).toBe(71);
 			expect(fm.map(100)).toBe(101);
 		});
+
 		it('test range 4', function() {
 			var fm = new window.FrequencyPitchMapper(-100, 0, 0, 100);
 			expect(fm.map(-100)).toBe(0);
@@ -75,6 +78,7 @@ describe('FrequencyPitchMapper', function() {
 			expect(fm.map(-20)).toBe(80);
 			expect(fm.map(0)).toBe(100);
 		});
+
 		it('test range 5', function() {
 			var fm = new window.FrequencyPitchMapper(-100, 100, 0, 100);
 			expect(fm.map(-100)).toBe(0);
@@ -83,12 +87,14 @@ describe('FrequencyPitchMapper', function() {
 			expect(fm.map(50)).toBe(75);
 			expect(fm.map(100)).toBe(100);
 		});
+
 		it('test range 6', function() {
 			var fm = new window.FrequencyPitchMapper(42, 42, 0, 100);
 			expect(fm.map(42)).toBe(50);
 		});
 	});
 });
+
 
 describe('NotePitchMapper', function() {
 	var MIN = 0;
