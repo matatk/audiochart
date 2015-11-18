@@ -45,8 +45,8 @@ module.exports = function(grunt) {
 		uglify: {
 			lib: {
 				options: {
-					beautify: true,
-					mangle: false,
+					beautify: false,
+					mangle: true,
 					banner: '/* <%= pkg.name %> ' +
 						'<%= grunt.template.today("yyyy-mm-dd") %>\n' +
 						'<%= pkg.license %> licence */\n',
