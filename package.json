@@ -9,7 +9,7 @@
     "grunt-contrib-clean": "0.6 - 0.7.x",
     "grunt-contrib-jasmine": "^0.9.1",
     "grunt-contrib-jshint": "^0.11.3",
-    "grunt-contrib-uglify": "0.6 - 0.10.x",
+    "grunt-contrib-uglify": "0.6 - 0.11.x",
     "grunt-curl": "^2.2.0",
     "grunt-if-missing": "^1.0.0",
     "load-grunt-tasks": "^3.2.0",
