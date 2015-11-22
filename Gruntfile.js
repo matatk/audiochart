@@ -1,12 +1,18 @@
 module.exports = function(grunt) {
-	require('load-grunt-tasks')(grunt);
+	require('load-grunt-tasks')(grunt, {
+		pattern: ['grunt-*', '!grunt-template-jasmine-istanbul']
+	});
 	require('time-grunt')(grunt);
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 
 		paths: {
-			test_vendor: 'test/vendor'
+			test: 'test',
+			test_specs: 'test/spec/*.spec.js',
+			test_vendor: 'test/vendor',
+			test_coverage: 'test/coverage',
+			source_dir: 'src'
 		},
 
 		clean: {
@@ -26,19 +32,34 @@ module.exports = function(grunt) {
 		},
 
 		jshint: {
-			all: ['Gruntfile.js', 'src/*.js', 'test/spec/*.js']
+			all: [
+				'Gruntfile.js',
+				'<%= paths.source_dir %>/*.js',
+				'<%= paths.test_specs %>'
+			]
 		},
 
 		jasmine: {
-			src: 'src/<%= pkg.name %>.js',
+			src: '<%= paths.source_dir %>/<%= pkg.name %>.js',
 			options: {
 				vendor: [
-					'<%= paths.test_vendor%>/jquery.js',
-					'<%= paths.test_vendor%>/jasmine-jquery.js',
+					'<%= paths.test_vendor %>/jquery.js',
+					'<%= paths.test_vendor %>/jasmine-jquery.js',
 				],
-				specs: 'test/spec/*.spec.js',
-				outfile: 'test/index.html',
-				keepRunner: true
+				specs: '<%= paths.test_specs %>',
+				outfile: '<%= paths.test %>/index.html',
+				keepRunner: true,
+                template: require('grunt-template-jasmine-istanbul'),
+				templateOptions: {
+					coverage: '<%= paths.test_coverage %>/coverage.json',
+					report: '<%= paths.test_coverage %>',
+					thresholds: {
+						lines: 75,
+						statements: 75,
+						branches: 75,
+						functions: 90
+					}
+				}
 			}
 		},
 
@@ -56,7 +77,8 @@ module.exports = function(grunt) {
 					}
 				},
 				files: {
-					'lib/<%= pkg.name %>.min.js': 'src/*.js'
+					'lib/<%= pkg.name %>.min.js':
+						'<%= paths.source_dir %>/*.js'
 				}
 			}
 		}

@@ -141,7 +141,7 @@ The following objects are present in [AudioChart (JavaScript code)](src/audiocha
 Development
 ------------
 
-A Gruntfile is provided to run the tests and automate things like linting and minification.  [Unit tests can be run in-browser](http://matatk.agrip.org.uk/audiochart/test/) or via the Gruntfile, printing output to the terminal.
+A Gruntfile is provided to run the tests and automate things like linting and minification.  [Unit tests can be run in-browser](http://matatk.agrip.org.uk/audiochart/test/) or via the Gruntfile, printing output to the terminal.  You can also view the [test coverage details](http://matatk.agrip.org.uk/audiochart/test/coverage/).
 
 Development is carried out in a [test-driven](http://en.wikipedia.org/wiki/Test-driven_development) manner.  The `pre-commit` hook can be used to ensure only code that passes tests is committed.  You can make a symlink from the `.git/hooks/` directory to it and it'll be run before you are asked for a commit message.
 
@@ -183,3 +183,4 @@ Patches for and feedback on the following are welcome!
  * Officially support development on Windows.
  * Create a browser extension to enable AudioChart on charts/tables for sites that don't provide it themselves.
  * Allow modular builds to be created, with only support for data sources relevant to your site/application.
+ * Make AudioChart a bower package and explain how it can be easily added to any page that way.
