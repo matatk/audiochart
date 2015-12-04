@@ -1,3 +1,7 @@
+/* The common DataWrapper interface is validated via the tests
+   Note: it is not done as a superclass (as PitchMapper is below) because
+         there's really nothing in common implementation-wise; only the
+         interface is shared.
 var DataWrapper = (function() {
 	function DataWrapper(data) {
 		throw Error('Please use a derived object.');
@@ -11,7 +15,7 @@ var DataWrapper = (function() {
 	DataWrapper.prototype.series_length = function(series) {};
 
 	return DataWrapper;
-})();
+})();*/
 
 
 var GoogleDataWrapper = (function() {
@@ -166,6 +170,7 @@ var PitchMapper = (function() {
 	}
 
 	PitchMapper.prototype.map = function(datum) {};  // FIXME naming conflict?
+
 	return PitchMapper;
 })();
 
@@ -299,41 +304,6 @@ var AudioChart = (function() {
 })();
 
 
-var _AudioChart = (function() {
-	function _AudioChart(options, context) {
-		var callback, data_wrapper, frequency_pitch_mapper, player, sounder;
-		data_wrapper = null;
-		callback = null;
-		switch (options.type) {
-			case 'google':
-				data_wrapper = new GoogleDataWrapper(options.data);
-				if (options.chart !== null) {
-					callback = google_visual_callback_maker(options.chart);
-				}
-				break;
-			case 'json':
-				data_wrapper = new JSONDataWrapper(options.data);
-				break;
-			case 'html_table':
-				data_wrapper = new HTMLTableDataWrapper(options.table);
-				if (options.highlight_class !== null) {
-					callback = html_table_visual_callback_maker(options.table, options.highlight_class);
-				}
-				break;
-			case 'test':
-				return;
-			default:
-				throw Error("Invalid data type '" + options.type + "' given.");
-		}
-		frequency_pitch_mapper = new FrequencyPitchMapper(data_wrapper.series_min(0), data_wrapper.series_max(0), options.frequency_low, options.frequency_high);
-		sounder = new WebAudioSounder(context);
-		player = new Player(options.duration, data_wrapper, frequency_pitch_mapper, sounder, callback);
-		player.play();
-	}
-	return _AudioChart;
-})();
-
-
 var AudioContextGetter = (function() {
 	function AudioContextGetter() {}
 
@@ -354,6 +324,77 @@ var AudioContextGetter = (function() {
 	};
 
 	return AudioContextGetter;
+})();
+
+
+var _AudioChart = (function() {
+	function _AudioChart(options, context) {
+		var data_wrapper, callback, frequency_pitch_mapper, sounder, player;
+
+		var result = _AudioChart._assign_wrapper_callback(options);
+		data_wrapper = result.wrapper(result.parameter);
+		callback = result.callback;
+
+		frequency_pitch_mapper = new FrequencyPitchMapper(
+			data_wrapper.series_min(0),
+			data_wrapper.series_max(0),
+			options.frequency_low,
+			options.frequency_high
+		);
+
+		sounder = new WebAudioSounder(context);
+
+		player = new Player(
+			options.duration,
+			data_wrapper,
+			frequency_pitch_mapper,
+			sounder,
+			callback
+		);
+
+		player.play();
+	}
+
+	// This is being done as a sort of 'class/static method' because
+	// it doesn't need 'this'.
+	// http://stackoverflow.com/a/1635143
+	_AudioChart._assign_wrapper_callback = function(options) {
+		var result = {
+			'wrapper': null,
+			'parameter': null,
+			'callback': null
+		};
+
+		switch (options.type) {
+			case 'google':
+				data_wrapper = new GoogleDataWrapper(options.data);
+				if (options.chart !== null) {
+					callback = google_visual_callback_maker(options.chart);
+				}
+				break;
+			case 'json':
+				result.wrapper = JSONDataWrapper;
+				result.parameter = options.data;
+				break;
+			case 'html_table':
+				data_wrapper = new HTMLTableDataWrapper(options.table);
+				if (options.highlight_class !== null) {
+					callback = html_table_visual_callback_maker(
+						options.table,
+						options.highlight_class
+					);
+				}
+				break;
+			case 'test':
+				return;  // FIXME needed for AudioChart object tests :-(
+			default:
+				throw Error("Invalid data type '" + options.type + "' given.");
+		}
+
+		return result;
+	};
+
+	return _AudioChart;
 })();
 
 
