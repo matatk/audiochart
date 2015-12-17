@@ -1,4 +1,4 @@
-/* The common DataWrapper interface is validated via the tests
+/* The common DataWrapper 'interface' is validated via the tests
    Note: it is not done as a superclass (as PitchMapper is below) because
          there's really nothing in common implementation-wise; only the
          interface is shared.
@@ -332,7 +332,7 @@ var _AudioChart = (function() {
 		var data_wrapper, callback, frequency_pitch_mapper, sounder, player;
 
 		var result = _AudioChart._assign_wrapper_callback(options);
-		data_wrapper = result.wrapper(result.parameter);
+		data_wrapper = new result.wrapper(result.parameter);
 		callback = result.callback;
 
 		frequency_pitch_mapper = new FrequencyPitchMapper(
@@ -367,9 +367,11 @@ var _AudioChart = (function() {
 
 		switch (options.type) {
 			case 'google':
-				data_wrapper = new GoogleDataWrapper(options.data);
-				if (options.chart !== null) {
-					callback = google_visual_callback_maker(options.chart);
+				result.wrapper = GoogleDataWrapper;
+				result.parameter = options.data;
+				if (options.hasOwnProperty('chart')) {
+					result.callback =
+						google_visual_callback_maker(options.chart);
 				}
 				break;
 			case 'json':
@@ -377,16 +379,15 @@ var _AudioChart = (function() {
 				result.parameter = options.data;
 				break;
 			case 'html_table':
-				data_wrapper = new HTMLTableDataWrapper(options.table);
-				if (options.highlight_class !== null) {
-					callback = html_table_visual_callback_maker(
+				result.wrapper = HTMLTableDataWrapper;
+				result.parameter = options.table;
+				if (options.hasOwnProperty('highlight_class')) {
+					result.callback = html_table_visual_callback_maker(
 						options.table,
 						options.highlight_class
 					);
 				}
 				break;
-			case 'test':
-				return;  // FIXME needed for AudioChart object tests :-(
 			default:
 				throw Error("Invalid data type '" + options.type + "' given.");
 		}

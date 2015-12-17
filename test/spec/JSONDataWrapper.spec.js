@@ -10,3 +10,5 @@ data_wrappers_test_core(
 		'JSONDataWrapper, starting from object',
 		new window.JSONDataWrapper(JSON.parse(test_one)),
 		new window.JSONDataWrapper(JSON.parse(test_neg)));
+
+// FIXME test unhappy paths
