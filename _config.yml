@@ -10,6 +10,7 @@ exclude:
  - pre-commit
 include:
  - .grunt
+ - _AudioChart.spec.js
 
 # GitHub defaults
 highlighter: pygments
