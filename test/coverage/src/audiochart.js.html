@@ -20,14 +20,14 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">95.81% </span>
+        <span class="strong">95.65% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>206/215</span>
+        <span class='fraction'>198/207</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">81.82% </span>
+        <span class="strong">85% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>36/44</span>
+        <span class='fraction'>34/40</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">96.61% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>57/59</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">95.81% </span>
+        <span class="strong">95.65% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>206/215</span>
+        <span class='fraction'>198/207</span>
       </div>
     </div>
   </div>
@@ -457,19 +457,7 @@
 412
 413
 414
-415
-416
-417
-418
-419
-420
-421
-422
-423
-424
-425
-426
-427</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+415</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -499,8 +487,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
@@ -544,10 +530,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4×</span>
-<span class="cline-any cline-yes">4×</span>
-<span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-yes">4×</span>
@@ -588,9 +570,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
@@ -600,12 +579,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-yes">4×</span>
-<span class="cline-any cline-yes">4×</span>
-<span class="cline-any cline-yes">18×</span>
 <span class="cline-any cline-yes">18×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4×</span>
@@ -925,13 +901,11 @@ var GoogleDataWrapper = (function() {
 	};
 &nbsp;
 	GoogleDataWrapper.prototype.series_names = function() {
-		// FIXME
-		var i, _i, _ref, _results;
-		_results = [];
-		for (i = _i = 1, _ref = this.data.getNumberOfColumns() - 1; 1 &lt;= _ref ? _i &lt;= _ref : <span class="branch-1 cbranch-no" title="branch not covered" >_i &gt;= _ref;</span> i = 1 &lt;= _ref ? ++_i : <span class="branch-1 cbranch-no" title="branch not covered" >--_i)</span> {
-			_results.push(this.data.getColumnLabel(i));
+		var results = [];
+		for (var i = 0; i &lt; this.data.getNumberOfColumns() - 1; i++) {
+			results.push(this.data.getColumnLabel(i));
 		}
-		return _results;
+		return results;
 	};
 &nbsp;
 	GoogleDataWrapper.prototype.series_min = function(series) {
@@ -970,15 +944,11 @@ var JSONDataWrapper = (function() {
 	};
 &nbsp;
 	JSONDataWrapper.prototype.series_names = function() {
-		// FIXME
-		var chunk, _i, _len, _ref, _results;
-		_ref = this.object.data;
-		_results = [];
-		for (_i = 0, _len = _ref.length; _i &lt; _len; _i++) {
-			chunk = _ref[_i];
-			_results.push(chunk.series);
+		var results = [];
+		for (var i = 0; i &lt; this.object.data.length; i++) {
+			results.push(this.object.data[i].series);
 		}
-		return _results;
+		return results;
 	};
 &nbsp;
 	JSONDataWrapper.prototype.series_min = function(series) {
@@ -1014,27 +984,21 @@ var HTMLTableDataWrapper = (function() {
 	};
 &nbsp;
 	HTMLTableDataWrapper.prototype.series_names = function() {
-		// FIXME
-		var element, _i, _len, _ref, _results;
-		_ref = this.table.getElementsByTagName('th');
-		_results = [];
-		for (_i = 0, _len = _ref.length; _i &lt; _len; _i++) {
-			element = _ref[_i];
-			_results.push(element.textContent);
+		var header_cells = this.table.getElementsByTagName('th');
+		var results = [];
+		for (var i = 0; i &lt; header_cells.length; i++) {
+			results.push(header_cells[i].textContent);
 		}
-		return _results;
+		return results;
 	};
 &nbsp;
 	HTMLTableDataWrapper.prototype._series_floats = function(series) {
-		// FIXME
-		var element, _i, _len, _ref, _results;
-		_ref = this.table.getElementsByTagName('td');
-		_results = [];
-		for (_i = 0, _len = _ref.length; _i &lt; _len; _i++) {
-			element = _ref[_i];
-			_results.push(parseFloat(element.textContent));
+		var data_cells = this.table.getElementsByTagName('td');
+		var results = [];
+		for (var i = 0; i &lt; data_cells.length; i++) {
+			results.push(parseFloat(data_cells[i].textContent));
 		}
-		return _results;
+		return results;
 	};
 &nbsp;
 	HTMLTableDataWrapper.prototype.series_min = function(series) {
@@ -1327,7 +1291,7 @@ var html_table_visual_callback_maker = function(table, class_name) {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Dec 17 2015 10:07:41 GMT+0000 (GMT)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Dec 17 2015 10:36:13 GMT+0000 (GMT)
 </div>
 </div>
 <script src="../prettify.js"></script>

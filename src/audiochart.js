@@ -28,13 +28,11 @@ var GoogleDataWrapper = (function() {
 	};
 
 	GoogleDataWrapper.prototype.series_names = function() {
-		// FIXME
-		var i, _i, _ref, _results;
-		_results = [];
-		for (i = _i = 1, _ref = this.data.getNumberOfColumns() - 1; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-			_results.push(this.data.getColumnLabel(i));
+		var results = [];
+		for (var i = 0; i < this.data.getNumberOfColumns() - 1; i++) {
+			results.push(this.data.getColumnLabel(i));
 		}
-		return _results;
+		return results;
 	};
 
 	GoogleDataWrapper.prototype.series_min = function(series) {
@@ -73,15 +71,11 @@ var JSONDataWrapper = (function() {
 	};
 
 	JSONDataWrapper.prototype.series_names = function() {
-		// FIXME
-		var chunk, _i, _len, _ref, _results;
-		_ref = this.object.data;
-		_results = [];
-		for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-			chunk = _ref[_i];
-			_results.push(chunk.series);
+		var results = [];
+		for (var i = 0; i < this.object.data.length; i++) {
+			results.push(this.object.data[i].series);
 		}
-		return _results;
+		return results;
 	};
 
 	JSONDataWrapper.prototype.series_min = function(series) {
@@ -117,27 +111,21 @@ var HTMLTableDataWrapper = (function() {
 	};
 
 	HTMLTableDataWrapper.prototype.series_names = function() {
-		// FIXME
-		var element, _i, _len, _ref, _results;
-		_ref = this.table.getElementsByTagName('th');
-		_results = [];
-		for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-			element = _ref[_i];
-			_results.push(element.textContent);
+		var header_cells = this.table.getElementsByTagName('th');
+		var results = [];
+		for (var i = 0; i < header_cells.length; i++) {
+			results.push(header_cells[i].textContent);
 		}
-		return _results;
+		return results;
 	};
 
 	HTMLTableDataWrapper.prototype._series_floats = function(series) {
-		// FIXME
-		var element, _i, _len, _ref, _results;
-		_ref = this.table.getElementsByTagName('td');
-		_results = [];
-		for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-			element = _ref[_i];
-			_results.push(parseFloat(element.textContent));
+		var data_cells = this.table.getElementsByTagName('td');
+		var results = [];
+		for (var i = 0; i < data_cells.length; i++) {
+			results.push(parseFloat(data_cells[i].textContent));
 		}
-		return _results;
+		return results;
 	};
 
 	HTMLTableDataWrapper.prototype.series_min = function(series) {
