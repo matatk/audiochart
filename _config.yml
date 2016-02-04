@@ -13,6 +13,5 @@ include:
  - _AudioChart.spec.js
 
 # GitHub defaults
-highlighter: pygments
 safe: true
 lsi: false
