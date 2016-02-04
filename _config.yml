@@ -1,5 +1,17 @@
-exclude: [node_modules]
+exclude:
+ - Gemfile
+ - Gemfile.lock
+ - Gruntfile.js
+ - LICENCE
+ - README.md
+ - REFERENCE.md
+ - node_modules
+ - package.json
+ - pre-commit
+include:
+ - .grunt
+ - _AudioChart.spec.js
+
 # GitHub defaults
 safe: true
 lsi: false
-highlighter: pygments

@@ -1,0 +1,3 @@
+.grunt/** -diff
+test/coverage/** -diff
+lib/** -diff

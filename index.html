@@ -1,9 +1,12 @@
 ---
 layout: base
 title: AudioChart
+extra-script:
+- https://www.google.com/jsapi
+- lib/audiochart.min.js
 ---
 <p id="intro">
-Allows the user to explore charts on web pages using sound and the keyboard rather than, or in conjunction with, visually and with the mouse.  The code is <a href="https://github.com/matatk/audiochart">hosted on GitHub</a> and can easily be added to any page containing charts (or HTML tables or JSON data).  A <a href="hello-world-tutorial.html">tutorial</a> and <a href="examples-gallery.html">examples</a> are available.
+Allows the user to explore charts on web pages using sound and the keyboard rather than, or in conjunction with, visually and with the mouse.  The code is <a href="https://github.com/matatk/audiochart">developed on GitHub</a> and can easily be added to any page containing charts (or HTML tables or JSON data).  A <a href="hello-world-tutorial.html">tutorial</a> and <a href="examples-gallery.html">examples</a> are available.
 </p>
 <div id="hackContainer">
 	<div id="chartContainer">
@@ -14,7 +17,7 @@ Allows the user to explore charts on web pages using sound and the keyboard rath
 	Thanks to <a href="http://paciellogroup.com">The Paciello Group</a> for allowing me to share this with you, and to <a href="http://sonification.de/handbook/">The Sonification Handbook</a> for the research behind it.
 	</p>
 	<p>
-	AudioChart uses the Web Audio API, which has <a href="http://caniuse.com/audio-api">great support amongst browsers, including Microsoft Edge</a>, though is not (yet) supported by Internet Explorer.
+	AudioChart uses the Web Audio API, which has <a href="http://caniuse.com/audio-api">great support amongst browsers, including Microsoft Edge</a>, though is not supported by Internet Explorer.
 	</p>
 
 	<h2>What does it do for you?</h2>
@@ -31,15 +34,12 @@ Allows the user to explore charts on web pages using sound and the keyboard rath
 
 	<h2>Tutorial and Examples</h2>
 	<p>
-	The <a href="examples-gallery.html">Examples Gallery</a> contains line and bar Google Charts, JSON- and HTML table-based examples.	Steps to create the <a href="hello-world-tutorial.html">Google Charts-based "Hello, world" example</a> are described in the <a href="https://github.com/matatk/audiochart#audiochart">README</a>.
+	The <a href="examples-gallery.html">Examples Gallery</a> contains line and bar Google Charts, JSON- and HTML table-based examples.  Steps to create the <a href="hello-world-tutorial.html">Google Charts-based "Hello, world" example</a> are described in the <a href="https://github.com/matatk/audiochart#hello-world-tutorial-using-google-charts">tutorial section of the README</a>.
 	</p>
 
-	<h2>Testing and known bugs</h2>
+	<h2>Code Testing</h2>
 	<p>
-	You can <a href="test/">run the unit tests in-browser</a> or via the command line if you have <code>jasmine-node</code> installed.
-	</p>
-	<p>
-	Sometimes, if you hear no audio when trying to play one of the examples, you have to reload the page (because the audio context gets locked up).  This is probably down to my code not clearing up properly.
+	You can <a href="test/">run the unit tests in-browser</a> or via the command line if you have the required tools and package installed (as detailed in the <a href="https://github.com/matatk/audiochart#development">development information section of the README</a>).  Also available online are the <a href="test/coverage/">test coverage details</a>.
 	</p>
 </div>
 <script>

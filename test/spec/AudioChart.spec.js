@@ -1,29 +1,35 @@
-(function() {
-  var FakeAudioContext, ac;
+describe('AudioChart', function() {
+	var fake_options = null;
 
-  if (typeof exports !== "undefined" && exports !== null) {
-    ac = require('../audiochart');
-  } else {
-    ac = window;
-  }
+	beforeEach(function() {
+		fake_options = { type: 'test' };
+	});
 
-  FakeAudioContext = (function() {
-    function FakeAudioContext() {}
+	it('passes its context to _AudioChart', function() {
+		function FakeAudioContext() {}
+		var fake_audio_context = new FakeAudioContext();
+		spyOn(window, '_AudioChart');
 
-    return FakeAudioContext;
+		var audiochart = new AudioChart(fake_options, fake_audio_context);
+		expect(_AudioChart)
+			.toHaveBeenCalledWith(fake_options, fake_audio_context);
+	});
 
-  })();
+	it('can create a new context and pass it to _AudioChart', function() {
+		spyOn(window, '_AudioChart');
+		spyOn(AudioContextGetter, 'get').and.returnValue(42);
 
-  describe('AudioChart', function() {
-    return it('calling it with a context causes _AudioChart to get that context', function() {
-      var audiochart, fake_audio_context, options;
-      spyOn(ac, '_AudioChart');
-      options = {
-        type: 'test'
-      };
-      fake_audio_context = new FakeAudioContext();
-      return audiochart = new ac.AudioChart(options, fake_audio_context);
-    });
-  });
+		var audiochart = new AudioChart(fake_options);
+		expect(_AudioChart)
+			.toHaveBeenCalledWith(fake_options, 42);
+	});
 
-}).call(this);
+	it('throws with a message if Web Audio API is unsupported', function() {
+		spyOn(AudioContextGetter, 'get').and.returnValue(null);
+		expect(function() {
+			new AudioChart(fake_options);
+		}).toThrow(
+			Error("Sorry, your browser doesn't support the Web Audio API.")
+		);
+	});
+});
