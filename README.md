@@ -143,28 +143,33 @@ Development
 
 A Gruntfile is provided to run the tests and automate things like linting and minification.  [Unit tests can be run in-browser](http://matatk.agrip.org.uk/audiochart/test/) or via the Gruntfile, printing output to the terminal.  You can also view the [test coverage details](http://matatk.agrip.org.uk/audiochart/test/coverage/).
 
-Development is carried out in a [test-driven](http://en.wikipedia.org/wiki/Test-driven_development) manner.  The `pre-commit` hook can be used to ensure only code that passes tests is committed.  You can make a symlink from the `.git/hooks/` directory to it and it'll be run before you are asked for a commit message.
+Development is carried out in a [test-driven](http://en.wikipedia.org/wiki/Test-driven_development) manner.  The `pre-commit` hook can be used to ensure only code that passes tests is committed.  You can make a symlink from the `.git/hooks/` directory to it and thus it (and the tests) will be run before you are asked for a commit message.
 
 ### Setting up for development
 
-The build process uses [Grunt](http://gruntjs.com) (and therefore [node](https://github.com/joyent/node)).  Development set-up steps for Mac users with [Homebrew](http://brew.sh):
+The build process uses Grunt and therefore also Node.  You can get set up for development as follows (most of these instructions require the use of a command line).
 
- 1. `brew install node` (comes with `npm`).
- 2. `npm -g install grunt-cli` in order to be able to conveniently run the grunt command (this will not globally install any other tools/libraries).
- 3. `git clone` or otherwise download this repository.
- 4. `npm install` in the newly-cloned repository grabs all required tools and libraries and stores them in the local `node_modules` directory.
- 5. `grunt` will lint the code, run the tests and make a minified production version.
+ 1. Install [Node](https://nodejs.org/) (if you're a Mac user doing this via [Homebrew](http://brew.sh) is recommended: `brew install node`).
+ 2. Install [Grunt](http://gruntjs.com) globally via `npm -g install grunt-cli` in order to be able to run the `grunt` command in any directory.
+ 3. Get AudioChart's code by using `git clone https://github.com/matatk/audiochart.git` or [downloading a ZIP of the latest code](https://github.com/matatk/audiochart/archive/gh-pages.zip).
+ 4. Locally install AudioChart's dependencies by running `npm install` in the newly-cloned/extracted `audiochart/` directory (the packages will be stored inside `node_modules/`).
+ 5. Running `grunt` will lint the code, run the tests and make a minified production version.
 
-Instructions for Windows are forthcomming (sorry for the wait) -- but it should be trivial and very similar to the above once you've got node set up.
+**Windows users:** this has not yet been extensively tested on Windows, but it doesn't use anything platform-specific, so should work fine.
 
 ### Hosting the AudioChart Site and Examples Locally
 
-You can use [Jekyll](http://jekyllrb.com) to host the AudioChart site locally and run the in-browser tests.  On the Mac, it can help to have your own Ruby install, e.g. from Homebrew, and use [Bundler](http://bundler.io) to manage the gems, as follows.
+You can use [Jekyll](http://jekyllrb.com) to host the AudioChart site locally and run the in-browser tests.  It is recommended to use [Bundler](http://bundler.io) to manage the gems on which Jekyll depends.
 
- 1. `brew install ruby` gives you a local ruby installation. You may need to close your current terminal session before `/usr/local/bin/ruby` and `/usr/local/bin/gem` will supersede the system ones.
- 2. `gem install bundler` will grab the gem-management tool.
- 3. `bundle install` will use the `Gemfile` and `Gemfile.lock` to ensure you have a compatible set of gems (currently this is particularly targetted at ensuring the site will work on [GitHub Pages with Jekyll](https://help.github.com/articles/using-jekyll-with-pages/)).
- 4. `bundle exec jekyll serve` will perpetually (re-)generate and serve the site locally.  The URL will be given in the terminal window.  Changes to files will be reflected when you reload a page in the browser.
+On the Mac, having your own Ruby install, e.g. from Homebrew, can keep things clean: `brew install ruby` gives you a ruby that is separate to the stock OS X one.  You'll need to start a new shell session before `/usr/local/bin/ruby` and `/usr/local/bin/gem` will supersede the system ones.
+
+To get up-and-running with Jekyll via Bundler, follow these steps.
+
+ 1. `gem install bundler` will grab the gem-management tool.
+ 2. `bundle install` when you are in the `audiochart/` repository/code directory will use the `Gemfile` and `Gemfile.lock` to ensure you have a compatible set of gems -- currently this is particularly targeted at ensuring the site will work on [GitHub Pages with Jekyll](https://help.github.com/articles/using-jekyll-with-pages/).
+ 3. `bundle exec jekyll serve` will perpetually (re-)generate and serve the site locally.  Changes to files will be reflected when you reload a page in the browser.
+
+**Windows users:** Jekyll is not officially supported on Windows, but the developers provide some [documentation on installing and using Jekyll on Windows](http://jekyllrb.com/docs/windows/).
 
 Future Work Ideas
 ------------------
