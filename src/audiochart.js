@@ -245,17 +245,16 @@ var Player = (function() {
 	}
 
 	Player.prototype.play = function() {
-		// FIXME
-		var i, offset, series_length, series_max_index, _i;
-		series_length = this.data.series_length(0);
-		series_max_index = series_length - 1;
+		var series_length = this.data.series_length(0);
+		var series_max_index = series_length - 1;
+
 		this.sounder.start(0);
 		if (this.visual_callback !== null) {
 			this.visual_callback(0, 0);
 		}
 		this.sounder.frequency(this.pitch_mapper.map(this.data.series_value(0, 0)));
-		for (i = _i = 1; 1 <= series_max_index ? _i <= series_max_index : _i >= series_max_index; i = 1 <= series_max_index ? ++_i : --_i) {
-			offset = this.interval * i;
+		for (var i = 1; i <= series_max_index; i++) {
+			var offset = this.interval * i;
 			if (this.visual_callback !== null) {
 				this._highlight_enqueue(0, i, offset);
 			}
@@ -401,11 +400,9 @@ var google_visual_callback_maker = function(chart) {
 
 var html_table_visual_callback_maker = function(table, class_name) {
 	return function(series, row) {
-		// FIXME tidy up
-		var cell, _i, _len, _ref;
-		_ref = table.getElementsByTagName('td');
-		for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-			cell = _ref[_i];
+		var tds = table.getElementsByTagName('td');
+		for (var i = 0; i < tds.length; i++) {
+			cell = tds[i];
 			cell.className = '';
 		}
 		cell = table.getElementsByTagName('td')[row];
