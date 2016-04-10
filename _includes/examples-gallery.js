@@ -55,7 +55,7 @@ function make_audiochart_options() {
 			document.getElementById('opt-freq-low').valueAsNumber,
 		'frequency_high':
 			document.getElementById('opt-freq-high').valueAsNumber
-	}
+	};
 }
 
 /* Draw all the charts after the library has been loaded */
