@@ -403,9 +403,9 @@ var html_table_visual_callback_maker = function(table, class_name) {
 		var tds = table.getElementsByTagName('td');
 		for (var i = 0; i < tds.length; i++) {
 			cell = tds[i];
-			cell.className = '';
+			cell.classList.remove(class_name);
 		}
 		cell = table.getElementsByTagName('td')[row];
-		cell.className = class_name;
+		cell.classList.add(class_name);
 	};
 };
