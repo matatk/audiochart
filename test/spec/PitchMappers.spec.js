@@ -94,10 +94,3 @@ describe('FrequencyPitchMapper', function() {
 		});
 	});
 });
-
-
-describe('NotePitchMapper', function() {
-	var MIN = 0;
-	var MAX = 42;
-	mixin_min_max(window.NotePitchMapper, MIN, MAX);
-});

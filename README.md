@@ -133,7 +133,6 @@ The following objects are present in [AudioChart (JavaScript code)](src/audiocha
     - `HTMLTableWrapper`
  * A `PitchMapper` maps from data values to pitches.
     - `FrequencyPitchMapper` does basic interpolation.
-    - `NotePitchMapper` does basic interpolation, then "rounds" this to the nearest musical note (not yet implemented).
  * The `WebAudioSounder` wraps the Web Audio API.
  * The `Player` brings together wrapped data source, mapper and sounder.
  * The `AudioChart` object provides the public-facing interface.

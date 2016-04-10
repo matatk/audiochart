@@ -191,18 +191,6 @@ var FrequencyPitchMapper = (function() {
 })();
 
 
-var NotePitchMapper = (function() {
-	function NotePitchMapper() {
-		return PitchMapper.apply(this, arguments);
-	}
-
-	NotePitchMapper.prototype = Object.create(PitchMapper.prototype);
-	NotePitchMapper.prototype.constructor = NotePitchMapper;
-
-	return NotePitchMapper;
-})();
-
-
 var WebAudioSounder = (function() {
 	function WebAudioSounder(context) {
 		this.context = context;
