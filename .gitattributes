@@ -1,3 +1,4 @@
 .grunt/** -diff
+test/index.html -diff
 test/coverage/** -diff
 lib/** -diff
