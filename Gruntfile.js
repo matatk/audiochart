@@ -22,11 +22,11 @@ module.exports = function(grunt) {
 
 		curl: {
 			jquery: {
-				src: 'http://code.jquery.com/jquery-1.11.3.min.js',
+				src: 'http://code.jquery.com/jquery-2.2.3.min.js',
 				dest: '<%= paths.test_vendor%>/jquery.js'
 			},
 			jasmine_jquery: {
-				src: 'https://raw.github.com/velesin/jasmine-jquery/master/lib/jasmine-jquery.js',
+				src: 'https://raw.github.com/velesin/jasmine-jquery/blob/2.1.1/lib/jasmine-jquery.js',
 				dest: '<%= paths.test_vendor%>/jasmine-jquery.js'
 			}
 		},
@@ -81,6 +81,12 @@ module.exports = function(grunt) {
 						'<%= paths.source_dir %>/*.js'
 				}
 			}
+		},
+
+		open: {
+			jasmine_jquery_releases: {
+				path: "https://github.com/velesin/jasmine-jquery/releases"
+			}
 		}
 	});
 
@@ -92,4 +98,10 @@ module.exports = function(grunt) {
 		'jasmine',
 		'uglify'
 	]);
+
+	// This task allows us to quickly check if there has been a new relase
+	// of the jasmine-jquery library (`grunt open` would also do it).
+	grunt.registerTask('check', ['open:jasmine_jquery_releases']);
+
+	// The 'clean' task is defined wholly above.
 };
