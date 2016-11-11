@@ -26,7 +26,7 @@ module.exports = function(grunt) {
 				dest: '<%= paths.test_vendor%>/jquery.js'
 			},
 			jasmine_jquery: {
-				src: 'https://raw.github.com/velesin/jasmine-jquery/blob/2.1.1/lib/jasmine-jquery.js',
+				src: 'https://raw.githubusercontent.com/velesin/jasmine-jquery/2.1.1/lib/jasmine-jquery.js',
 				dest: '<%= paths.test_vendor%>/jasmine-jquery.js'
 			}
 		},

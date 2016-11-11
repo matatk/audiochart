@@ -1,6 +1,8 @@
 AudioChart
 ===========
 
+[![Build Status](https://travis-ci.org/matatk/audiochart.svg?branch=gh-pages)](https://travis-ci.org/matatk/audiochart)
+
 Allows the user to explore charts on web pages using sound and the keyboard rather than, or in conjunction with, visually and with the mouse.  The code can easily be added to any page containing charts.
 
 Thanks to [The Paciello Group](http://paciellogroup.com) for allowing me to share this with you, and to [The Sonification Handbook](http://sonification.de/handbook/) for the research behind it.

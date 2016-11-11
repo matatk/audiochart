@@ -385,14 +385,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       toHaveCss: function () {
         return {
           compare: function (actual, css) {
-            var stripCharsRegex = /[\s;\"\']/g
-            for (var prop in css) {
+            for (var prop in css){
               var value = css[prop]
               // see issue #147 on gh
-              ;if ((value === 'auto') && ($(actual).get(0).style[prop] === 'auto')) continue
-              var actualStripped = $(actual).css(prop).replace(stripCharsRegex, '')
-              var valueStripped = value.replace(stripCharsRegex, '')
-              if (actualStripped !== valueStripped) return { pass: false }
+              ;if (value === 'auto' && $(actual).get(0).style[prop] === 'auto') continue
+              if ($(actual).css(prop) !== value) return { pass: false }
             }
             return { pass: true }
           }
