@@ -49,7 +49,7 @@ module.exports = function(grunt) {
 				specs: '<%= paths.test_specs %>',
 				outfile: '<%= paths.test %>/index.html',
 				keepRunner: true,
-                template: require('grunt-template-jasmine-istanbul'),
+				template: require('grunt-template-jasmine-istanbul'),
 				templateOptions: {
 					coverage: '<%= paths.test_coverage %>/coverage.json',
 					report: '<%= paths.test_coverage %>',
