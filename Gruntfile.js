@@ -16,8 +16,11 @@ module.exports = function(grunt) {
 		},
 
 		clean: {
-			lib: 'lib/*',
-			jasmine_jquery: '<%= paths.test_vendor %>',
+			lib: 'lib/',
+			test_vendor: '<%= paths.test_vendor %>',
+			test_index: '<%= paths.test %>/index.html',
+			test_coverage: '<%= paths.test_coverage %>',
+			dot_grunt: '.grunt'
 		},
 
 		curl: {

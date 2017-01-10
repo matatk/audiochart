@@ -1,4 +1,8 @@
 .DS_Store
 *.swp
-_site
 node_modules
+.grunt
+test/index.html
+test/vendor
+test/coverage
+lib
