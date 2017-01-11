@@ -1,8 +1,15 @@
 .DS_Store
 *.swp
+
 node_modules
+
+# Generated during a build
 .grunt
 test/index.html
 test/vendor
 test/coverage
 lib
+
+# These are from the gh-pages branch
+_site
+audiochart
