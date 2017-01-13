@@ -1,8 +1,10 @@
+'use strict'
+
 module.exports = function(grunt) {
 	require('load-grunt-tasks')(grunt, {
 		pattern: ['grunt-*', '!grunt-template-jasmine-istanbul']
-	});
-	require('time-grunt')(grunt);
+	})
+	require('time-grunt')(grunt)
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
@@ -34,9 +36,15 @@ module.exports = function(grunt) {
 			}
 		},
 
+		eslint: {
+			options: {
+				configFile: '.eslintrc.json'
+			},
+			target: ['Gruntfile.js']
+		},
+
 		jshint: {
 			all: [
-				'Gruntfile.js',
 				'<%= paths.source_dir %>/*.js',
 				'<%= paths.test_specs %>'
 			]
@@ -88,23 +96,24 @@ module.exports = function(grunt) {
 
 		open: {
 			jasmine_jquery_releases: {
-				path: "https://github.com/velesin/jasmine-jquery/releases"
+				path: 'https://github.com/velesin/jasmine-jquery/releases'
 			}
 		}
-	});
+	})
 
 	grunt.registerTask('default', [
 		'clean:lib',
 		'if-missing:curl:jquery',
 		'if-missing:curl:jasmine_jquery',
+		'eslint',
 		'jshint',
 		'jasmine',
 		'uglify'
-	]);
+	])
 
 	// This task allows us to quickly check if there has been a new relase
 	// of the jasmine-jquery library (`grunt open` would also do it).
-	grunt.registerTask('check', ['open:jasmine_jquery_releases']);
+	grunt.registerTask('check', ['open:jasmine_jquery_releases'])
 
 	// The 'clean' task is defined wholly above.
-};
+}
