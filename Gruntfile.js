@@ -37,15 +37,15 @@ module.exports = function(grunt) {
 		},
 
 		eslint: {
-			options: {
-				configFile: '.eslintrc.json'
-			},
-			target: ['Gruntfile.js']
+			target: [
+				'Gruntfile.js',
+				'<%= paths.source_dir %>/audiochart.js'  // TODO use pkg name var?
+			]
 		},
 
 		jshint: {
 			all: [
-				'<%= paths.source_dir %>/*.js',
+				'<%= paths.source_dir %>/export.js',
 				'<%= paths.test_specs %>'
 			]
 		},
