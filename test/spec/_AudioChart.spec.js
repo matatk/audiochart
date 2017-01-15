@@ -17,7 +17,7 @@ describe('_AudioChart', function() {
 
 		expect(_AudioChart._assign_wrapper_callback(options))
 			.toEqual({
-				'wrapper': JSONDataWrapper,
+				'Wrapper': JSONDataWrapper,
 				'parameter': 42,
 				'callback': null
 			});
@@ -31,7 +31,7 @@ describe('_AudioChart', function() {
 
 		expect(_AudioChart._assign_wrapper_callback(options))
 			.toEqual({
-				'wrapper': GoogleDataWrapper,
+				'Wrapper': GoogleDataWrapper,
 				'parameter': 42,
 				'callback': null
 			});
@@ -52,7 +52,7 @@ describe('_AudioChart', function() {
 
 		expect(_AudioChart._assign_wrapper_callback(options))
 			.toEqual({
-				'wrapper': GoogleDataWrapper,
+				'Wrapper': GoogleDataWrapper,
 				'parameter': 42,
 				'callback': 42
 			});
@@ -66,7 +66,7 @@ describe('_AudioChart', function() {
 
 		expect(_AudioChart._assign_wrapper_callback(options))
 			.toEqual({
-				'wrapper': HTMLTableDataWrapper,
+				'Wrapper': HTMLTableDataWrapper,
 				'parameter': 42,
 				'callback': null
 			});
@@ -83,7 +83,7 @@ describe('_AudioChart', function() {
 
 		expect(_AudioChart._assign_wrapper_callback(options))
 			.toEqual({
-				'wrapper': HTMLTableDataWrapper,
+				'Wrapper': HTMLTableDataWrapper,
 				'parameter': 42,
 				'callback': 42
 			});
