@@ -44,12 +44,6 @@ module.exports = function(grunt) {
 			]
 		},
 
-		jshint: {
-			all: [
-				'<%= paths.source_dir %>/export.js',
-			]
-		},
-
 		jasmine: {
 			src: '<%= paths.source_dir %>/<%= pkg.name %>.js',
 			options: {
@@ -106,7 +100,6 @@ module.exports = function(grunt) {
 		'if-missing:curl:jquery',
 		'if-missing:curl:jasmine_jquery',
 		'eslint',
-		'jshint',
 		'jasmine',
 		'uglify'
 	])
