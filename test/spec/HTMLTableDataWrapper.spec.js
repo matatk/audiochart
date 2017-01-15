@@ -1,14 +1,14 @@
 'use strict'
-/* global loadFixtures data_wrappers_test_core */
+/* global loadFixtures dataWrappersTestCore */
 
 describe('HTMLTableDataWrapper', function() {
 	jasmine.getFixtures().fixturesPath = 'spec/'
 	loadFixtures('HTMLTableDataWrapper.fixtures.html')
 
-	data_wrappers_test_core(
+	dataWrappersTestCore(
 		'HTMLTableDataWrapper (data wrapper core)',
-		new window.HTMLTableDataWrapper(document.getElementById('test_one')),
-		new window.HTMLTableDataWrapper(document.getElementById('test_neg')))
+		new window.HTMLTableDataWrapper(document.getElementById('testOne')),
+		new window.HTMLTableDataWrapper(document.getElementById('testNeg')))
 
 	it('Throws when a null table is given', function() {
 		expect(function() {

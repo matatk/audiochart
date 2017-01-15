@@ -1,8 +1,8 @@
 'use strict'
-/* global data_wrappers_test_core */
+/* global dataWrappersTestCore */
 
-var test_one = [[0, 2], [1, 3], [2, 3], [3, 4]]
-var test_neg = [[0, 20], [1, -10], [2, 0], [3, 8], [4, -90]]
+var testOne = [[0, 2], [1, 3], [2, 3], [3, 4]]
+var testNeg = [[0, 20], [1, -10], [2, 0], [3, 8], [4, -90]]
 
 var FakeGoogleDataTable = (function() {
 	function FakeGoogleDataTable(table) {
@@ -63,7 +63,7 @@ var FakeGoogleDataTable = (function() {
 	return FakeGoogleDataTable
 })()
 
-data_wrappers_test_core(
+dataWrappersTestCore(
 	'GoogleDataWrapper',
-	new window.GoogleDataWrapper(new FakeGoogleDataTable(test_one)),
-	new window.GoogleDataWrapper(new FakeGoogleDataTable(test_neg)))
+	new window.GoogleDataWrapper(new FakeGoogleDataTable(testOne)),
+	new window.GoogleDataWrapper(new FakeGoogleDataTable(testNeg)))

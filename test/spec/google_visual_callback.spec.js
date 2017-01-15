@@ -1,24 +1,24 @@
 'use strict'
 
-describe('google_visual_callback', function() {
+describe('googleVisualCallback', function() {
 	var FakeChart = (function() {
 		function FakeChart() {}
 		FakeChart.prototype.setSelection = function(selection) {}
 		return FakeChart
 	})()
 
-	var fake_chart = null
-	var google_visual_callback = null
+	var fakeChart = null
+	var googleVisualCallback = null
 
 	beforeEach(function() {
-		fake_chart = new FakeChart()
-		google_visual_callback = window.google_visual_callback_maker(fake_chart)
-		spyOn(fake_chart, 'setSelection')
+		fakeChart = new FakeChart()
+		googleVisualCallback = window.googleVisualCallbackMaker(fakeChart)
+		spyOn(fakeChart, 'setSelection')
 	})
 
 	it('correctly munges its parameters (1a)', function() {
-		google_visual_callback(0, 0)
-		expect(fake_chart.setSelection).toHaveBeenCalledWith([
+		googleVisualCallback(0, 0)
+		expect(fakeChart.setSelection).toHaveBeenCalledWith([
 			{
 				'row': 0,
 				'column': 1
@@ -27,8 +27,8 @@ describe('google_visual_callback', function() {
 	})
 
 	it('correctly munges its parameters (1b)', function() {
-		google_visual_callback(0, 1)
-		expect(fake_chart.setSelection).toHaveBeenCalledWith([
+		googleVisualCallback(0, 1)
+		expect(fakeChart.setSelection).toHaveBeenCalledWith([
 			{
 				'row': 1,
 				'column': 1
@@ -37,8 +37,8 @@ describe('google_visual_callback', function() {
 	})
 
 	it('correctly munges its parameters (1c)', function() {
-		google_visual_callback(0, 2)
-		expect(fake_chart.setSelection).toHaveBeenCalledWith([
+		googleVisualCallback(0, 2)
+		expect(fakeChart.setSelection).toHaveBeenCalledWith([
 			{
 				'row': 2,
 				'column': 1
@@ -47,8 +47,8 @@ describe('google_visual_callback', function() {
 	})
 
 	it('correctly munges its parameters (2)', function() {
-		google_visual_callback(1, 0)
-		expect(fake_chart.setSelection).toHaveBeenCalledWith([
+		googleVisualCallback(1, 0)
+		expect(fakeChart.setSelection).toHaveBeenCalledWith([
 			{
 				'row': 0,
 				'column': 2

@@ -9,8 +9,8 @@ describe('WebAudioSounder', function() {
 		}
 
 		FakeOscillator.prototype.connect = function(destination) {}
-		FakeOscillator.prototype.start = function(opt_offest) {}
-		FakeOscillator.prototype.stop = function(opt_offset) {}
+		FakeOscillator.prototype.start = function(optOffest) {}
+		FakeOscillator.prototype.stop = function(optOffset) {}
 		return FakeOscillator
 	})()
 
@@ -29,75 +29,75 @@ describe('WebAudioSounder', function() {
 	})()
 
 
-	var fake_audio_context = null
+	var fakeAudioContext = null
 
 	beforeEach(function() {
-		fake_audio_context = new FakeAudioContext()
+		fakeAudioContext = new FakeAudioContext()
 	})
 
 	it('creates an oscillator', function() {
 		var sounder
-		spyOn(fake_audio_context, 'createOscillator')
-		sounder = new window.WebAudioSounder(fake_audio_context)
-		expect(fake_audio_context.createOscillator).toHaveBeenCalled()
+		spyOn(fakeAudioContext, 'createOscillator')
+		sounder = new window.WebAudioSounder(fakeAudioContext)
+		expect(fakeAudioContext.createOscillator).toHaveBeenCalled()
 	})
 
 	it('connects and starts its oscillator', function() {
-		var fake_oscillator
+		var fakeOscillator
 		var sounder
-		sounder = new window.WebAudioSounder(fake_audio_context)
-		fake_oscillator = sounder.oscillator
-		spyOn(fake_oscillator, 'connect')
-		spyOn(fake_oscillator, 'start')
+		sounder = new window.WebAudioSounder(fakeAudioContext)
+		fakeOscillator = sounder.oscillator
+		spyOn(fakeOscillator, 'connect')
+		spyOn(fakeOscillator, 'start')
 		sounder.start()
-		expect(fake_oscillator.connect).toHaveBeenCalledWith(fake_audio_context.destination)
-		expect(fake_oscillator.start).toHaveBeenCalledWith(0)
+		expect(fakeOscillator.connect).toHaveBeenCalledWith(fakeAudioContext.destination)
+		expect(fakeOscillator.start).toHaveBeenCalledWith(0)
 	})
 
 	it('changes frequency immediately', function() {
-		var fake_oscillator = null
-		var sounder = new window.WebAudioSounder(fake_audio_context)
+		var fakeOscillator = null
+		var sounder = new window.WebAudioSounder(fakeAudioContext)
 		jasmine.clock().install()
-		fake_oscillator = sounder.oscillator
-		expect(fake_oscillator.frequency.value).toBe(0)
+		fakeOscillator = sounder.oscillator
+		expect(fakeOscillator.frequency.value).toBe(0)
 		sounder.frequency(42)
 		jasmine.clock().tick(1)
-		expect(fake_oscillator.frequency.value).toBe(42)
+		expect(fakeOscillator.frequency.value).toBe(42)
 		jasmine.clock().uninstall()
 	})
 
 	it('changes frequency with an offset', function() {
 		var delay
-		var fake_oscillator
+		var fakeOscillator
 		var sounder
 		jasmine.clock().install()
 		delay = 250
-		sounder = new window.WebAudioSounder(fake_audio_context)
-		fake_oscillator = sounder.oscillator
-		expect(fake_oscillator.frequency.value).toBe(0)
+		sounder = new window.WebAudioSounder(fakeAudioContext)
+		fakeOscillator = sounder.oscillator
+		expect(fakeOscillator.frequency.value).toBe(0)
 		sounder.frequency(84, delay)
 		jasmine.clock().tick(delay)
-		expect(fake_oscillator.frequency.value).toBe(84)
+		expect(fakeOscillator.frequency.value).toBe(84)
 		jasmine.clock().uninstall()
 	})
 
 	it('stops its oscillator', function() {
-		var fake_oscillator
+		var fakeOscillator
 		var sounder
-		sounder = new window.WebAudioSounder(fake_audio_context)
-		fake_oscillator = sounder.oscillator
-		spyOn(fake_oscillator, 'stop')
+		sounder = new window.WebAudioSounder(fakeAudioContext)
+		fakeOscillator = sounder.oscillator
+		spyOn(fakeOscillator, 'stop')
 		sounder.stop()
-		expect(fake_oscillator.stop).toHaveBeenCalled()
+		expect(fakeOscillator.stop).toHaveBeenCalled()
 	})
 
 	it('stops its oscillator at a given time', function() {
-		var fake_oscillator
+		var fakeOscillator
 		var sounder
-		sounder = new window.WebAudioSounder(fake_audio_context)
-		fake_oscillator = sounder.oscillator
-		spyOn(fake_oscillator, 'stop')
+		sounder = new window.WebAudioSounder(fakeAudioContext)
+		fakeOscillator = sounder.oscillator
+		spyOn(fakeOscillator, 'stop')
 		sounder.stop(21)
-		expect(fake_oscillator.stop).toHaveBeenCalledWith(fake_audio_context.currentTime + 21)
+		expect(fakeOscillator.stop).toHaveBeenCalledWith(fakeAudioContext.currentTime + 21)
 	})
 })

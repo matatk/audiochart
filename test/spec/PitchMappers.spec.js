@@ -1,24 +1,24 @@
 'use strict'
 
-var mixin_min_max = function(Klass, test_min, test_max) {
+var mixinMinMax = function(Klass, testMin, testMax) {
 	describe('Minimum and Maximum data', function() {
 		var obj = null
 
 		beforeEach(function() {
-			obj = new Klass(test_min, test_max)
+			obj = new Klass(testMin, testMax)
 		})
 
 		it('stores a minimum data value [not for public use]', function() {
-			expect(obj.minimum_datum).toBe(test_min)
+			expect(obj.minimumDatum).toBe(testMin)
 		})
 
 		it('stores a maximum data value [not for public use]', function() {
-			expect(obj.maximum_datum).toBe(test_max)
+			expect(obj.maximumDatum).toBe(testMax)
 		})
 
 		it('will not allow min datum > max datum', function() {
 			expect(function() {
-				new Klass(test_max, test_min)
+				new Klass(testMax, testMin)
 			}).toThrow()
 		})
 	})
@@ -28,7 +28,7 @@ var mixin_min_max = function(Klass, test_min, test_max) {
 describe('PitchMapper', function() {
 	var MIN = -4
 	var MAX = 2
-	mixin_min_max(window.PitchMapper, MIN, MAX)
+	mixinMinMax(window.PitchMapper, MIN, MAX)
 })
 
 
@@ -36,7 +36,7 @@ describe('FrequencyPitchMapper', function() {
 	var MIN = 0
 	var MAX = 42
 
-	mixin_min_max(window.FrequencyPitchMapper, MIN, MAX)
+	mixinMinMax(window.FrequencyPitchMapper, MIN, MAX)
 
 	it('will not allow min frequency > max frequency', function() {
 		expect(function() {

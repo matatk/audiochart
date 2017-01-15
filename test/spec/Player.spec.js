@@ -1,16 +1,16 @@
 'use strict'
 
-var expected_frequency_calls = function(playback_time, series_length) {
+var expectedFrequencyCalls = function(playbackTime, seriesLength) {
 	// TODO tidy up
 	var i
 	var interval
 	var j
 	var out
 	var ref
-	interval = playback_time / series_length
+	interval = playbackTime / seriesLength
 	out = []
 	out.push([21])
-	for (i = j = 1, ref = series_length - 1; ref >= 1 ? j <= ref : j >= ref; i = ref >= 1 ? ++j : --j) {
+	for (i = j = 1, ref = seriesLength - 1; ref >= 1 ? j <= ref : j >= ref; i = ref >= 1 ? ++j : --j) {
 		out.push([21, interval * i])
 	}
 	return out
@@ -20,15 +20,15 @@ var expected_frequency_calls = function(playback_time, series_length) {
 var BaseFakeDataWrapper = (function() {
 	function BaseFakeDataWrapper() {}
 
-	BaseFakeDataWrapper.prototype.num_series = function() {
+	BaseFakeDataWrapper.prototype.numSeries = function() {
 		return 1
 	}
 
-	BaseFakeDataWrapper.prototype.series_names = function() {
+	BaseFakeDataWrapper.prototype.seriesNames = function() {
 		return ['Test']
 	}
 
-	BaseFakeDataWrapper.prototype.series_value = function(series, index) {
+	BaseFakeDataWrapper.prototype.seriesValue = function(series, index) {
 		return 42
 	}
 
@@ -44,7 +44,7 @@ var ShortFakeDataWrapper = (function() {
 	ShortFakeDataWrapper.prototype = Object.create(BaseFakeDataWrapper.prototype)
 	ShortFakeDataWrapper.prototype.constructor = ShortFakeDataWrapper
 
-	ShortFakeDataWrapper.prototype.series_length = function(series) {
+	ShortFakeDataWrapper.prototype.seriesLength = function(series) {
 		return 4
 	}
 
@@ -60,7 +60,7 @@ var LongFakeDataWrapper = (function() {
 	LongFakeDataWrapper.prototype = Object.create(BaseFakeDataWrapper.prototype)
 	LongFakeDataWrapper.prototype.constructor = LongFakeDataWrapper
 
-	LongFakeDataWrapper.prototype.series_length = function(series) {
+	LongFakeDataWrapper.prototype.seriesLength = function(series) {
 		return 100
 	}
 
@@ -88,23 +88,23 @@ var FakeSounder = (function() {
 })()
 
 
-var mixin_data_wrapper_core = function(message, TestDataClass, test_duration, test_call_count, test_interval, use_visual_callback) {
+var mixinDataWrapperCore = function(message, TestDataClass, testDuration, testCallCount, testInterval, useVisualCallback) {
 	describe(message, function() {
-		var fake_data = null
-		var fake_mapper = null
-		var fake_sounder = null
+		var fakeData = null
+		var fakeMapper = null
+		var fakeSounder = null
 		var player = null
-		var fake_visual_callback = null  // may not be used
+		var fakeVisualCallback = null  // may not be used
 
 		beforeEach(function() {
-			fake_data = new TestDataClass()
-			fake_mapper = new FakeMapper()
-			fake_sounder = new FakeSounder()
-			if (use_visual_callback) {
-				fake_visual_callback = jasmine.createSpy('fake_visual_callback')
-				player = new window.Player(test_duration, fake_data, fake_mapper, fake_sounder, fake_visual_callback)
+			fakeData = new TestDataClass()
+			fakeMapper = new FakeMapper()
+			fakeSounder = new FakeSounder()
+			if (useVisualCallback) {
+				fakeVisualCallback = jasmine.createSpy('fakeVisualCallback')
+				player = new window.Player(testDuration, fakeData, fakeMapper, fakeSounder, fakeVisualCallback)
 			} else {
-				player = new window.Player(test_duration, fake_data, fake_mapper, fake_sounder)
+				player = new window.Player(testDuration, fakeData, fakeMapper, fakeSounder)
 			}
 
 			jasmine.clock().install()
@@ -115,66 +115,66 @@ var mixin_data_wrapper_core = function(message, TestDataClass, test_duration, te
 		})
 
 		it('works out for how long to sound each datum', function() {
-			expect(player.interval).toBe(test_interval)
+			expect(player.interval).toBe(testInterval)
 		})
 
 		it('starts the sounder', function() {
-			spyOn(fake_sounder, 'start')
+			spyOn(fakeSounder, 'start')
 			player.play()
-			jasmine.clock().tick(test_duration)
-			expect(fake_sounder.start.calls.count()).toBe(1)
+			jasmine.clock().tick(testDuration)
+			expect(fakeSounder.start.calls.count()).toBe(1)
 		})
 
 		it('stops the sounder', function() {
-			spyOn(fake_sounder, 'stop')
+			spyOn(fakeSounder, 'stop')
 			player.play()
-			jasmine.clock().tick(test_duration)
-			expect(fake_sounder.stop.calls.count()).toBe(1)
+			jasmine.clock().tick(testDuration)
+			expect(fakeSounder.stop.calls.count()).toBe(1)
 		})
 
 		it('makes the correct number of map calls', function() {
-			spyOn(fake_mapper, 'map')
+			spyOn(fakeMapper, 'map')
 			player.play()
-			jasmine.clock().tick(test_duration)
-			expect(fake_mapper.map.calls.count()).toBe(test_call_count)
+			jasmine.clock().tick(testDuration)
+			expect(fakeMapper.map.calls.count()).toBe(testCallCount)
 		})
 
 		it('makes the right number of calls to the sounder', function() {
-			spyOn(fake_sounder, 'frequency')
+			spyOn(fakeSounder, 'frequency')
 			player.play()
-			jasmine.clock().tick(test_duration)
-			expect(fake_sounder.frequency.calls.count()).toBe(test_call_count)
+			jasmine.clock().tick(testDuration)
+			expect(fakeSounder.frequency.calls.count()).toBe(testCallCount)
 		})
 
 		it('calls the sounder with the correct arguments each time', function() {
-			spyOn(fake_sounder, 'frequency')
+			spyOn(fakeSounder, 'frequency')
 			player.play()
-			jasmine.clock().tick(test_duration)
-			expect(fake_sounder.frequency.calls.allArgs()).toEqual(expected_frequency_calls(test_duration, test_call_count))
+			jasmine.clock().tick(testDuration)
+			expect(fakeSounder.frequency.calls.allArgs()).toEqual(expectedFrequencyCalls(testDuration, testCallCount))
 		})
 
-		if (use_visual_callback) {
+		if (useVisualCallback) {
 			it('makes the correct number of visual callback calls', function() {
 				player.play()
-				jasmine.clock().tick(test_duration)
-				expect(fake_visual_callback.calls.count()).toBe(test_call_count)
+				jasmine.clock().tick(testDuration)
+				expect(fakeVisualCallback.calls.count()).toBe(testCallCount)
 			})
 		}
 	})
 }
 
 
-var mixin_data_wrapper = function(message, TestDataClass, test_duration, test_call_count, test_interval) {
+var mixinDataWrapper = function(message, TestDataClass, testDuration, testCallCount, testInterval) {
 	describe(message, function() {
-		mixin_data_wrapper_core('when not having a callback', TestDataClass, test_duration, test_call_count, test_interval, false)
-		mixin_data_wrapper_core('when having a callback', TestDataClass, test_duration, test_call_count, test_interval, true)
+		mixinDataWrapperCore('when not having a callback', TestDataClass, testDuration, testCallCount, testInterval, false)
+		mixinDataWrapperCore('when having a callback', TestDataClass, testDuration, testCallCount, testInterval, true)
 	})
 }
 
 
 describe('Player', function() {
-	mixin_data_wrapper('instantiated with short fake data source for 5000ms', ShortFakeDataWrapper, 5000, 4, 1250)
-	mixin_data_wrapper('instantiated with short fake data source for 3000ms', ShortFakeDataWrapper, 3000, 4, 750)
-	mixin_data_wrapper('instantiated with long fake data source for 5000ms', LongFakeDataWrapper, 5000, 100, 50)
-	mixin_data_wrapper('instantiated with long fake data source for 2500ms', LongFakeDataWrapper, 2500, 100, 25)
+	mixinDataWrapper('instantiated with short fake data source for 5000ms', ShortFakeDataWrapper, 5000, 4, 1250)
+	mixinDataWrapper('instantiated with short fake data source for 3000ms', ShortFakeDataWrapper, 3000, 4, 750)
+	mixinDataWrapper('instantiated with long fake data source for 5000ms', LongFakeDataWrapper, 5000, 100, 50)
+	mixinDataWrapper('instantiated with long fake data source for 2500ms', LongFakeDataWrapper, 2500, 100, 25)
 })

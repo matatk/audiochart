@@ -1,5 +1,5 @@
 'use strict'
-/* global _AudioChart JSONDataWrapper GoogleDataWrapper HTMLTableDataWrapper html_table_visual_callback_maker */
+/* global _AudioChart JSONDataWrapper GoogleDataWrapper HTMLTableDataWrapper htmlTableVisualCallbackMaker */
 
 describe('_AudioChart', function() {
 	it('throws when an errant `options.type` is supplied', function() {
@@ -18,7 +18,7 @@ describe('_AudioChart', function() {
 			'data': 42
 		}
 
-		expect(_AudioChart._assign_wrapper_callback(options))
+		expect(_AudioChart._assignWrapperCallback(options))
 			.toEqual({
 				'Wrapper': JSONDataWrapper,
 				'parameter': 42,
@@ -32,7 +32,7 @@ describe('_AudioChart', function() {
 			'data': 42
 		}
 
-		expect(_AudioChart._assign_wrapper_callback(options))
+		expect(_AudioChart._assignWrapperCallback(options))
 			.toEqual({
 				'Wrapper': GoogleDataWrapper,
 				'parameter': 42,
@@ -51,9 +51,9 @@ describe('_AudioChart', function() {
 		// maker, maybe it is better to revert to doing this for *all* of
 		// these tests, because returning this artificial object thing is
 		// a bit naff...
-		spyOn(window, 'google_visual_callback_maker').and.returnValue(42)
+		spyOn(window, 'googleVisualCallbackMaker').and.returnValue(42)
 
-		expect(_AudioChart._assign_wrapper_callback(options))
+		expect(_AudioChart._assignWrapperCallback(options))
 			.toEqual({
 				'Wrapper': GoogleDataWrapper,
 				'parameter': 42,
@@ -67,7 +67,7 @@ describe('_AudioChart', function() {
 			'table': 42
 		}
 
-		expect(_AudioChart._assign_wrapper_callback(options))
+		expect(_AudioChart._assignWrapperCallback(options))
 			.toEqual({
 				'Wrapper': HTMLTableDataWrapper,
 				'parameter': 42,
@@ -82,16 +82,16 @@ describe('_AudioChart', function() {
 			'highlight_class': 'moo'
 		}
 
-		spyOn(window, 'html_table_visual_callback_maker').and.returnValue(42)
+		spyOn(window, 'htmlTableVisualCallbackMaker').and.returnValue(42)
 
-		expect(_AudioChart._assign_wrapper_callback(options))
+		expect(_AudioChart._assignWrapperCallback(options))
 			.toEqual({
 				'Wrapper': HTMLTableDataWrapper,
 				'parameter': 42,
 				'callback': 42
 			})
 
-		expect(html_table_visual_callback_maker)
+		expect(htmlTableVisualCallbackMaker)
 			.toHaveBeenCalledWith(42, 'moo')
 	})
 })
