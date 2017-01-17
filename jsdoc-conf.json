@@ -1,0 +1,17 @@
+{
+  "source": {
+    "include": "src/audiochart.js"
+  },
+  "plugins": [
+    "plugins/markdown"
+  ],
+  "opts": {
+    "destination": "doc",
+    "private": true,
+    "readme": "README.md",
+    "verbose": true
+  },
+  "markdown": {
+    "tags": ["todo"]
+  }
+}

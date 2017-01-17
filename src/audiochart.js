@@ -1,26 +1,68 @@
 'use strict'
+/**
+ * Zero-indexed series or row
+ * @typedef {integer} zinteger
+ */
 
-/* The common DataWrapper 'interface' is validated via the tests
-   Note: it is not done as a superclass (as PitchMapper is below) because
-         there's really nothing in common implementation-wise; only the
-         interface is shared.
-var DataWrapper = (function() {
-	function DataWrapper(data) {
-		throw Error('Please use a derived object.');
-	}
 
-	DataWrapper.prototype.numSeries = function() {};
-	DataWrapper.prototype.seriesNames = function() {};
-	DataWrapper.prototype.seriesMin = function(series) {};
-	DataWrapper.prototype.seriesMax = function(series) {};
-	DataWrapper.prototype.seriesValue = function(series, index) {};
-	DataWrapper.prototype.seriesLength = function(series) {};
-
-	return DataWrapper;
-})();*/
+/**
+ * The common interface that the other DataWrappers use.
+ *
+ * The common DataWrapper 'interface' is validated via the tests.
+ *
+ * Note: it is not done as a superclass (as {@link PitchMapper} is below) because
+ *       there's really nothing in common implementation-wise; only the
+ *       interface is shared.
+ *
+ * @interface DataWrapper
+ * @private
+ * @todo tidy up this note
+ */
+/**
+ * Returns the number of series in the underlying data
+ * @function DataWrapper#numSeries
+ * @returns {integer} The number of series
+ */
+/**
+ * Get a list of the underlying data series names
+ * @function DataWrapper#seriesNames
+ * @returns {string[]} An array of the series names
+ */
+/**
+ * What is the minimum value in a given series?
+ * @function DataWrapper#seriesMin
+ * @param {zinteger} series - The series number
+ * @returns {Number} The minimum value in the series
+ */
+/**
+ * What is the maximum value in a given series?
+ * @function DataWrapper#seriesMax
+ * @param {zinteger} series - The series number
+ * @returns {Number} The maximum value in the series
+ */
+/**
+ * Get value of specific datum
+ * @function DataWrapper#seriesValue
+ * @param {zinteger} series - The series number
+ * @param {zinteger} index - The row number
+ * @todo rename `index` to `row`?
+ * @returns {Number} the datum
+ */
+/**
+ * What is the length of a series?
+ * @function DataWrapper#seriesLength
+ * @param {zinteger} series - The series
+ * @returns {integer} The number of data in the series
+ */
 
 
 var GoogleDataWrapper = (function() {
+	/**
+	 * @class GoogleDataWrapper
+	 * @private
+	 * @implements DataWrapper
+	 * @param {GoogleDataTable} data - The in-memory GoogleDataTable
+	 */
 	function GoogleDataWrapper(data) {
 		this.data = data
 	}
@@ -58,6 +100,12 @@ var GoogleDataWrapper = (function() {
 
 
 var JSONDataWrapper = (function() {
+	/**
+	 * @class JSONDataWrapper
+	 * @private
+	 * @implements DataWrapper
+	 * @param {JSON} json - The JSON data, as a string or object
+	 */
 	function JSONDataWrapper(json) {
 		if (typeof json === 'string') {
 			this.object = JSON.parse(json)
@@ -101,6 +149,12 @@ var JSONDataWrapper = (function() {
 
 
 var HTMLTableDataWrapper = (function() {
+	/**
+	 * @class HTMLTableDataWrapper
+	 * @private
+	 * @implements DataWrapper
+	 * @param {HTMLTableElement} table - The in-DOM table element
+	 */
 	function HTMLTableDataWrapper(table) {
 		this.table = table
 		if (!this.table) {
@@ -151,6 +205,10 @@ var HTMLTableDataWrapper = (function() {
 
 
 var PitchMapper = (function() {
+	/**
+	 * @class PitchMapper
+	 * @private
+	 */
 	function PitchMapper(minimumDatum, maximumDatum) {
 		this.minimumDatum = minimumDatum
 		this.maximumDatum = maximumDatum
@@ -166,6 +224,11 @@ var PitchMapper = (function() {
 
 
 var FrequencyPitchMapper = (function() {
+	/**
+	 * @class FrequencyPitchMapper
+	 * @private
+	 * @extends PitchMapper
+	 */
 	function FrequencyPitchMapper(minimumDatum, maximumDatum, minimumFrequency, maximumFrequency) {
 		this.minimumFrequency = minimumFrequency
 		this.maximumFrequency = maximumFrequency
@@ -194,6 +257,10 @@ var FrequencyPitchMapper = (function() {
 
 
 var WebAudioSounder = (function() {
+	/**
+	 * @class WebAudioSounder
+	 * @private
+	 */
 	function WebAudioSounder(context) {
 		this.context = context
 		this.oscillator = this.context.createOscillator()
@@ -222,6 +289,10 @@ var WebAudioSounder = (function() {
 
 
 var Player = (function() {
+	/**
+	 * Class Player
+	 * @private
+	 */
 	function Player(duration, data, pitchMapper, sounder, visualCallback) {
 		this.data = data
 		this.pitchMapper = pitchMapper
@@ -267,6 +338,10 @@ var Player = (function() {
 
 
 var AudioContextGetter = (function() {
+	/**
+	 * @class AudioContextGetter
+	 * @private
+	 */
 	function AudioContextGetter() {}
 
 	var audioContext = null
@@ -290,6 +365,19 @@ var AudioContextGetter = (function() {
 })()
 
 
+/**
+ * This callback moves the cursor on a Google Chart object
+ * @callback GoogleVisualCallback
+ * @param {zinteger} series - Data series in underlying table
+ * @param {zinteger} row - Datum within that series
+ */
+
+/**
+ * Generates a function that moves the cursor on a Google Chart
+ * @private
+ * @param {GoogleChart} chart - the in-memory GoogleChart object
+ * @returns {GoogleVisualCallback} the callback
+ */
 var googleVisualCallbackMaker = function(chart) {
 	return function(series, row) {
 		chart.setSelection([
@@ -302,6 +390,20 @@ var googleVisualCallbackMaker = function(chart) {
 }
 
 
+/**
+ * This callback highlights (using CSS) a table cell
+ * @callback HTMLTableVisualCallback
+ * @param {zinteger} series - The column of the cell to highlight
+ * @param {zinteger} row - The row of the cell to highlight
+ */
+
+/**
+ * Generate a callback that can be used to highlight table cells
+ * @private
+ * @param {HTMLTableElement} table - The in-DOM table element
+ * @param {string} className - Name of the CSS highlight class
+ * @returns {HTMLTableVisualCallback} The highlighting function
+ */
 var htmlTableVisualCallbackMaker = function(table, className) {
 	return function(series, row) {
 		var tds = table.getElementsByTagName('td')
@@ -317,6 +419,10 @@ var htmlTableVisualCallbackMaker = function(table, className) {
 
 
 var _AudioChart = (function() {
+	/**
+	 * @class _AudioChart
+	 * @private
+	 */
 	function _AudioChart(options, context) {
 		var result = _AudioChart._assignWrapperCallback(options)
 		var dataWrapper = new result.Wrapper(result.parameter)
@@ -387,6 +493,10 @@ var _AudioChart = (function() {
 
 
 var AudioChart = (function() {
+	/**
+	 * Main entry point for API consumers
+	 * @class AudioChart
+	 */
 	function AudioChart(options, context) {
 		var fail = "Sorry, your browser doesn't support the Web Audio API."
 		if (arguments.length < 2) {
