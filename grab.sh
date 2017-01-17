@@ -4,9 +4,11 @@ AC='audiochart'
 GRUNT='.grunt'
 LIB='lib'
 TEST='test'
+EXAMPLES='examples'
+ESLINTRC='.eslintrc.json'
 
 echo "Removing existing stuff..."
-rm -rfv $GRUNT $LIB $TEST
+rm -rfv $GRUNT $LIB $TEST $EXAMPLES
 
 if [ $PROG == 'grab.sh' ]; then
 	echo
@@ -17,5 +19,6 @@ if [ $PROG == 'grab.sh' ]; then
 	cd -
 	echo
 	echo "Coyping in needed things..."
-	cp -R "$AC/$GRUNT" "$AC/$LIB" "$AC/$TEST" .
+	cp -R "$AC/$GRUNT" "$AC/$LIB" "$AC/$TEST" "$AC/$EXAMPLES" .
+	rm "$TEST/spec/$ESLINTRC" "$EXAMPLES/$ESLINTRC"
 fi
