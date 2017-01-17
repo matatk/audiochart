@@ -1,61 +1,63 @@
+'use strict'
+
 module.exports = function(grunt) {
 	require('load-grunt-tasks')(grunt, {
 		pattern: ['grunt-*', '!grunt-template-jasmine-istanbul']
-	});
-	require('time-grunt')(grunt);
+	})
+	require('time-grunt')(grunt)
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 
 		paths: {
 			test: 'test',
-			test_specs: 'test/spec/*.spec.js',
-			test_vendor: 'test/vendor',
-			test_coverage: 'test/coverage',
-			source_dir: 'src'
+			testSpecs: 'test/spec/*.spec.js',
+			testVendor: 'test/vendor',
+			testCoverage: 'test/coverage',
+			sourceDir: 'src'
 		},
 
 		clean: {
 			lib: 'lib/',
-			test_vendor: '<%= paths.test_vendor %>',
-			test_index: '<%= paths.test %>/index.html',
-			test_coverage: '<%= paths.test_coverage %>',
-			dot_grunt: '.grunt'
+			testVendor: '<%= paths.testVendor %>',
+			testIndex: '<%= paths.test %>/index.html',
+			testCoverage: '<%= paths.testCoverage %>',
+			dotGrunt: '.grunt'
 		},
 
 		curl: {
 			jquery: {
 				src: 'http://code.jquery.com/jquery-2.2.3.min.js',
-				dest: '<%= paths.test_vendor%>/jquery.js'
+				dest: '<%= paths.testVendor%>/jquery.js'
 			},
-			jasmine_jquery: {
+			jasmineJquery: {
 				src: 'https://raw.githubusercontent.com/velesin/jasmine-jquery/2.1.1/lib/jasmine-jquery.js',
-				dest: '<%= paths.test_vendor%>/jasmine-jquery.js'
+				dest: '<%= paths.testVendor%>/jasmine-jquery.js'
 			}
 		},
 
-		jshint: {
-			all: [
+		eslint: {
+			target: [
 				'Gruntfile.js',
-				'<%= paths.source_dir %>/*.js',
-				'<%= paths.test_specs %>'
+				'<%= paths.sourceDir %>/<%= pkg.name %>.js',
+				'<%= paths.testSpecs %>'
 			]
 		},
 
 		jasmine: {
-			src: '<%= paths.source_dir %>/<%= pkg.name %>.js',
+			src: '<%= paths.sourceDir %>/<%= pkg.name %>.js',
 			options: {
 				vendor: [
-					'<%= paths.test_vendor %>/jquery.js',
-					'<%= paths.test_vendor %>/jasmine-jquery.js',
+					'<%= paths.testVendor %>/jquery.js',
+					'<%= paths.testVendor %>/jasmine-jquery.js',
 				],
-				specs: '<%= paths.test_specs %>',
+				specs: '<%= paths.testSpecs %>',
 				outfile: '<%= paths.test %>/index.html',
 				keepRunner: true,
 				template: require('grunt-template-jasmine-istanbul'),
 				templateOptions: {
-					coverage: '<%= paths.test_coverage %>/coverage.json',
-					report: '<%= paths.test_coverage %>',
+					coverage: '<%= paths.testCoverage %>/coverage.json',
+					report: '<%= paths.testCoverage %>',
 					thresholds: {
 						lines: 75,
 						statements: 75,
@@ -81,30 +83,30 @@ module.exports = function(grunt) {
 				},
 				files: {
 					'lib/<%= pkg.name %>.min.js':
-						'<%= paths.source_dir %>/*.js'
+						'<%= paths.sourceDir %>/*.js'
 				}
 			}
 		},
 
 		open: {
-			jasmine_jquery_releases: {
-				path: "https://github.com/velesin/jasmine-jquery/releases"
+			jasmineJqueryReleases: {
+				path: 'https://github.com/velesin/jasmine-jquery/releases'
 			}
 		}
-	});
+	})
 
 	grunt.registerTask('default', [
 		'clean:lib',
 		'if-missing:curl:jquery',
-		'if-missing:curl:jasmine_jquery',
-		'jshint',
+		'if-missing:curl:jasmineJquery',
+		'eslint',
 		'jasmine',
 		'uglify'
-	]);
+	])
 
 	// This task allows us to quickly check if there has been a new relase
 	// of the jasmine-jquery library (`grunt open` would also do it).
-	grunt.registerTask('check', ['open:jasmine_jquery_releases']);
+	grunt.registerTask('check', ['open:jasmineJquery_releases'])
 
 	// The 'clean' task is defined wholly above.
-};
+}

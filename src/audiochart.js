@@ -1,3 +1,5 @@
+'use strict'
+
 /* The common DataWrapper 'interface' is validated via the tests
    Note: it is not done as a superclass (as PitchMapper is below) because
          there's really nothing in common implementation-wise; only the
@@ -7,12 +9,12 @@ var DataWrapper = (function() {
 		throw Error('Please use a derived object.');
 	}
 
-	DataWrapper.prototype.num_series = function() {};
-	DataWrapper.prototype.series_names = function() {};
-	DataWrapper.prototype.series_min = function(series) {};
-	DataWrapper.prototype.series_max = function(series) {};
-	DataWrapper.prototype.series_value = function(series, index) {};
-	DataWrapper.prototype.series_length = function(series) {};
+	DataWrapper.prototype.numSeries = function() {};
+	DataWrapper.prototype.seriesNames = function() {};
+	DataWrapper.prototype.seriesMin = function(series) {};
+	DataWrapper.prototype.seriesMax = function(series) {};
+	DataWrapper.prototype.seriesValue = function(series, index) {};
+	DataWrapper.prototype.seriesLength = function(series) {};
 
 	return DataWrapper;
 })();*/
@@ -20,380 +22,380 @@ var DataWrapper = (function() {
 
 var GoogleDataWrapper = (function() {
 	function GoogleDataWrapper(data) {
-		this.data = data;
+		this.data = data
 	}
 
-	GoogleDataWrapper.prototype.num_series = function() {
-		return this.data.getNumberOfColumns() - 1;
-	};
+	GoogleDataWrapper.prototype.numSeries = function() {
+		return this.data.getNumberOfColumns() - 1
+	}
 
-	GoogleDataWrapper.prototype.series_names = function() {
-		var results = [];
+	GoogleDataWrapper.prototype.seriesNames = function() {
+		var results = []
 		for (var i = 0; i < this.data.getNumberOfColumns() - 1; i++) {
-			results.push(this.data.getColumnLabel(i));
+			results.push(this.data.getColumnLabel(i))
 		}
-		return results;
-	};
+		return results
+	}
 
-	GoogleDataWrapper.prototype.series_min = function(series) {
-		return this.data.getColumnRange(series + 1).min;
-	};
+	GoogleDataWrapper.prototype.seriesMin = function(series) {
+		return this.data.getColumnRange(series + 1).min
+	}
 
-	GoogleDataWrapper.prototype.series_max = function(series) {
-		return this.data.getColumnRange(series + 1).max;
-	};
+	GoogleDataWrapper.prototype.seriesMax = function(series) {
+		return this.data.getColumnRange(series + 1).max
+	}
 
-	GoogleDataWrapper.prototype.series_value = function(series, index) {
-		return this.data.getValue(index, series + 1);
-	};
+	GoogleDataWrapper.prototype.seriesValue = function(series, index) {
+		return this.data.getValue(index, series + 1)
+	}
 
-	GoogleDataWrapper.prototype.series_length = function(series) {
-		return this.data.getNumberOfRows();
-	};
+	GoogleDataWrapper.prototype.seriesLength = function(series) {
+		return this.data.getNumberOfRows()
+	}
 
-	return GoogleDataWrapper;
-})();
+	return GoogleDataWrapper
+})()
 
 
 var JSONDataWrapper = (function() {
 	function JSONDataWrapper(json) {
 		if (typeof json === 'string') {
-			this.object = JSON.parse(json);
+			this.object = JSON.parse(json)
 		} else if (typeof json === 'object') {
-			this.object = json;
+			this.object = json
 		} else {
-			throw Error("Please provide a JSON string or derived object.");
+			throw Error('Please provide a JSON string or derived object.')
 		}
 	}
 
-	JSONDataWrapper.prototype.num_series = function() {
-		return this.object.data.length;
-	};
+	JSONDataWrapper.prototype.numSeries = function() {
+		return this.object.data.length
+	}
 
-	JSONDataWrapper.prototype.series_names = function() {
-		var results = [];
+	JSONDataWrapper.prototype.seriesNames = function() {
+		var results = []
 		for (var i = 0; i < this.object.data.length; i++) {
-			results.push(this.object.data[i].series);
+			results.push(this.object.data[i].series)
 		}
-		return results;
-	};
+		return results
+	}
 
-	JSONDataWrapper.prototype.series_min = function(series) {
-		return Math.min.apply(this, this.object.data[series].values);
-	};
+	JSONDataWrapper.prototype.seriesMin = function(series) {
+		return Math.min.apply(this, this.object.data[series].values)
+	}
 
-	JSONDataWrapper.prototype.series_max = function(series) {
-		return Math.max.apply(this, this.object.data[series].values);
-	};
+	JSONDataWrapper.prototype.seriesMax = function(series) {
+		return Math.max.apply(this, this.object.data[series].values)
+	}
 
-	JSONDataWrapper.prototype.series_value = function(series, index) {
-		return this.object.data[series].values[index];
-	};
+	JSONDataWrapper.prototype.seriesValue = function(series, index) {
+		return this.object.data[series].values[index]
+	}
 
-	JSONDataWrapper.prototype.series_length = function(series) {
-		return this.object.data[series].values.length;
-	};
+	JSONDataWrapper.prototype.seriesLength = function(series) {
+		return this.object.data[series].values.length
+	}
 
-	return JSONDataWrapper;
-})();
+	return JSONDataWrapper
+})()
 
 
 var HTMLTableDataWrapper = (function() {
 	function HTMLTableDataWrapper(table) {
-		this.table = table;
+		this.table = table
 		if (!this.table) {
-			throw Error("No table given.");
+			throw Error('No table given.')
 		}
 	}
 
-	HTMLTableDataWrapper.prototype.num_series = function() {
-		return this.table.getElementsByTagName('tr')[0].children.length;
-	};
+	HTMLTableDataWrapper.prototype.numSeries = function() {
+		return this.table.getElementsByTagName('tr')[0].children.length
+	}
 
-	HTMLTableDataWrapper.prototype.series_names = function() {
-		var header_cells = this.table.getElementsByTagName('th');
-		var results = [];
-		for (var i = 0; i < header_cells.length; i++) {
-			results.push(header_cells[i].textContent);
+	HTMLTableDataWrapper.prototype.seriesNames = function() {
+		var headerCells = this.table.getElementsByTagName('th')
+		var results = []
+		for (var i = 0; i < headerCells.length; i++) {
+			results.push(headerCells[i].textContent)
 		}
-		return results;
-	};
+		return results
+	}
 
-	HTMLTableDataWrapper.prototype._series_floats = function(series) {
-		var data_cells = this.table.getElementsByTagName('td');
-		var results = [];
-		for (var i = 0; i < data_cells.length; i++) {
-			results.push(parseFloat(data_cells[i].textContent));
+	HTMLTableDataWrapper.prototype._seriesFloats = function(series) {
+		var dataCells = this.table.getElementsByTagName('td')
+		var results = []
+		for (var i = 0; i < dataCells.length; i++) {
+			results.push(parseFloat(dataCells[i].textContent))
 		}
-		return results;
-	};
+		return results
+	}
 
-	HTMLTableDataWrapper.prototype.series_min = function(series) {
-		return Math.min.apply(this, this._series_floats(series));
-	};
+	HTMLTableDataWrapper.prototype.seriesMin = function(series) {
+		return Math.min.apply(this, this._seriesFloats(series))
+	}
 
-	HTMLTableDataWrapper.prototype.series_max = function(series) {
-		return Math.max.apply(this, this._series_floats(series));
-	};
+	HTMLTableDataWrapper.prototype.seriesMax = function(series) {
+		return Math.max.apply(this, this._seriesFloats(series))
+	}
 
-	HTMLTableDataWrapper.prototype.series_value = function(series, index) {
-		return parseFloat(this.table.getElementsByTagName('tr')[index + 1].children[series].textContent);
-	};
+	HTMLTableDataWrapper.prototype.seriesValue = function(series, index) {
+		return parseFloat(this.table.getElementsByTagName('tr')[index + 1].children[series].textContent)
+	}
 
-	HTMLTableDataWrapper.prototype.series_length = function(series) {
-		return this.table.getElementsByTagName('tr').length - 1;
-	};
+	HTMLTableDataWrapper.prototype.seriesLength = function(series) {
+		return this.table.getElementsByTagName('tr').length - 1
+	}
 
-	return HTMLTableDataWrapper;
-})();
+	return HTMLTableDataWrapper
+})()
 
 
 var PitchMapper = (function() {
-	function PitchMapper(minimum_datum, maximum_datum) {
-		this.minimum_datum = minimum_datum;
-		this.maximum_datum = maximum_datum;
-		if (this.minimum_datum > this.maximum_datum) {
-			throw Error('minimum datum should be <= maximum datum');
+	function PitchMapper(minimumDatum, maximumDatum) {
+		this.minimumDatum = minimumDatum
+		this.maximumDatum = maximumDatum
+		if (this.minimumDatum > this.maximumDatum) {
+			throw Error('minimum datum should be <= maximum datum')
 		}
 	}
 
-	PitchMapper.prototype.map = function(datum) {};  // FIXME naming conflict?
+	PitchMapper.prototype.map = function(datum) {}  // FIXME naming conflict?
 
-	return PitchMapper;
-})();
+	return PitchMapper
+})()
 
 
 var FrequencyPitchMapper = (function() {
-	function FrequencyPitchMapper(minimum_datum, maximum_datum, minimum_frequency, maximum_frequency) {
-		this.minimum_frequency = minimum_frequency;
-		this.maximum_frequency = maximum_frequency;
-		PitchMapper.call(this, minimum_datum, maximum_datum);
-		if (this.minimum_frequency > this.maximum_frequency) {
-			throw Error('minimum frequency should be <= maximum frequency');
+	function FrequencyPitchMapper(minimumDatum, maximumDatum, minimumFrequency, maximumFrequency) {
+		this.minimumFrequency = minimumFrequency
+		this.maximumFrequency = maximumFrequency
+		PitchMapper.call(this, minimumDatum, maximumDatum)
+		if (this.minimumFrequency > this.maximumFrequency) {
+			throw Error('minimum frequency should be <= maximum frequency')
 		}
-		this.data_range = this.maximum_datum - this.minimum_datum;
+		this.dataRange = this.maximumDatum - this.minimumDatum
 	}
 
-	FrequencyPitchMapper.prototype = Object.create(PitchMapper.prototype);
-	FrequencyPitchMapper.prototype.constructor = FrequencyPitchMapper;
+	FrequencyPitchMapper.prototype = Object.create(PitchMapper.prototype)
+	FrequencyPitchMapper.prototype.constructor = FrequencyPitchMapper
 
 	FrequencyPitchMapper.prototype.map = function(datum) {
-		var ratio;
-		if (this.data_range) {
-			ratio = (datum - this.minimum_datum) / this.data_range;
+		var ratio
+		if (this.dataRange) {
+			ratio = (datum - this.minimumDatum) / this.dataRange
 		} else {
-			ratio = 0.5;
+			ratio = 0.5
 		}
-		return this.minimum_frequency + ratio * (this.maximum_frequency - this.minimum_frequency);
-	};
+		return this.minimumFrequency + ratio * (this.maximumFrequency - this.minimumFrequency)
+	}
 
-	return FrequencyPitchMapper;
-})();
+	return FrequencyPitchMapper
+})()
 
 
 var WebAudioSounder = (function() {
 	function WebAudioSounder(context) {
-		this.context = context;
-		this.oscillator = this.context.createOscillator();
+		this.context = context
+		this.oscillator = this.context.createOscillator()
 	}
 
 	WebAudioSounder.prototype.start = function() {
-		this.oscillator.connect(this.context.destination);
-		this.oscillator.start(0);
-	};
+		this.oscillator.connect(this.context.destination)
+		this.oscillator.start(0)
+	}
 
 	WebAudioSounder.prototype.frequency = function(frequency, offset) {
 		var callback = (function(that) {
 			return function() {
-				that.oscillator.frequency.value = frequency;
-			};
-		})(this);
-		setTimeout(callback, offset);
-	};
+				that.oscillator.frequency.value = frequency
+			}
+		})(this)
+		setTimeout(callback, offset)
+	}
 
 	WebAudioSounder.prototype.stop = function(offset) {
-		this.oscillator.stop(this.context.currentTime + offset);
-	};
+		this.oscillator.stop(this.context.currentTime + offset)
+	}
 
-	return WebAudioSounder;
-})();
+	return WebAudioSounder
+})()
 
 
 var Player = (function() {
-	function Player(duration, data, pitch_mapper, sounder, visual_callback) {
-		this.data = data;
-		this.pitch_mapper = pitch_mapper;
-		this.sounder = sounder;
+	function Player(duration, data, pitchMapper, sounder, visualCallback) {
+		this.data = data
+		this.pitchMapper = pitchMapper
+		this.sounder = sounder
 		if (arguments.length < 5) {
-			this.visual_callback = null;
+			this.visualCallback = null
 		} else {
-			this.visual_callback = visual_callback;
+			this.visualCallback = visualCallback
 		}
-		this.interval = duration / this.data.series_length(0);
+		this.interval = duration / this.data.seriesLength(0)
 	}
 
 	Player.prototype.play = function() {
-		var series_length = this.data.series_length(0);
-		var series_max_index = series_length - 1;
+		var seriesLength = this.data.seriesLength(0)
+		var seriesMaxIndex = seriesLength - 1
 
-		this.sounder.start(0);
-		if (this.visual_callback !== null) {
-			this.visual_callback(0, 0);
+		this.sounder.start(0)
+		if (this.visualCallback !== null) {
+			this.visualCallback(0, 0)
 		}
-		this.sounder.frequency(this.pitch_mapper.map(this.data.series_value(0, 0)));
-		for (var i = 1; i <= series_max_index; i++) {
-			var offset = this.interval * i;
-			if (this.visual_callback !== null) {
-				this._highlight_enqueue(0, i, offset);
+		this.sounder.frequency(this.pitchMapper.map(this.data.seriesValue(0, 0)))
+		for (var i = 1; i <= seriesMaxIndex; i++) {
+			var offset = this.interval * i
+			if (this.visualCallback !== null) {
+				this._highlightEnqueue(0, i, offset)
 			}
-			this.sounder.frequency(this.pitch_mapper.map(this.data.series_value(0, i)), offset);
+			this.sounder.frequency(this.pitchMapper.map(this.data.seriesValue(0, i)), offset)
 		}
-		this.sounder.stop((series_length * this.interval) / 1000);
-	};
+		this.sounder.stop((seriesLength * this.interval) / 1000)
+	}
 
-	Player.prototype._highlight_enqueue = function(series, row, offset) {
+	Player.prototype._highlightEnqueue = function(series, row, offset) {
 		var callback = (function(that) {
 			return function() {
-				that.visual_callback(series, row);
-			};
-		})(this);
-		setTimeout(callback, offset);
-	};
-
-	return Player;
-})();
-
-
-var AudioChart = (function() {
-	function AudioChart(options, context) {
-		var fail = "Sorry, your browser doesn't support the Web Audio API.";
-		if (arguments.length < 2) {
-			context = AudioContextGetter.get();
-			if (context === null) {
-				throw Error(fail);
+				that.visualCallback(series, row)
 			}
-		}
-		return _AudioChart(options, context);
+		})(this)
+		setTimeout(callback, offset)
 	}
-	return AudioChart;
-})();
+
+	return Player
+})()
 
 
 var AudioContextGetter = (function() {
 	function AudioContextGetter() {}
 
-	var audio_context = null;
+	var audioContext = null
 
-	var _get_audio_context = function() {
+	var _getAudioContext = function() {
 		if (window.AudioContext !== undefined) {
-			return new window.AudioContext();
+			return new window.AudioContext()
 		} else if (window.webkitAudioContext !== undefined) {
-			return new window.webkitAudioContext();
-		} else {
-			return null;
+			/* eslint-disable new-cap */
+			return new window.webkitAudioContext()
+			/* eslint-enable new-cap */
 		}
-	};
+		return null
+	}
 
 	AudioContextGetter.get = function() {
-		return audio_context !== null ? audio_context : audio_context = _get_audio_context();
-	};
+		return audioContext !== null ? audioContext : audioContext = _getAudioContext()
+	}
 
-	return AudioContextGetter;
-})();
+	return AudioContextGetter
+})()
+
+
+var googleVisualCallbackMaker = function(chart) {
+	return function(series, row) {
+		chart.setSelection([
+			{
+				'row': row,
+				'column': series + 1
+			}
+		])
+	}
+}
+
+
+var htmlTableVisualCallbackMaker = function(table, className) {
+	return function(series, row) {
+		var tds = table.getElementsByTagName('td')
+		var cell  // TODO remove
+		for (var i = 0; i < tds.length; i++) {
+			cell = tds[i]
+			cell.classList.remove(className)
+		}
+		cell = table.getElementsByTagName('td')[row]
+		cell.classList.add(className)
+	}
+}
 
 
 var _AudioChart = (function() {
 	function _AudioChart(options, context) {
-		var data_wrapper, callback, frequency_pitch_mapper, sounder, player;
+		var result = _AudioChart._assignWrapperCallback(options)
+		var dataWrapper = new result.Wrapper(result.parameter)
+		var callback = result.callback
 
-		var result = _AudioChart._assign_wrapper_callback(options);
-		data_wrapper = new result.wrapper(result.parameter);
-		callback = result.callback;
+		var frequencyPitchMapper = new FrequencyPitchMapper(
+			dataWrapper.seriesMin(0),
+			dataWrapper.seriesMax(0),
+			options.frequencyLow,
+			options.frequencyHigh
+		)
 
-		frequency_pitch_mapper = new FrequencyPitchMapper(
-			data_wrapper.series_min(0),
-			data_wrapper.series_max(0),
-			options.frequency_low,
-			options.frequency_high
-		);
+		var sounder = new WebAudioSounder(context)
 
-		sounder = new WebAudioSounder(context);
-
-		player = new Player(
+		var player = new Player(
 			options.duration,
-			data_wrapper,
-			frequency_pitch_mapper,
+			dataWrapper,
+			frequencyPitchMapper,
 			sounder,
 			callback
-		);
+		)
 
-		player.play();
+		player.play()
 	}
 
 	// This is being done as a sort of 'class/static method' because
 	// it doesn't need 'this'.
 	// http://stackoverflow.com/a/1635143
-	_AudioChart._assign_wrapper_callback = function(options) {
+	_AudioChart._assignWrapperCallback = function(options) {
 		var result = {
-			'wrapper': null,
+			'Wrapper': null,
 			'parameter': null,
 			'callback': null
-		};
+		}
 
 		switch (options.type) {
 			case 'google':
-				result.wrapper = GoogleDataWrapper;
-				result.parameter = options.data;
+				result.Wrapper = GoogleDataWrapper
+				result.parameter = options.data
 				if (options.hasOwnProperty('chart')) {
 					result.callback =
-						google_visual_callback_maker(options.chart);
+						googleVisualCallbackMaker(options.chart)
 				}
-				break;
+				break
 			case 'json':
-				result.wrapper = JSONDataWrapper;
-				result.parameter = options.data;
-				break;
-			case 'html_table':
-				result.wrapper = HTMLTableDataWrapper;
-				result.parameter = options.table;
-				if (options.hasOwnProperty('highlight_class')) {
-					result.callback = html_table_visual_callback_maker(
+				result.Wrapper = JSONDataWrapper
+				result.parameter = options.data
+				break
+			case 'htmlTable':
+				result.Wrapper = HTMLTableDataWrapper
+				result.parameter = options.table
+				if (options.hasOwnProperty('highlightClass')) {
+					result.callback = htmlTableVisualCallbackMaker(
 						options.table,
-						options.highlight_class
-					);
+						options.highlightClass
+					)
 				}
-				break;
+				break
 			default:
-				throw Error("Invalid data type '" + options.type + "' given.");
+				throw Error("Invalid data type '" + options.type + "' given.")
 		}
 
-		return result;
-	};
+		return result
+	}
 
-	return _AudioChart;
-})();
-
-
-var google_visual_callback_maker = function(chart) {
-	return function(series, row) {
-		chart.setSelection([
-				{
-					'row': row,
-					'column': series + 1
-				}
-		]);
-	};
-};
+	return _AudioChart
+})()
 
 
-var html_table_visual_callback_maker = function(table, class_name) {
-	return function(series, row) {
-		var tds = table.getElementsByTagName('td');
-		for (var i = 0; i < tds.length; i++) {
-			cell = tds[i];
-			cell.classList.remove(class_name);
+var AudioChart = (function() {
+	function AudioChart(options, context) {
+		var fail = "Sorry, your browser doesn't support the Web Audio API."
+		if (arguments.length < 2) {
+			context = AudioContextGetter.get()
+			if (context === null) {
+				throw Error(fail)
+			}
 		}
-		cell = table.getElementsByTagName('td')[row];
-		cell.classList.add(class_name);
-	};
-};
+		return _AudioChart(options, context)
+	}
+	return AudioChart
+})()
