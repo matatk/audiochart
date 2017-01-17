@@ -1,16 +1,17 @@
-google.load('visualization', '1.0', {'packages':['corechart']});
-google.setOnLoadCallback(draw_chart);
+'use strict'
+google.load('visualization', '1.0', {'packages':['corechart']})
+google.setOnLoadCallback(drawChart)
 
-function draw_chart() {
+function drawChart() {
 	//
 	// Google Charts Stuff
 	//
 
-	var data = new google.visualization.DataTable();
+	var data = new google.visualization.DataTable()
 
 	// Populate the table
-	data.addColumn('string', 'Top Secret Evil Project');
-	data.addColumn('number', 'Watermelons');
+	data.addColumn('string', 'Top Secret Evil Project')
+	data.addColumn('number', 'Watermelons')
 	data.addRows([
 			['Alpha',    293],
 			['Beta',     329],
@@ -18,31 +19,29 @@ function draw_chart() {
 			['Delta',    130],
 			['Epsilon',  196],
 			['Zeta',     196],
-	]);
+	])
 
 	// Prepare chart options, then create and draw the chart
-	var chart_options = {
+	var chartOptions = {
 		'title': 'Evil Project Efficacy',
 		'curveType': 'function'
-	};
+	}
 
 	var chart = new google.visualization.LineChart(
-			document.getElementById('chart'));
+			document.getElementById('chart'))
 
-	resizeChart();  // initial draw
+	resizeChart()  // initial draw
 
 	// Resizing; thanks, http://stackoverflow.com/a/23594901
-	function resizeChart () {
-		chart.draw(data, chart_options);
+	function resizeChart() {
+		chart.draw(data, chartOptions)
 	}
 	if (document.addEventListener) {
-		window.addEventListener('resize', resizeChart);
-	}
-	else if (document.attachEvent) {
-		window.attachEvent('onresize', resizeChart);
-	}
-	else {
-		window.resize = resizeChart;
+		window.addEventListener('resize', resizeChart)
+	}	else if (document.attachEvent) {
+		window.attachEvent('onresize', resizeChart)
+	}	else {
+		window.resize = resizeChart
 	}
 
 	//
@@ -55,8 +54,8 @@ function draw_chart() {
 			'data': data,          // the GoogleDataTable
 			'chart': chart,        // the Google Chart object
 			'duration': 5000,      // milliseconds
-			'frequency_low': 200,  // Hz
-			'frequency_high': 600  // Hz
-		});
+			'frequencyLow': 200,   // Hz
+			'frequencyHigh': 600   // Hz
+		})
 	}
 }

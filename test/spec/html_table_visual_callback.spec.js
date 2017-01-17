@@ -1,37 +1,41 @@
-describe('html_table_visual_callback', function() {
-	jasmine.getFixtures().fixturesPath = 'spec/';
+'use strict'
+/* global loadFixtures */
 
-	var html_table_visual_callback = null;
-	var highlight_class_name = 'audiochart-playing';
-	var table = null;
+describe('htmlTableVisualCallback', function() {
+	jasmine.getFixtures().fixturesPath = 'spec/'
+
+	var htmlTableVisualCallback = null
+	var highlightClassName = 'audiochart-playing'
+	var table = null
 
 	beforeEach(function() {
-		loadFixtures('HTMLTableDataWrapper.fixtures.html');
-		table = document.getElementById('test_one');
-		html_table_visual_callback = window.html_table_visual_callback_maker(table, 'audiochart-playing');
-	});
+		loadFixtures('HTMLTableDataWrapper.fixtures.html')
+		table = document.getElementById('testOne')
+		htmlTableVisualCallback = window.htmlTableVisualCallbackMaker(table, 'audiochart-playing')
+	})
 
 	it('does not add a class before it is called', function() {
-		var first_data_cell;
-		first_data_cell = table.getElementsByTagName('td')[0];
-		expect(first_data_cell.className).toBe('');
-	});
+		var firstDataCell
+		firstDataCell = table.getElementsByTagName('td')[0]
+		expect(firstDataCell.className).toBe('')
+	})
 
 	it('has added a class after it is called', function() {
-		var first_data_cell;
-		html_table_visual_callback(0, 0);
-		first_data_cell = table.getElementsByTagName('td')[0];
-		expect(first_data_cell.className).toBe(highlight_class_name);
-	});
+		var firstDataCell
+		htmlTableVisualCallback(0, 0)
+		firstDataCell = table.getElementsByTagName('td')[0]
+		expect(firstDataCell.className).toBe(highlightClassName)
+	})
 
 	it('has removes the class from one cell and adds it to another', function() {
-		var first_data_cell, second_data_cell;
-		html_table_visual_callback(0, 0);
-		first_data_cell = table.getElementsByTagName('td')[0];
-		expect(first_data_cell.className).toBe(highlight_class_name);
-		html_table_visual_callback(0, 1);
-		second_data_cell = table.getElementsByTagName('td')[1];
-		expect(first_data_cell.className).toBe('');
-		expect(second_data_cell.className).toBe(highlight_class_name);
-	});
-});
+		var firstDataCell
+		var secondDataCell
+		htmlTableVisualCallback(0, 0)
+		firstDataCell = table.getElementsByTagName('td')[0]
+		expect(firstDataCell.className).toBe(highlightClassName)
+		htmlTableVisualCallback(0, 1)
+		secondDataCell = table.getElementsByTagName('td')[1]
+		expect(firstDataCell.className).toBe('')
+		expect(secondDataCell.className).toBe(highlightClassName)
+	})
+})

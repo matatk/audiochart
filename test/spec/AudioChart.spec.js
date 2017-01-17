@@ -1,35 +1,38 @@
+'use strict'
+/* global AudioChart _AudioChart AudioContextGetter */
+
 describe('AudioChart', function() {
-	var fake_options = null;
+	var fakeOptions = null
 
 	beforeEach(function() {
-		fake_options = { type: 'test' };
-	});
+		fakeOptions = { type: 'test' }
+	})
 
 	it('passes its context to _AudioChart', function() {
 		function FakeAudioContext() {}
-		var fake_audio_context = new FakeAudioContext();
-		spyOn(window, '_AudioChart');
+		var fakeAudioContext = new FakeAudioContext()
+		spyOn(window, '_AudioChart')
 
-		var audiochart = new AudioChart(fake_options, fake_audio_context);
+		var audiochart = new AudioChart(fakeOptions, fakeAudioContext)
 		expect(_AudioChart)
-			.toHaveBeenCalledWith(fake_options, fake_audio_context);
-	});
+			.toHaveBeenCalledWith(fakeOptions, fakeAudioContext)
+	})
 
 	it('can create a new context and pass it to _AudioChart', function() {
-		spyOn(window, '_AudioChart');
-		spyOn(AudioContextGetter, 'get').and.returnValue(42);
+		spyOn(window, '_AudioChart')
+		spyOn(AudioContextGetter, 'get').and.returnValue(42)
 
-		var audiochart = new AudioChart(fake_options);
+		var audiochart = new AudioChart(fakeOptions)
 		expect(_AudioChart)
-			.toHaveBeenCalledWith(fake_options, 42);
-	});
+			.toHaveBeenCalledWith(fakeOptions, 42)
+	})
 
 	it('throws with a message if Web Audio API is unsupported', function() {
-		spyOn(AudioContextGetter, 'get').and.returnValue(null);
+		spyOn(AudioContextGetter, 'get').and.returnValue(null)
 		expect(function() {
-			new AudioChart(fake_options);
+			new AudioChart(fakeOptions)
 		}).toThrow(
 			Error("Sorry, your browser doesn't support the Web Audio API.")
-		);
-	});
-});
+		)
+	})
+})

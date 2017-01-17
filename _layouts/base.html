@@ -4,14 +4,7 @@
 		<meta charset="utf-8">
 		<title>{{ page.title }}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<style>
-{% include style.css %}
-		</style>
-		{% for css in page.extra-style %}
-		<style>
-{% include {{ css }}.css %}
-		</style>
-		{% endfor %}
+		<link rel="stylesheet" href="examples/style.css">
 		{% for js in page.extra-script %}
 		<script src="{{ js }}"></script>
 		{% endfor %}
