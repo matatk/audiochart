@@ -1,13 +1,11 @@
 exclude:
  - Gemfile
  - Gemfile.lock
- - Gruntfile.js
  - LICENCE
- - README.md
- - REFERENCE.md
  - node_modules
- - package.json
- - pre-commit
+ - audiochart
+ - grab.sh
+ - clean.sh
 include:
  - .grunt
  - _AudioChart.spec.js
