@@ -13,10 +13,10 @@ These must always be specified, regardless of the type the source chart/data.
  * **`type` (string):** indicates the sort of chart you want AudioChart to sonify.  Valid values are as follows, and their accompanying settings are given in the following section.
    - "google"
    - "json"
-   - "html_table"
+   - "htmlTable"
  * **`duration` (integer):** the length of the audio rendering in milliseconds.
- * **`frequency_low` (integer):** the lower bound of the frequency range to be used, in Hz.
- * **`frequency_high` (integer):** the uppoer bound of the frequency range to be used, in Hz.
+ * **`frequencyLow` (integer):** the lower bound of the frequency range to be used, in Hz.
+ * **`frequencyHigh` (integer):** the uppoer bound of the frequency range to be used, in Hz.
 
 Source Chart/Data Types and their Options
 ------------------------------------------
@@ -37,8 +37,8 @@ The steps to create the [Google Charts "Hello, World" example](http://matatk.agr
   "data": data,          // in-memory GoogleDataTable
   "chart": chart,        // in-memory Google Chart
   "duration": 5000,
-  "frequency_low": 200,
-  "frequency_high": 600
+  "frequencyLow": 200,
+  "frequencyHigh": 600
 }
 ```
 
@@ -56,8 +56,8 @@ There is [a JSON example](http://matatk.agrip.org.uk/audiochart/examples-gallery
   "type": "json",
   "data": "{"data":[{"series":"Test","values":[21,42,84,42,21]}]}"
   "duration": 5000,
-  "frequency_low": 200,
-  "frequency_high": 600
+  "frequencyLow": 200,
+  "frequencyHigh": 600
 }
 ```
 
@@ -65,19 +65,19 @@ There is [a JSON example](http://matatk.agrip.org.uk/audiochart/examples-gallery
 
 There is [an HTML example](http://matatk.agrip.org.uk/audiochart/examples-gallery.html#table) in the examples gallery.
 
- * **`type` (string):** "html_table"
+ * **`type` (string):** "htmlTable"
  * **`table` (object):** the table element's in-memory DOM object.
- * **`highlight_class` (string, optional):** the name of a CSS class to be used to indicate the currently-playing datum's table cell.
+ * **`highlightClass` (string, optional):** the name of a CSS class to be used to indicate the currently-playing datum's table cell.
 
 ### HTML Table Options Example
 
 ```javascript
 {
-  "type": "html_table",
+  "type": "htmlTable",
   "table": table_element_object,
-  "highlight_class": "audiochart-current",
+  "highlightClass": "audiochart-current",
   "duration": 5000,
-  "frequency_low": 200,
-  "frequency_high": 600
+  "frequencyLow": 200,
+  "frequencyHigh": 600
 }
 ```

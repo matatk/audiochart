@@ -63,7 +63,7 @@ describe('_AudioChart', function() {
 
 	it('assigns a HTML data wrapper, parameter and no callback', function() {
 		var options = {
-			'type': 'html_table',
+			'type': 'htmlTable',
 			'table': 42
 		}
 
@@ -77,9 +77,9 @@ describe('_AudioChart', function() {
 
 	it('assigns a HTML data wrapper, parameter and callback', function() {
 		var options = {
-			'type': 'html_table',
+			'type': 'htmlTable',
 			'table': 42,
-			'highlight_class': 'moo'
+			'highlightClass': 'moo'
 		}
 
 		spyOn(window, 'htmlTableVisualCallbackMaker').and.returnValue(42)

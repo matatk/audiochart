@@ -325,8 +325,8 @@ var _AudioChart = (function() {
 		var frequencyPitchMapper = new FrequencyPitchMapper(
 			dataWrapper.seriesMin(0),
 			dataWrapper.seriesMax(0),
-			options.frequency_low,
-			options.frequency_high
+			options.frequencyLow,
+			options.frequencyHigh
 		)
 
 		var sounder = new WebAudioSounder(context)
@@ -365,13 +365,13 @@ var _AudioChart = (function() {
 				result.Wrapper = JSONDataWrapper
 				result.parameter = options.data
 				break
-			case 'html_table':
+			case 'htmlTable':
 				result.Wrapper = HTMLTableDataWrapper
 				result.parameter = options.table
-				if (options.hasOwnProperty('highlight_class')) {
+				if (options.hasOwnProperty('highlightClass')) {
 					result.callback = htmlTableVisualCallbackMaker(
 						options.table,
-						options.highlight_class
+						options.highlightClass
 					)
 				}
 				break
