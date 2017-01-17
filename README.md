@@ -114,8 +114,8 @@ More details on this can be found in the [Google Charts documentation](https://d
     		'data': data,          // the GoogleDataTable
     		'chart': chart,        // the Google Chart object
     		'duration': 5000,      // milliseconds
-    		'frequencyLow': 200,  // Hz
-    		'frequencyHigh': 600  // Hz
+    		'frequencyLow': 200,   // Hz
+    		'frequencyHigh': 600   // Hz
     	});
     }
     ```
