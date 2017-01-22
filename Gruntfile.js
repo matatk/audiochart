@@ -88,6 +88,24 @@ module.exports = function(grunt) {
 			}
 		},
 
+		jsdoc: {
+			dist: {
+				src: ['src/audiochart.js'],
+				options: {
+					'plugins': [
+						'plugins/markdown'
+					],
+					'destination': 'doc',
+					'private': true,
+					'readme': 'README.md',
+					'verbose': true,
+					'markdown': {
+						'tags': ['todo']
+					}
+				}
+			}
+		},
+
 		open: {
 			jasmineJqueryReleases: {
 				path: 'https://github.com/velesin/jasmine-jquery/releases'
@@ -101,7 +119,8 @@ module.exports = function(grunt) {
 		'if-missing:curl:jasmineJquery',
 		'eslint',
 		'jasmine',
-		'uglify'
+		'uglify',
+		'jsdoc'
 	])
 
 	// This task allows us to quickly check if there has been a new relase

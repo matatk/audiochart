@@ -1,7 +1,8 @@
 'use strict'
 /**
- * Zero-indexed series or row
- * @typedef {integer} zinteger
+ * Array index number (starts at zero).
+ * Used to specify series and row in visual callbacks.
+ * @typedef {integer} index
  */
 
 
@@ -31,27 +32,27 @@
 /**
  * What is the minimum value in a given series?
  * @function DataWrapper#seriesMin
- * @param {zinteger} series - The series number
+ * @param {index} series - The series number
  * @returns {Number} The minimum value in the series
  */
 /**
  * What is the maximum value in a given series?
  * @function DataWrapper#seriesMax
- * @param {zinteger} series - The series number
+ * @param {index} series - The series number
  * @returns {Number} The maximum value in the series
  */
 /**
  * Get value of specific datum
  * @function DataWrapper#seriesValue
- * @param {zinteger} series - The series number
- * @param {zinteger} index - The row number
+ * @param {index} series - The series number
+ * @param {index} index - The row number
  * @todo rename `index` to `row`?
  * @returns {Number} the datum
  */
 /**
  * What is the length of a series?
  * @function DataWrapper#seriesLength
- * @param {zinteger} series - The series
+ * @param {index} series - The series
  * @returns {integer} The number of data in the series
  */
 
@@ -368,8 +369,8 @@ var AudioContextGetter = (function() {
 /**
  * This callback moves the cursor on a Google Chart object
  * @callback GoogleVisualCallback
- * @param {zinteger} series - Data series in underlying table
- * @param {zinteger} row - Datum within that series
+ * @param {index} series - Data series in underlying table
+ * @param {index} row - Datum within that series
  */
 
 /**
@@ -393,8 +394,8 @@ var googleVisualCallbackMaker = function(chart) {
 /**
  * This callback highlights (using CSS) a table cell
  * @callback HTMLTableVisualCallback
- * @param {zinteger} series - The column of the cell to highlight
- * @param {zinteger} row - The row of the cell to highlight
+ * @param {index} series - The column of the cell to highlight
+ * @param {index} row - The row of the cell to highlight
  */
 
 /**
