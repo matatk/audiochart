@@ -156,21 +156,7 @@ The build process uses Grunt and therefore also Node.  You can get set up for de
  4. Locally install AudioChart's dependencies by running `npm install` in the newly-cloned/extracted `audiochart/` directory (the packages will be stored inside `node_modules/`).
  5. Running `grunt` will lint the code, run the tests and make a minified production version.
 
-**Windows users:** this has not yet been extensively tested on Windows, but it doesn't use anything platform-specific, so should work fine.
-
-### Hosting the AudioChart Site and Examples Locally
-
-You can use [Jekyll](http://jekyllrb.com) to host the AudioChart site locally and run the in-browser tests.  It is recommended to use [Bundler](http://bundler.io) to manage the gems on which Jekyll depends.
-
-On the Mac, having your own Ruby install, e.g. from Homebrew, can keep things clean: `brew install ruby` gives you a ruby that is separate to the stock OS X one.  You'll need to start a new shell session before `/usr/local/bin/ruby` and `/usr/local/bin/gem` will supersede the system ones.
-
-To get up-and-running with Jekyll via Bundler, follow these steps.
-
- 1. `gem install bundler` will grab the gem-management tool.
- 2. `bundle install` when you are in the `audiochart/` repository/code directory will use the `Gemfile` and `Gemfile.lock` to ensure you have a compatible set of gems -- currently this is particularly targeted at ensuring the site will work on [GitHub Pages with Jekyll](https://help.github.com/articles/using-jekyll-with-pages/).
- 3. `bundle exec jekyll serve` will perpetually (re-)generate and serve the site locally.  Changes to files will be reflected when you reload a page in the browser.
-
-**Windows users:** Jekyll is not officially supported on Windows, but the developers provide some [documentation on installing and using Jekyll on Windows](http://jekyllrb.com/docs/windows/).
+**Windows users:** this has not yet been extensively tested on Windows, but it doesn't use anything platform-specific, so should work fine. Please file a bug if you encounter any problems.
 
 Future Work Ideas
 ------------------

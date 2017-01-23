@@ -9,6 +9,7 @@ test/index.html
 test/vendor
 test/coverage
 lib
+doc
 
 # These are from the gh-pages branch
 _site

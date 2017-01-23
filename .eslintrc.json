@@ -72,9 +72,27 @@
       "global"
     ],
     "use-isnan": "error",
-    "valid-jsdoc": "warn",
+    "valid-jsdoc": [
+      "error",
+      {
+        "prefer": {
+          "arg": "param",
+          "argument": "param",
+          "class": "constructor",
+          "return": "returns",
+          "virtual": "abstract"
+        },
+        "preferType": {
+          "Boolean": "boolean",
+          "Number": "number",
+          "String": "string",
+          "object": "object"
+        },
+        "requireReturn": false
+      }
+    ],
     "valid-typeof": "warn",
-    "vars-on-top": "warn",
+    "vars-on-top": "off",
     "wrap-iife": [
       "error",
       "inside"

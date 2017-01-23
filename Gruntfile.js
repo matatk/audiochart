@@ -88,6 +88,17 @@ module.exports = function(grunt) {
 			}
 		},
 
+		jsdoc: {
+			dist: {
+				src: ['src/audiochart.js'],
+				options: {
+					'destination': 'doc',
+					'private': true,
+					'readme': 'README.md'
+				}
+			}
+		},
+
 		open: {
 			jasmineJqueryReleases: {
 				path: 'https://github.com/velesin/jasmine-jquery/releases'
@@ -101,7 +112,8 @@ module.exports = function(grunt) {
 		'if-missing:curl:jasmineJquery',
 		'eslint',
 		'jasmine',
-		'uglify'
+		'uglify',
+		'jsdoc'
 	])
 
 	// This task allows us to quickly check if there has been a new relase
