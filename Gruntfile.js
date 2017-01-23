@@ -92,16 +92,9 @@ module.exports = function(grunt) {
 			dist: {
 				src: ['src/audiochart.js'],
 				options: {
-					'plugins': [
-						'plugins/markdown'
-					],
 					'destination': 'doc',
 					'private': true,
-					'readme': 'README.md',
-					'verbose': true,
-					'markdown': {
-						'tags': ['todo']
-					}
+					'readme': 'README.md'
 				}
 			}
 		},

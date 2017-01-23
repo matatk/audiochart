@@ -1,4 +1,6 @@
 'use strict'
+/** @module */
+
 /**
  * Array index number (starts at zero).
  * Used to specify series and row in visual callbacks.
@@ -7,17 +9,26 @@
 
 
 /**
+ * A function that highlights the current datum visually.
+ * Different callbacks must be created for different types of chart.
+ * @callback VisualCallback
+ * @param {index} series - The column of the cell to highlight
+ * @param {index} row - The row of the cell to highlight
+ */
+
+
+/**
  * The common interface that the other DataWrappers use.
  *
  * The common DataWrapper 'interface' is validated via the tests.
  *
- * Note: it is not done as a superclass (as {@link PitchMapper} is below) because
+ * Note: it is not done as a superclass (as {@link PitchMapper} is) because
  *       there's really nothing in common implementation-wise; only the
  *       interface is shared.
  *
  * @interface DataWrapper
  * @private
- * @todo tidy up this note
+ * @todo fix the link in this comment
  */
 /**
  * Returns the number of series in the underlying data
@@ -59,9 +70,9 @@
 
 var GoogleDataWrapper = (function() {
 	/**
-	 * @class GoogleDataWrapper
+	 * @constructor GoogleDataWrapper
 	 * @private
-	 * @implements DataWrapper
+	 * @implements {DataWrapper}
 	 * @param {GoogleDataTable} data - The in-memory GoogleDataTable
 	 */
 	function GoogleDataWrapper(data) {
@@ -102,9 +113,9 @@ var GoogleDataWrapper = (function() {
 
 var JSONDataWrapper = (function() {
 	/**
-	 * @class JSONDataWrapper
+	 * @constructor JSONDataWrapper
 	 * @private
-	 * @implements DataWrapper
+	 * @implements {DataWrapper}
 	 * @param {JSON} json - The JSON data, as a string or object
 	 */
 	function JSONDataWrapper(json) {
@@ -151,9 +162,9 @@ var JSONDataWrapper = (function() {
 
 var HTMLTableDataWrapper = (function() {
 	/**
-	 * @class HTMLTableDataWrapper
+	 * @constructor HTMLTableDataWrapper
 	 * @private
-	 * @implements DataWrapper
+	 * @implements {DataWrapper}
 	 * @param {HTMLTableElement} table - The in-DOM table element
 	 */
 	function HTMLTableDataWrapper(table) {
@@ -207,8 +218,10 @@ var HTMLTableDataWrapper = (function() {
 
 var PitchMapper = (function() {
 	/**
-	 * @class PitchMapper
+	 * @constructor PitchMapper
 	 * @private
+	 * @param {number} minimumDatum - the minimum value in this data series
+	 * @param {number} maximumDatum - the maximum value in this data series
 	 */
 	function PitchMapper(minimumDatum, maximumDatum) {
 		this.minimumDatum = minimumDatum
@@ -218,6 +231,11 @@ var PitchMapper = (function() {
 		}
 	}
 
+	/**
+	 * Map a datum to an output value
+	 * @abstract
+	 * @param {number} datum - the datum to be mapped
+	 */
 	PitchMapper.prototype.map = function(datum) {}  // FIXME naming conflict?
 
 	return PitchMapper
@@ -226,9 +244,13 @@ var PitchMapper = (function() {
 
 var FrequencyPitchMapper = (function() {
 	/**
-	 * @class FrequencyPitchMapper
+	 * @constructor FrequencyPitchMapper
 	 * @private
-	 * @extends PitchMapper
+	 * @extends {PitchMapper}
+	 * @param {number} minimumDatum - the minimum value in this data series
+	 * @param {number} maximumDatum - the maximum value in this data series
+	 * @param {number} minimumFrequency - the minimum output frequency
+	 * @param {number} maximumFrequency - the maximum output frequency
 	 */
 	function FrequencyPitchMapper(minimumDatum, maximumDatum, minimumFrequency, maximumFrequency) {
 		this.minimumFrequency = minimumFrequency
@@ -243,6 +265,10 @@ var FrequencyPitchMapper = (function() {
 	FrequencyPitchMapper.prototype = Object.create(PitchMapper.prototype)
 	FrequencyPitchMapper.prototype.constructor = FrequencyPitchMapper
 
+	/**
+	 * @param {number} datum - the datum to be mapped
+	 * @returns {number} frequency for this datum
+	 */
 	FrequencyPitchMapper.prototype.map = function(datum) {
 		var ratio
 		if (this.dataRange) {
@@ -259,19 +285,28 @@ var FrequencyPitchMapper = (function() {
 
 var WebAudioSounder = (function() {
 	/**
-	 * @class WebAudioSounder
+	 * @constructor WebAudioSounder
 	 * @private
+	 * @param {AudioContext} context - the Web Audio API context
 	 */
 	function WebAudioSounder(context) {
 		this.context = context
 		this.oscillator = this.context.createOscillator()
 	}
 
+	/**
+	 * Start the oscillator
+	 */
 	WebAudioSounder.prototype.start = function() {
 		this.oscillator.connect(this.context.destination)
 		this.oscillator.start(0)
 	}
 
+	/**
+	 * Set the frequency of the oscillator at a given point in time
+	 * @param {number} frequency - the frequency to change to
+	 * @param {integer} offset - the number of milliseconds to elapse before the change
+	 */
 	WebAudioSounder.prototype.frequency = function(frequency, offset) {
 		var callback = (function(that) {
 			return function() {
@@ -281,6 +316,10 @@ var WebAudioSounder = (function() {
 		setTimeout(callback, offset)
 	}
 
+	/**
+	 * Stop the oscillator at a given time
+	 * @param {integer} offset - the number of milliseconds to wait before stopping the oscillator
+	 */
 	WebAudioSounder.prototype.stop = function(offset) {
 		this.oscillator.stop(this.context.currentTime + offset)
 	}
@@ -291,8 +330,13 @@ var WebAudioSounder = (function() {
 
 var Player = (function() {
 	/**
-	 * Class Player
+	 * @constructor Player
 	 * @private
+	 * @param {integer} duration - the length of the rendering in milliseconds
+	 * @param {DataWrapper} data - the underlying data (wrapped in interface)
+	 * @param {PitchMapper} pitchMapper - maps data to pitches
+	 * @param {WebAudioSounder} sounder - the sounder object
+	 * @param {VisualCallback} visualCallback - the callback function that highlights the current datum
 	 */
 	function Player(duration, data, pitchMapper, sounder, visualCallback) {
 		this.data = data
@@ -306,6 +350,11 @@ var Player = (function() {
 		this.interval = duration / this.data.seriesLength(0)
 	}
 
+	/**
+	 * Play the underlying data as audio.
+	 * If a visual callback was specified, this also coordinates the visual
+	 * highlighting of the current datum as the playback occurs.
+	 */
 	Player.prototype.play = function() {
 		var seriesLength = this.data.seriesLength(0)
 		var seriesMaxIndex = seriesLength - 1
@@ -325,6 +374,13 @@ var Player = (function() {
 		this.sounder.stop((seriesLength * this.interval) / 1000)
 	}
 
+	/**
+	 * Set up a visual highlight callback for the future (when the audio
+	 * is playing)
+	 * @param {index} series - the data series
+	 * @param {index} row - the datum within that series
+	 * @param {integer} offset - the number of milliseconds before highlighting this datum
+	 */
 	Player.prototype._highlightEnqueue = function(series, row, offset) {
 		var callback = (function(that) {
 			return function() {
@@ -340,7 +396,7 @@ var Player = (function() {
 
 var AudioContextGetter = (function() {
 	/**
-	 * @class AudioContextGetter
+	 * @constructor AudioContextGetter
 	 * @private
 	 */
 	function AudioContextGetter() {}
@@ -358,6 +414,9 @@ var AudioContextGetter = (function() {
 		return null
 	}
 
+	/**
+	 * @returns {AudioContext} the page-global Web Audio context
+	 */
 	AudioContextGetter.get = function() {
 		return audioContext !== null ? audioContext : audioContext = _getAudioContext()
 	}
@@ -367,17 +426,10 @@ var AudioContextGetter = (function() {
 
 
 /**
- * This callback moves the cursor on a Google Chart object
- * @callback GoogleVisualCallback
- * @param {index} series - Data series in underlying table
- * @param {index} row - Datum within that series
- */
-
-/**
  * Generates a function that moves the cursor on a Google Chart
  * @private
  * @param {GoogleChart} chart - the in-memory GoogleChart object
- * @returns {GoogleVisualCallback} the callback
+ * @returns {VisualCallback} the callback
  */
 var googleVisualCallbackMaker = function(chart) {
 	return function(series, row) {
@@ -392,18 +444,11 @@ var googleVisualCallbackMaker = function(chart) {
 
 
 /**
- * This callback highlights (using CSS) a table cell
- * @callback HTMLTableVisualCallback
- * @param {index} series - The column of the cell to highlight
- * @param {index} row - The row of the cell to highlight
- */
-
-/**
  * Generate a callback that can be used to highlight table cells
  * @private
  * @param {HTMLTableElement} table - The in-DOM table element
  * @param {string} className - Name of the CSS highlight class
- * @returns {HTMLTableVisualCallback} The highlighting function
+ * @returns {VisualCallback} The highlighting function
  */
 var htmlTableVisualCallbackMaker = function(table, className) {
 	return function(series, row) {
@@ -421,7 +466,7 @@ var htmlTableVisualCallbackMaker = function(table, className) {
 
 var _AudioChart = (function() {
 	/**
-	 * @class _AudioChart
+	 * @constructor _AudioChart
 	 * @private
 	 * @param {options} options - AudioChart options
 	 * @param {AudioContext} context - the window's AudioContext
@@ -496,10 +541,13 @@ var _AudioChart = (function() {
 
 var AudioChart = (function() {
 	/**
-	 * Main entry point for API consumers
-	 * @class AudioChart
+	 * Main entry point for API consumers.
+	 * This first checks to see if the Web Audio API is available, and
+	 * throws an {Error} if not.
+	 * @constructor AudioChart
 	 * @param {options} options - AudioChart options
 	 * @param {AudioContext} context - the window's AudioContext
+	 * @returns {_AudioChart} the real AudioChart object
 	 */
 	function AudioChart(options, context) {
 		var fail = "Sorry, your browser doesn't support the Web Audio API."
@@ -517,7 +565,7 @@ var AudioChart = (function() {
 
 var KeyboardHandler = (function() {
 	/**
-	 * @class KeyboardHandler
+	 * @constructor KeyboardHandler
 	 * @private
 	 * @param {HTMLDivElement} container - The `<div>` containing the chart
 	 */
