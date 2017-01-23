@@ -423,6 +423,8 @@ var _AudioChart = (function() {
 	/**
 	 * @class _AudioChart
 	 * @private
+	 * @param {options} options - AudioChart options
+	 * @param {AudioContext} context - the window's AudioContext
 	 */
 	function _AudioChart(options, context) {
 		var result = _AudioChart._assignWrapperCallback(options)
@@ -478,8 +480,7 @@ var _AudioChart = (function() {
 				if (options.hasOwnProperty('highlightClass')) {
 					result.callback = htmlTableVisualCallbackMaker(
 						options.table,
-						options.highlightClass
-					)
+						options.highlightClass)
 				}
 				break
 			default:
@@ -497,6 +498,8 @@ var AudioChart = (function() {
 	/**
 	 * Main entry point for API consumers
 	 * @class AudioChart
+	 * @param {options} options - AudioChart options
+	 * @param {AudioContext} context - the window's AudioContext
 	 */
 	function AudioChart(options, context) {
 		var fail = "Sorry, your browser doesn't support the Web Audio API."
@@ -509,4 +512,20 @@ var AudioChart = (function() {
 		return _AudioChart(options, context)
 	}
 	return AudioChart
+})()
+
+
+var KeyboardHandler = (function() {
+	/**
+	 * @class KeyboardHandler
+	 * @private
+	 * @param {HTMLDivElement} container - The `<div>` containing the chart
+	 */
+	function KeyboardHandler(container) {
+		if (!container) {
+			throw Error('No container given')
+		}
+	}
+
+	return KeyboardHandler
 })()
