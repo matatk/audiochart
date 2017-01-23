@@ -1,12 +1,16 @@
 'use strict'
-/* global loadFixtures */
 
 describe('KeyboardHandler', function() {
-	jasmine.getFixtures().fixturesPath = 'spec/'
-	loadFixtures('KeyboardHandler.fixtures.html')
+	var nonExistantDiv
+	var keyboardHandlerDiv
 
-	var nonExistantDiv = document.getElementById('moo')
-	var keyboardHandlerDiv = document.getElementById('test-01')
+	beforeAll(function() {
+		jasmine.getFixtures().fixturesPath = 'spec/'
+		loadFixtures('KeyboardHandler.fixtures.html')
+
+		nonExistantDiv = document.getElementById('moo')
+		keyboardHandlerDiv = document.getElementById('test-01')
+	})
 
 	it('throws when a non-existant container is given', function() {
 		expect(function() {
