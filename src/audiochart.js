@@ -567,11 +567,41 @@ var KeyboardHandler = (function() {
 	/**
 	 * @constructor KeyboardHandler
 	 * @private
-	 * @param {HTMLDivElement} container - The `<div>` containing the chart
+	 * @param {HTMLDivElement} container - The DIV containing the chart
+	 * @todo mark up the DIV properly
 	 */
 	function KeyboardHandler(container) {
+		this.triggered = false
 		if (!container) {
 			throw Error('No container given')
+		}
+		container.setAttribute('tabindex', '0')
+		container.addEventListener('keydown', this._keypressHandler)
+	}
+
+	/**
+	 * Support both standard and Safari methods of asking for the key
+	 * @param {KeyboardEvent} keyboardEvent - the KeyboardEvent
+	 * @param {string} match - the key name to be matched
+	 * @returns {boolean} is the KeyboardEvent key matched?
+	 */
+	function _keyOrKeyIdentifierIs(keyboardEvent, match) {
+		if (keyboardEvent.key) {
+			return keyboardEvent.key === match
+		} else if (keyboardEvent.keyIdentifier) {
+			return keyboardEvent.keyIdentifier === match
+		}
+
+		throw new Error('Keyboard Events API unsupported')
+	}
+
+	/**
+	 * Handle keypresses
+	 * @param {KeyboardEvent} evt - the KeyboardEvent that occured
+	 */
+	KeyboardHandler.prototype._keypressHandler = function(evt) {
+		if (_keyOrKeyIdentifierIs(evt, 'Right')) {
+			this.triggered = true
 		}
 	}
 
