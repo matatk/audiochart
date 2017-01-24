@@ -356,38 +356,41 @@ var Player = (function() {
 	 * highlighting of the current datum as the playback occurs.
 	 */
 	Player.prototype.play = function() {
-		var seriesLength = this.data.seriesLength(0)
-		var seriesMaxIndex = seriesLength - 1
-
 		this.sounder.start(0)
+
 		if (this.visualCallback !== null) {
 			this.visualCallback(0, 0)
 		}
-		this.sounder.frequency(this.pitchMapper.map(this.data.seriesValue(0, 0)))
-		for (var i = 1; i <= seriesMaxIndex; i++) {
-			var offset = this.interval * i
-			if (this.visualCallback !== null) {
-				this._highlightEnqueue(0, i, offset)
-			}
-			this.sounder.frequency(this.pitchMapper.map(this.data.seriesValue(0, i)), offset)
-		}
+		this.sounder.frequency(
+			this.pitchMapper.map(
+				this.data.seriesValue(0, 0)))
+
+		this.startTime = new Date()
+		var seriesLength = this.data.seriesLength(0)
+		this.seriesMaxIndex = seriesLength - 1
+		this.playCounter = 1
+		var that = this
+		this.intervalID = setInterval(function() {
+			that._playOne()
+		}, this.interval)
+
 		this.sounder.stop((seriesLength * this.interval) / 1000)
 	}
 
-	/**
-	 * Set up a visual highlight callback for the future (when the audio
-	 * is playing)
-	 * @param {index} series - the data series
-	 * @param {index} row - the datum within that series
-	 * @param {integer} offset - the number of milliseconds before highlighting this datum
-	 */
-	Player.prototype._highlightEnqueue = function(series, row, offset) {
-		var callback = (function(that) {
-			return function() {
-				that.visualCallback(series, row)
-			}
-		})(this)
-		setTimeout(callback, offset)
+	Player.prototype._playOne = function() {
+		if (this.visualCallback !== null) {
+			this.visualCallback(0, this.playCounter)
+		}
+		this.sounder.frequency(
+			this.pitchMapper.map(
+				this.data.seriesValue(0, this.playCounter)), 0)
+
+		if (this.playCounter === this.seriesMaxIndex) {
+			clearInterval(this.intervalID)
+			console.log('playback took:', new Date() - this.startTime)
+		}
+
+		this.playCounter += 1
 	}
 
 	return Player
