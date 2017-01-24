@@ -348,6 +348,7 @@ var Player = (function() {
 			this.visualCallback = visualCallback
 		}
 		this.interval = duration / this.data.seriesLength(0)
+		console.log(this.interval, duration)
 	}
 
 	/**
@@ -374,12 +375,16 @@ var Player = (function() {
 			that._playOne()
 		}, this.interval)
 
+		console.log('stop at:', (seriesLength * this.interval) / 1000)
 		this.sounder.stop((seriesLength * this.interval) / 1000)
 	}
 
 	Player.prototype._playOne = function() {
 		if (this.visualCallback !== null) {
-			this.visualCallback(0, this.playCounter)
+			var that = this
+			setTimeout(function() {
+				that.visualCallback(0, that.playCounter)
+			}, 0)
 		}
 		this.sounder.frequency(
 			this.pitchMapper.map(
