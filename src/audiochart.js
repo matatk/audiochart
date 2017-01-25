@@ -307,7 +307,6 @@ var WebAudioSounder = (function() {
 	/**
 	 * Set the frequency of the oscillator at a given point in time
 	 * @param {number} frequency - the frequency to change to
-	 * @param {integer} offset - the number of milliseconds to elapse before the change
 	 */
 	WebAudioSounder.prototype.frequency = function(frequency) {
 		this.oscillator.frequency.value = frequency
@@ -315,7 +314,6 @@ var WebAudioSounder = (function() {
 
 	/**
 	 * Stop the oscillator at a given time
-	 * @param {integer} offset - the number of milliseconds to wait before stopping the oscillator
 	 */
 	WebAudioSounder.prototype.stop = function() {
 		this.oscillator.stop()
@@ -351,9 +349,9 @@ var Player = (function() {
 	}
 
 	/**
-	 * Play the underlying data as audio.
-	 * If a visual callback was specified, this also coordinates the visual
-	 * highlighting of the current datum as the playback occurs.
+	 * Initiate the playback of the data as sound.
+	 * This sets up a function to update the sound (and, optionally, visual
+	 * callback) at an interval dependant on the number of data points.
 	 */
 	Player.prototype.play = function() {
 		this.startTime = new Date()
@@ -368,6 +366,10 @@ var Player = (function() {
 		}, this.interval)
 	}
 
+	/**
+	 * If a visual callback was specified, this also coordinates the visual
+	 * highlighting of the current datum as the playback occurs.
+	 */
 	Player.prototype._playCore = function() {
 		// Firefox and Chrome both seem to handle running this function
 		// with an interval of ~5ms fine, but Safari really lags when
