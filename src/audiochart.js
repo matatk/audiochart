@@ -308,12 +308,7 @@ var WebAudioSounder = (function() {
 	 * @param {integer} offset - the number of milliseconds to elapse before the change
 	 */
 	WebAudioSounder.prototype.frequency = function(frequency, offset) {
-		var callback = (function(that) {
-			return function() {
-				that.oscillator.frequency.value = frequency
-			}
-		})(this)
-		setTimeout(callback, offset)
+		this.oscillator.frequency.value = frequency
 	}
 
 	/**
@@ -372,19 +367,16 @@ var Player = (function() {
 		this.playCounter = 1
 		var that = this
 		this.intervalID = setInterval(function() {
-			that._playOne()
+			that._playCore()
 		}, this.interval)
 
 		console.log('stop at:', (seriesLength * this.interval) / 1000)
 		this.sounder.stop((seriesLength * this.interval) / 1000)
 	}
 
-	Player.prototype._playOne = function() {
+	Player.prototype._playCore = function() {
 		if (this.visualCallback !== null) {
-			var that = this
-			setTimeout(function() {
-				that.visualCallback(0, that.playCounter)
-			}, 0)
+			this.visualCallback(0, this.playCounter)
 		}
 		this.sounder.frequency(
 			this.pitchMapper.map(
