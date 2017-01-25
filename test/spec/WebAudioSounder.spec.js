@@ -54,7 +54,7 @@ describe('WebAudioSounder', function() {
 		expect(fakeOscillator.start).toHaveBeenCalledWith(0)
 	})
 
-	it('changes frequency immediately', function() {
+	it('changes frequency', function() {
 		var fakeOscillator = null
 		var sounder = new window.WebAudioSounder(fakeAudioContext)
 		jasmine.clock().install()
@@ -66,21 +66,6 @@ describe('WebAudioSounder', function() {
 		jasmine.clock().uninstall()
 	})
 
-	it('changes frequency with an offset', function() {
-		var delay
-		var fakeOscillator
-		var sounder
-		jasmine.clock().install()
-		delay = 250
-		sounder = new window.WebAudioSounder(fakeAudioContext)
-		fakeOscillator = sounder.oscillator
-		expect(fakeOscillator.frequency.value).toBe(0)
-		sounder.frequency(84, delay)
-		jasmine.clock().tick(delay)
-		expect(fakeOscillator.frequency.value).toBe(84)
-		jasmine.clock().uninstall()
-	})
-
 	it('stops its oscillator', function() {
 		var fakeOscillator
 		var sounder
@@ -89,15 +74,5 @@ describe('WebAudioSounder', function() {
 		spyOn(fakeOscillator, 'stop')
 		sounder.stop()
 		expect(fakeOscillator.stop).toHaveBeenCalled()
-	})
-
-	it('stops its oscillator at a given time', function() {
-		var fakeOscillator
-		var sounder
-		sounder = new window.WebAudioSounder(fakeAudioContext)
-		fakeOscillator = sounder.oscillator
-		spyOn(fakeOscillator, 'stop')
-		sounder.stop(21)
-		expect(fakeOscillator.stop).toHaveBeenCalledWith(fakeAudioContext.currentTime + 21)
 	})
 })

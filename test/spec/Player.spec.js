@@ -1,17 +1,9 @@
 'use strict'
 
 var expectedFrequencyCalls = function(playbackTime, seriesLength) {
-	// TODO tidy up
-	var i
-	var interval
-	var j
-	var out
-	var ref
-	interval = playbackTime / seriesLength
-	out = []
-	for (i = j = 0, ref = seriesLength - 1; ref >= 1 ? j <= ref : j >= ref; i = ref >= 1 ? ++j : --j) {
-		// out.push([21, interval * i]) TODO old method; remove argument
-		out.push([21, 0])
+	var out = []
+	for (var i = 0; i <= seriesLength - 1; i++) {
+		out.push([21])
 	}
 	return out
 }
@@ -81,7 +73,7 @@ var FakeMapper = (function() {
 
 var FakeSounder = (function() {
 	function FakeSounder() {}
-	FakeSounder.prototype.frequency = function(frequency, offset) {}
+	FakeSounder.prototype.frequency = function(frequency) {}
 	FakeSounder.prototype.start = function() {}
 	FakeSounder.prototype.stop = function() {}
 	return FakeSounder

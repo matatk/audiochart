@@ -309,7 +309,7 @@ var WebAudioSounder = (function() {
 	 * @param {number} frequency - the frequency to change to
 	 * @param {integer} offset - the number of milliseconds to elapse before the change
 	 */
-	WebAudioSounder.prototype.frequency = function(frequency, offset) {
+	WebAudioSounder.prototype.frequency = function(frequency) {
 		this.oscillator.frequency.value = frequency
 	}
 
@@ -317,8 +317,8 @@ var WebAudioSounder = (function() {
 	 * Stop the oscillator at a given time
 	 * @param {integer} offset - the number of milliseconds to wait before stopping the oscillator
 	 */
-	WebAudioSounder.prototype.stop = function(offset) {
-		this.oscillator.stop(this.context.currentTime + offset)
+	WebAudioSounder.prototype.stop = function() {
+		this.oscillator.stop()
 	}
 
 	return WebAudioSounder
@@ -394,7 +394,7 @@ var Player = (function() {
 
 		this.sounder.frequency(
 			this.pitchMapper.map(
-				this.data.seriesValue(0, this.playCounter)), 0)
+				this.data.seriesValue(0, this.playCounter)))
 
 		if (this.playCounter === this.seriesMaxIndex) {
 			clearInterval(this.intervalID)
