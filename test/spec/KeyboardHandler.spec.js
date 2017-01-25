@@ -1,5 +1,15 @@
 'use strict'
 
+var FakePlayer = (function() {
+	function FakePlayer() {}
+	FakePlayer.prototype.play = function() {}
+	FakePlayer.prototype.pause = function() {}
+	FakePlayer.prototype.playPause = function() {}
+	FakePlayer.prototype.stop = function() {}
+	return FakePlayer
+})()
+
+
 function createAndDispatchKeydownEvent(keyName, shift, target) {
 	// Looks like Phantom doesn't support Event constructors
 	// https://github.com/ariya/phantomjs/issues/11289#issuecomment-38880333
@@ -19,9 +29,11 @@ function createAndDispatchKeydownEvent(keyName, shift, target) {
 	target.dispatchEvent(keydownEvent)
 }
 
+
 describe('KeyboardHandler', function() {
 	var nonExistantDiv
 	var keyTargetDiv
+	var fakePlayer
 
 	beforeEach(function() {
 		jasmine.getFixtures().fixturesPath = 'spec/'
@@ -29,22 +41,30 @@ describe('KeyboardHandler', function() {
 
 		nonExistantDiv = document.getElementById('moo')
 		keyTargetDiv = document.getElementById('test-01')
+		fakePlayer = new FakePlayer()
 	})
 
 	it('throws when a non-existant container is given', function() {
 		expect(function() {
-			new window.KeyboardHandler(nonExistantDiv)
+			new window.KeyboardHandler(nonExistantDiv, fakePlayer)
+		}).toThrow()
+	})
+
+	it('throws when a non-existant player is given', function() {
+		expect(function() {
+			new window.KeyboardHandler(keyTargetDiv)
 		}).toThrow()
 	})
 
 	it('sets the tabindex of the target container to 0', function() {
 		expect(keyTargetDiv.tabIndex).toBe(-1)
-		new window.KeyboardHandler(keyTargetDiv)
+		new window.KeyboardHandler(keyTargetDiv, fakePlayer)
 		expect(keyTargetDiv.tabIndex).toBe(0)
 	})
 
+	// TODO DRY
 	it('knows when the right arrow key has been pressed', function(done) {
-		var keyboardHandler = new window.KeyboardHandler(keyTargetDiv)
+		var keyboardHandler = new window.KeyboardHandler(keyTargetDiv, fakePlayer)
 		spyOn(keyboardHandler, 'handleRight').and.callThrough()
 		createAndDispatchKeydownEvent('Right', false, keyTargetDiv)
 		// TODO how to not need the timeout?
@@ -54,13 +74,26 @@ describe('KeyboardHandler', function() {
 		}, 100)
 	})
 
+	// TODO DRY
 	it('knows when the space key has been pressed', function(done) {
-		var keyboardHandler = new window.KeyboardHandler(keyTargetDiv)
+		var keyboardHandler = new window.KeyboardHandler(keyTargetDiv, fakePlayer)
 		spyOn(keyboardHandler, 'handleSpace').and.callThrough()
 		createAndDispatchKeydownEvent('U+0020', false, keyTargetDiv)
 		// TODO how to not need the timeout?
 		setTimeout(function() {
 			expect(keyboardHandler.handleSpace).toHaveBeenCalled()
+			done()
+		}, 100)
+	})
+
+	// TODO DRY
+	it('pauses its player when space is pressed', function(done) {
+		new window.KeyboardHandler(keyTargetDiv, fakePlayer)
+		spyOn(fakePlayer, 'playPause')
+		createAndDispatchKeydownEvent('U+0020', false, keyTargetDiv)
+		// TODO how to not need the timeout?
+		setTimeout(function() {
+			expect(fakePlayer.playPause).toHaveBeenCalled()
 			done()
 		}, 100)
 	})

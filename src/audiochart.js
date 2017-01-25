@@ -347,6 +347,8 @@ var Player = (function() {
 		this.interval = Math.ceil(duration / this.data.seriesLength(0))
 		console.log('Player: duration', duration, 'interval', this.interval)
 		this.seriesMaxIndex = this.data.seriesLength(0) - 1
+
+		this._isPlaying = false
 	}
 
 	/**
@@ -361,6 +363,7 @@ var Player = (function() {
 		this.playCounter = 0
 		this.skippedCalls = 0
 
+		this._isPlaying = true
 		var that = this
 		this.intervalID = setInterval(function() {
 			that._playCore()
@@ -402,12 +405,22 @@ var Player = (function() {
 		if (this.playCounter === this.seriesMaxIndex) {
 			clearInterval(this.intervalID)
 			this.sounder.stop(0)
+			this._isPlaying = false
 			console.log('playback took:', new Date() - this.startTime)
 			console.log('skipped calls:', this.skippedCalls)
 		}
 
 		this.playCounter += 1
 	}
+
+	/**
+	 * Is the Player currently playing?
+	 * @returns {boolean} is the Player currently playing?
+	 */
+	Player.prototype.isPlaying = function() {
+		return this._isPlaying
+	}
+
 	return Player
 })()
 
@@ -587,15 +600,21 @@ var KeyboardHandler = (function() {
 	 * @constructor KeyboardHandler
 	 * @private
 	 * @param {HTMLDivElement} container - The DIV containing the chart
+	 * @param {Player} player - AudioChart Player object
 	 * @todo mark up the DIV properly
 	 * @todo check what sort of element we get given? no; could be button?
 	 */
-	function KeyboardHandler(container) {
+	function KeyboardHandler(container, player) {
 		if (!container) {
 			throw Error('No container given')
 		}
 		container.setAttribute('tabindex', '0')
 		container.addEventListener('keydown', this.keypressHandler.bind(this))
+
+		if (!player) {
+			throw Error('No Player given')
+		}
+		this.player = player
 	}
 
 	/**
@@ -636,7 +655,7 @@ var KeyboardHandler = (function() {
 
 	/** Handle the space key being pressed */
 	KeyboardHandler.prototype.handleSpace = function() {
-		console.log('SPACE')
+		this.player.playPause()
 	}
 
 	return KeyboardHandler

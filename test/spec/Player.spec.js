@@ -152,6 +152,22 @@ var mixinDataWrapperCore = function(message, TestDataClass, testDuration, testCa
 				expect(fakeVisualCallback.calls.count()).toBe(testCallCount)
 			})
 		}
+
+		it('knows it is not playing when it is not playing', function() {
+			expect(player.isPlaying()).toBe(false)
+		})
+
+		it('knows when it is playing', function() {
+			player.play()
+			jasmine.clock().tick(testDuration / 2)
+			expect(player.isPlaying()).toBe(true)
+		})
+
+		it('knows when it has finished playing', function() {
+			player.play()
+			jasmine.clock().tick(testDuration)
+			expect(player.isPlaying()).toBe(false)
+		})
 	})
 }
 
