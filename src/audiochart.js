@@ -168,6 +168,7 @@ var HTMLTableDataWrapper = (function() {
 	 * @private
 	 * @implements {DataWrapper}
 	 * @param {HTMLTableElement} table - The in-DOM table element
+	 * @todo check it's a table
 	 */
 	function HTMLTableDataWrapper(table) {
 		this.table = table
@@ -587,40 +588,55 @@ var KeyboardHandler = (function() {
 	 * @private
 	 * @param {HTMLDivElement} container - The DIV containing the chart
 	 * @todo mark up the DIV properly
+	 * @todo check what sort of element we get given? no; could be button?
 	 */
 	function KeyboardHandler(container) {
-		this.triggered = false
 		if (!container) {
 			throw Error('No container given')
 		}
 		container.setAttribute('tabindex', '0')
-		container.addEventListener('keydown', this._keypressHandler)
+		container.addEventListener('keydown', this.keypressHandler.bind(this))
 	}
 
 	/**
-	 * Support both standard and Safari methods of asking for the key
-	 * @param {KeyboardEvent} keyboardEvent - the KeyboardEvent
-	 * @param {string} match - the key name to be matched
-	 * @returns {boolean} is the KeyboardEvent key matched?
+	 * Support both standard and Safari methods of checking the key
+	 * @param {KeyboardEvent} keyboardEvent - the event
+	 * @returns {string} the name of the pressed key
 	 */
-	function _keyOrKeyIdentifierIs(keyboardEvent, match) {
+	function keyName(keyboardEvent) {
 		if (keyboardEvent.key) {
-			return keyboardEvent.key === match
+			return keyboardEvent.key
 		} else if (keyboardEvent.keyIdentifier) {
-			return keyboardEvent.keyIdentifier === match
+			return keyboardEvent.keyIdentifier
 		}
-
 		throw new Error('Keyboard Events API unsupported')
 	}
 
 	/**
 	 * Handle keypresses
+	 *
+	 * Note: This is bound to the {@link KeyboardHandler} so that it can call
+	 *       the right handler methods.
+	 *
 	 * @param {KeyboardEvent} evt - the KeyboardEvent that occured
+	 * @todo make link work
 	 */
-	KeyboardHandler.prototype._keypressHandler = function(evt) {
-		if (_keyOrKeyIdentifierIs(evt, 'Right')) {
-			this.triggered = true
+	KeyboardHandler.prototype.keypressHandler = function(evt) {
+		if (keyName(evt) === 'Right') {
+			this.handleRight()
+		} else if (keyName(evt) === 'U+0020') {
+			this.handleSpace()
 		}
+	}
+
+	/** Handle a right arrow being pressed */
+	KeyboardHandler.prototype.handleRight = function() {
+		console.log('RIGHT')
+	}
+
+	/** Handle the space key being pressed */
+	KeyboardHandler.prototype.handleSpace = function() {
+		console.log('SPACE')
 	}
 
 	return KeyboardHandler

@@ -1,16 +1,20 @@
 'use strict'
 
-function _createAndDispatchKeydownEvent(keyName, target) {
+function createAndDispatchKeydownEvent(keyName, shift, target) {
 	// Looks like Phantom doesn't support Event constructors
 	// https://github.com/ariya/phantomjs/issues/11289#issuecomment-38880333
+	//
+	// Also Phantom doesn't seem to support assigning the shiftKey property
 	var keydownEvent
 	try {
-		keydownEvent = new KeyboardEvent('keydown')
+		keydownEvent = new KeyboardEvent('keydown', {
+			shiftKey: shift
+		})
 	} catch (error) {
 		keydownEvent = document.createEvent('KeyboardEvent')
 		keydownEvent.initEvent('keydown', true, false)
 	}
-	keydownEvent.key = keyName  // TODO support keyIdentifier for Safari?
+	keydownEvent.key = keyName
 
 	target.dispatchEvent(keydownEvent)
 }
@@ -39,24 +43,25 @@ describe('KeyboardHandler', function() {
 		expect(keyTargetDiv.tabIndex).toBe(0)
 	})
 
-	it('[TODO] listens for keypresses on container', function() {
-		// TODO complete this
-		new window.KeyboardHandler(keyTargetDiv)
-		// expect(keyTargetDiv).toHandle('keypress')
-		expect(true).toBe(true)
+	it('knows when the right arrow key has been pressed', function(done) {
+		var keyboardHandler = new window.KeyboardHandler(keyTargetDiv)
+		spyOn(keyboardHandler, 'handleRight').and.callThrough()
+		createAndDispatchKeydownEvent('Right', false, keyTargetDiv)
+		// TODO how to not need the timeout?
+		setTimeout(function() {
+			expect(keyboardHandler.handleRight).toHaveBeenCalled()
+			done()
+		}, 100)
 	})
 
-	it('knows when the right arrow key has been pressed', function() {
+	it('knows when the space key has been pressed', function(done) {
 		var keyboardHandler = new window.KeyboardHandler(keyTargetDiv)
-		expect(keyboardHandler.triggered).toBe(false)
-
-		_createAndDispatchKeydownEvent('Left', keyTargetDiv)
-		expect(keyboardHandler.triggered).toBe(false)
-
-		_createAndDispatchKeydownEvent('Right', keyTargetDiv)
+		spyOn(keyboardHandler, 'handleSpace').and.callThrough()
+		createAndDispatchKeydownEvent('U+0020', false, keyTargetDiv)
+		// TODO how to not need the timeout?
 		setTimeout(function() {
-			expect(keyboardHandler.triggered).toBe(true)
+			expect(keyboardHandler.handleSpace).toHaveBeenCalled()
+			done()
 		}, 100)
-		// TODO make this work using done()?
 	})
 })
