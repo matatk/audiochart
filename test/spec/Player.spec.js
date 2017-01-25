@@ -9,8 +9,7 @@ var expectedFrequencyCalls = function(playbackTime, seriesLength) {
 	var ref
 	interval = playbackTime / seriesLength
 	out = []
-	out.push([21])
-	for (i = j = 1, ref = seriesLength - 1; ref >= 1 ? j <= ref : j >= ref; i = ref >= 1 ? ++j : --j) {
+	for (i = j = 0, ref = seriesLength - 1; ref >= 1 ? j <= ref : j >= ref; i = ref >= 1 ? ++j : --j) {
 		// out.push([21, interval * i]) TODO old method; remove argument
 		out.push([21, 0])
 	}

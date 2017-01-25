@@ -1,6 +1,8 @@
 'use strict'
 /** @module */
 
+var isProbablySafari = false  // try to detect Safari
+
 /**
  * Array index number (starts at zero).
  * Used to specify series and row in visual callbacks.
@@ -342,8 +344,10 @@ var Player = (function() {
 		} else {
 			this.visualCallback = visualCallback
 		}
-		this.interval = duration / this.data.seriesLength(0)
-		console.log(this.interval, duration)
+
+		this.interval = Math.ceil(duration / this.data.seriesLength(0))
+		console.log('Player: duration', duration, 'interval', this.interval)
+		this.seriesMaxIndex = this.data.seriesLength(0) - 1
 	}
 
 	/**
@@ -352,44 +356,55 @@ var Player = (function() {
 	 * highlighting of the current datum as the playback occurs.
 	 */
 	Player.prototype.play = function() {
+		this.startTime = new Date()
 		this.sounder.start(0)
 
-		if (this.visualCallback !== null) {
-			this.visualCallback(0, 0)
-		}
-		this.sounder.frequency(
-			this.pitchMapper.map(
-				this.data.seriesValue(0, 0)))
+		this.playCounter = 0
+		this.skippedCalls = 0
 
-		this.startTime = new Date()
-		var seriesLength = this.data.seriesLength(0)
-		this.seriesMaxIndex = seriesLength - 1
-		this.playCounter = 1
 		var that = this
 		this.intervalID = setInterval(function() {
 			that._playCore()
 		}, this.interval)
-
-		console.log('stop at:', (seriesLength * this.interval) / 1000)
-		this.sounder.stop((seriesLength * this.interval) / 1000)
 	}
 
 	Player.prototype._playCore = function() {
+		// Firefox and Chrome both seem to handle running this function
+		// with an interval of ~5ms fine, but Safari really lags when
+		// doing so, so here is an unfortunately hacky workaround untill
+		// I'm better able to understand what's going on.
+		//
+		// TODO: this may only apply to Google charts visual callbacks
+		//
+		// TODO: ascertain if it's worth changing frequency at <10ms
+		//       intervals; if not then the incoming data should be
+		//       filtered in some way, thus negating this issue.
+		if (isProbablySafari
+			&& this.interval < 10
+			&& this.playCounter !== this.seriesMaxIndex
+			&& this.playCounter % 2 === 0) {
+			this.playCounter++
+			this.skippedCalls++
+			return
+		}
+
 		if (this.visualCallback !== null) {
 			this.visualCallback(0, this.playCounter)
 		}
+
 		this.sounder.frequency(
 			this.pitchMapper.map(
 				this.data.seriesValue(0, this.playCounter)), 0)
 
 		if (this.playCounter === this.seriesMaxIndex) {
 			clearInterval(this.intervalID)
+			this.sounder.stop(0)
 			console.log('playback took:', new Date() - this.startTime)
+			console.log('skipped calls:', this.skippedCalls)
 		}
 
 		this.playCounter += 1
 	}
-
 	return Player
 })()
 
@@ -408,6 +423,7 @@ var AudioContextGetter = (function() {
 			return new window.AudioContext()
 		} else if (window.webkitAudioContext !== undefined) {
 			/* eslint-disable new-cap */
+			isProbablySafari = true
 			return new window.webkitAudioContext()
 			/* eslint-enable new-cap */
 		}
