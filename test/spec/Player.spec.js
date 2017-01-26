@@ -112,61 +112,79 @@ var mixinDataWrapperCore = function(message, TestDataClass, testDuration, testCa
 
 		it('starts the sounder', function() {
 			spyOn(fakeSounder, 'start')
-			player.play()
+			player.playPause()
 			jasmine.clock().tick(testDuration)
 			expect(fakeSounder.start.calls.count()).toBe(1)
 		})
 
 		it('stops the sounder', function() {
 			spyOn(fakeSounder, 'stop')
-			player.play()
+			player.playPause()
 			jasmine.clock().tick(testDuration)
 			expect(fakeSounder.stop.calls.count()).toBe(1)
 		})
 
 		it('makes the correct number of map calls', function() {
 			spyOn(fakeMapper, 'map')
-			player.play()
+			player.playPause()
 			jasmine.clock().tick(testDuration)
 			expect(fakeMapper.map.calls.count()).toBe(testCallCount)
 		})
 
 		it('makes the right number of calls to the sounder', function() {
 			spyOn(fakeSounder, 'frequency')
-			player.play()
+			player.playPause()
 			jasmine.clock().tick(testDuration)
 			expect(fakeSounder.frequency.calls.count()).toBe(testCallCount)
 		})
 
 		it('calls the sounder with the correct arguments each time', function() {
 			spyOn(fakeSounder, 'frequency')
-			player.play()
+			player.playPause()
 			jasmine.clock().tick(testDuration)
 			expect(fakeSounder.frequency.calls.allArgs()).toEqual(expectedFrequencyCalls(testDuration, testCallCount))
 		})
 
 		if (useVisualCallback) {
 			it('makes the correct number of visual callback calls', function() {
-				player.play()
+				player.playPause()
 				jasmine.clock().tick(testDuration)
 				expect(fakeVisualCallback.calls.count()).toBe(testCallCount)
 			})
 		}
 
-		it('knows it is not playing when it is not playing', function() {
-			expect(player.isPlaying()).toBe(false)
+		it('knows it has never played', function() {
+			expect(player._state).toBe('ready')
 		})
 
 		it('knows when it is playing', function() {
-			player.play()
+			player.playPause()
 			jasmine.clock().tick(testDuration / 2)
-			expect(player.isPlaying()).toBe(true)
+			expect(player._state).toBe('playing')
 		})
 
 		it('knows when it has finished playing', function() {
-			player.play()
+			player.playPause()
 			jasmine.clock().tick(testDuration)
-			expect(player.isPlaying()).toBe(false)
+			expect(player._state).toBe('finished')
+		})
+
+		it('[TODO] clears its interval timer when paused', function() {
+			// TODO this seems to trigger a Jasmine bug
+			// spyOn(window, 'clearInterval').and.callThrough()
+			player.playPause()
+			jasmine.clock().tick(testDuration / 2)
+			expect(player.intervalID).toBeDefined()
+			player.playPause()
+			jasmine.clock().tick(testDuration / 4)
+			// expect(clearInterval).toHaveBeenCalled()
+		})
+
+		it('knows when it is paused', function() {
+			player.playPause()
+			jasmine.clock().tick(testDuration / 2)
+			player.playPause()
+			expect(player._state).toBe('paused')
 		})
 	})
 }

@@ -326,6 +326,7 @@ var WebAudioSounder = (function() {
 
 var Player = (function() {
 	/**
+	 * Orchestrates the audible (and visual cursor) rendering of the chart
 	 * @constructor Player
 	 * @private
 	 * @param {integer} duration - the length of the rendering in milliseconds
@@ -345,25 +346,45 @@ var Player = (function() {
 		}
 
 		this.interval = Math.ceil(duration / this.data.seriesLength(0))
-		console.log('Player: duration', duration, 'interval', this.interval)
+		// console.log('Player: duration', duration, 'interval', this.interval)
 		this.seriesMaxIndex = this.data.seriesLength(0) - 1
 
-		this._isPlaying = false
+		this._state = 'ready'
 	}
 
 	/**
-	 * Initiate the playback of the data as sound.
-	 * This sets up a function to update the sound (and, optionally, visual
-	 * callback) at an interval dependant on the number of data points.
+	 * Main entry point. Set up and start playing.
+	 * If we have already been playing
 	 */
-	Player.prototype.play = function() {
+	Player.prototype.playPause = function() {
+		switch (this._state) {
+			case 'ready':
+				this._play()
+				break
+			case 'playing':
+				this._pause()
+				break
+			case 'paused':
+				//
+				break
+			default:
+				throw Error('Player error: invalid state', this._state)
+		}
+	}
+
+	/**
+	 * Sets up a recurring function to update the sound (and, optionally,
+	 * visual callback) at an interval dependant on the number of data.
+	 */
+	Player.prototype._play = function() {
 		this.startTime = new Date()
 		this.sounder.start(0)
 
-		this.playCounter = 0
+		this.playIndex = 0
 		this.skippedCalls = 0
 
-		this._isPlaying = true
+		this._state = 'playing'
+
 		var that = this
 		this.intervalID = setInterval(function() {
 			that._playCore()
@@ -371,8 +392,9 @@ var Player = (function() {
 	}
 
 	/**
-	 * If a visual callback was specified, this also coordinates the visual
-	 * highlighting of the current datum as the playback occurs.
+	 * This is where the sound is actually played.  If a visual callback was
+	 * specified, this also coordinates the visual highlighting of the current
+	 * datum as the playback occurs.
 	 */
 	Player.prototype._playCore = function() {
 		// Firefox and Chrome both seem to handle running this function
@@ -387,38 +409,35 @@ var Player = (function() {
 		//       filtered in some way, thus negating this issue.
 		if (isProbablySafari
 			&& this.interval < 10
-			&& this.playCounter !== this.seriesMaxIndex
-			&& this.playCounter % 2 === 0) {
-			this.playCounter++
+			&& this.playIndex !== this.seriesMaxIndex
+			&& this.playIndex % 2 === 0) {
+			this.playIndex++
 			this.skippedCalls++
 			return
 		}
 
 		if (this.visualCallback !== null) {
-			this.visualCallback(0, this.playCounter)
+			this.visualCallback(0, this.playIndex)
 		}
 
 		this.sounder.frequency(
 			this.pitchMapper.map(
-				this.data.seriesValue(0, this.playCounter)))
+				this.data.seriesValue(0, this.playIndex)))
 
-		if (this.playCounter === this.seriesMaxIndex) {
+		if (this.playIndex === this.seriesMaxIndex) {
 			clearInterval(this.intervalID)
 			this.sounder.stop(0)
-			this._isPlaying = false
-			console.log('playback took:', new Date() - this.startTime)
-			console.log('skipped calls:', this.skippedCalls)
+			this._state = 'finished'
+			// console.log('playback took:', new Date() - this.startTime)
+			// console.log('skipped calls:', this.skippedCalls)
 		}
 
-		this.playCounter += 1
+		this.playIndex += 1
 	}
 
-	/**
-	 * Is the Player currently playing?
-	 * @returns {boolean} is the Player currently playing?
-	 */
-	Player.prototype.isPlaying = function() {
-		return this._isPlaying
+	Player.prototype._pause = function() {
+		clearInterval(this.intervalID)
+		this._state = 'paused'
 	}
 
 	return Player
@@ -525,7 +544,7 @@ var _AudioChart = (function() {
 			callback
 		)
 
-		player.play()
+		player.playPause()
 	}
 
 	// This is being done as a sort of 'class/static method' because
