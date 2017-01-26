@@ -294,13 +294,13 @@ var WebAudioSounder = (function() {
 	 */
 	function WebAudioSounder(context) {
 		this.context = context
-		this.oscillator = this.context.createOscillator()
 	}
 
 	/**
 	 * Start the oscillator
 	 */
 	WebAudioSounder.prototype.start = function() {
+		this.oscillator = this.context.createOscillator()
 		this.oscillator.connect(this.context.destination)
 		this.oscillator.start(0)
 	}
