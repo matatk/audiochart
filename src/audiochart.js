@@ -1,6 +1,8 @@
 'use strict'
 /** @module */
 
+var isProbablySafari = false  // try to detect Safari
+
 /**
  * Array index number (starts at zero).
  * Used to specify series and row in visual callbacks.
@@ -166,6 +168,7 @@ var HTMLTableDataWrapper = (function() {
 	 * @private
 	 * @implements {DataWrapper}
 	 * @param {HTMLTableElement} table - The in-DOM table element
+	 * @todo check it's a table
 	 */
 	function HTMLTableDataWrapper(table) {
 		this.table = table
@@ -305,23 +308,16 @@ var WebAudioSounder = (function() {
 	/**
 	 * Set the frequency of the oscillator at a given point in time
 	 * @param {number} frequency - the frequency to change to
-	 * @param {integer} offset - the number of milliseconds to elapse before the change
 	 */
-	WebAudioSounder.prototype.frequency = function(frequency, offset) {
-		var callback = (function(that) {
-			return function() {
-				that.oscillator.frequency.value = frequency
-			}
-		})(this)
-		setTimeout(callback, offset)
+	WebAudioSounder.prototype.frequency = function(frequency) {
+		this.oscillator.frequency.value = frequency
 	}
 
 	/**
 	 * Stop the oscillator at a given time
-	 * @param {integer} offset - the number of milliseconds to wait before stopping the oscillator
 	 */
-	WebAudioSounder.prototype.stop = function(offset) {
-		this.oscillator.stop(this.context.currentTime + offset)
+	WebAudioSounder.prototype.stop = function() {
+		this.oscillator.stop()
 	}
 
 	return WebAudioSounder
@@ -330,6 +326,7 @@ var WebAudioSounder = (function() {
 
 var Player = (function() {
 	/**
+	 * Orchestrates the audible (and visual cursor) rendering of the chart
 	 * @constructor Player
 	 * @private
 	 * @param {integer} duration - the length of the rendering in milliseconds
@@ -347,47 +344,119 @@ var Player = (function() {
 		} else {
 			this.visualCallback = visualCallback
 		}
-		this.interval = duration / this.data.seriesLength(0)
+
+		this.interval = Math.ceil(duration / this.data.seriesLength(0))
+		// console.log('Player: duration', duration, 'interval', this.interval)
+		this.seriesMaxIndex = this.data.seriesLength(0) - 1
+
+		this._state = 'ready'
 	}
 
 	/**
-	 * Play the underlying data as audio.
-	 * If a visual callback was specified, this also coordinates the visual
-	 * highlighting of the current datum as the playback occurs.
+	 * Main entry point. Set up and start playing.
+	 * If we have already been playing
 	 */
-	Player.prototype.play = function() {
-		var seriesLength = this.data.seriesLength(0)
-		var seriesMaxIndex = seriesLength - 1
+	Player.prototype.playPause = function() {
+		switch (this._state) {
+			case 'ready':
+				this._play()
+				break
+			case 'playing':
+				this._pause()
+				break
+			case 'paused':
+				this._startPlaying()
+				break
+			case 'finished':
+				this._play()
+				break
+			default:
+				throw Error('Player error: invalid state: ' + String(this._state))
+		}
+	}
 
+	/**
+	 * Sets up a recurring function to update the sound (and, optionally,
+	 * visual callback) at an interval dependant on the number of data.
+	 */
+	Player.prototype._play = function() {
+		this.startTime = new Date()
 		this.sounder.start(0)
-		if (this.visualCallback !== null) {
-			this.visualCallback(0, 0)
-		}
-		this.sounder.frequency(this.pitchMapper.map(this.data.seriesValue(0, 0)))
-		for (var i = 1; i <= seriesMaxIndex; i++) {
-			var offset = this.interval * i
-			if (this.visualCallback !== null) {
-				this._highlightEnqueue(0, i, offset)
-			}
-			this.sounder.frequency(this.pitchMapper.map(this.data.seriesValue(0, i)), offset)
-		}
-		this.sounder.stop((seriesLength * this.interval) / 1000)
+
+		this.playIndex = 0
+		this.skippedCalls = 0
+
+		this._startPlaying()
 	}
 
 	/**
-	 * Set up a visual highlight callback for the future (when the audio
-	 * is playing)
-	 * @param {index} series - the data series
-	 * @param {index} row - the datum within that series
-	 * @param {integer} offset - the number of milliseconds before highlighting this datum
+	 * Set up _playCore() to run regularly, to render the sound (and optional
+	 * visual cursor movement).
 	 */
-	Player.prototype._highlightEnqueue = function(series, row, offset) {
-		var callback = (function(that) {
-			return function() {
-				that.visualCallback(series, row)
-			}
-		})(this)
-		setTimeout(callback, offset)
+	Player.prototype._startPlaying = function() {
+		this._state = 'playing'
+		this._playCore()  // so that it starts immediately
+		var that = this
+		this.intervalID = setInterval(function() {
+			that._playCore()
+		}, this.interval)
+	}
+
+	/**
+	 * This is where the sound is actually played.  If a visual callback was
+	 * specified, this also coordinates the visual highlighting of the current
+	 * datum as the playback occurs.
+	 */
+	Player.prototype._playCore = function() {
+		// Firefox and Chrome both seem to handle running this function
+		// with an interval of ~5ms fine, but Safari really lags when
+		// doing so, so here is an unfortunately hacky workaround untill
+		// I'm better able to understand what's going on.
+		//
+		// TODO: this may only apply to Google charts visual callbacks
+		//
+		// TODO: ascertain if it's worth changing frequency at <10ms
+		//       intervals; if not then the incoming data should be
+		//       filtered in some way, thus negating this issue.
+		if (isProbablySafari
+			&& this.interval < 10
+			&& this.playIndex !== this.seriesMaxIndex
+			&& this.playIndex % 2 === 0) {
+			this.playIndex++
+			this.skippedCalls++
+			return
+		}
+
+		if (this.visualCallback !== null) {
+			this.visualCallback(0, this.playIndex)
+		}
+
+		this.sounder.frequency(
+			this.pitchMapper.map(
+				this.data.seriesValue(0, this.playIndex)))
+
+		if (this.playIndex === this.seriesMaxIndex) {
+			clearInterval(this.intervalID)
+			var that = this
+			setTimeout(function() {
+				that.sounder.stop()
+			}, this.interval)  // TODO test
+			this._state = 'finished'
+			// console.log('playback took:', new Date() - this.startTime)
+			// console.log('skipped calls:', this.skippedCalls)
+		}
+
+		this.playIndex += 1
+	}
+
+	/**
+	 * Temporarily pause the rendering of the chart.
+	 * This inherently keeps the sound going at the frequency it was at when
+	 * the pause was triggered.
+	 */
+	Player.prototype._pause = function() {
+		clearInterval(this.intervalID)
+		this._state = 'paused'
 	}
 
 	return Player
@@ -408,6 +477,7 @@ var AudioContextGetter = (function() {
 			return new window.AudioContext()
 		} else if (window.webkitAudioContext !== undefined) {
 			/* eslint-disable new-cap */
+			isProbablySafari = true
 			return new window.webkitAudioContext()
 			/* eslint-enable new-cap */
 		}
@@ -464,6 +534,75 @@ var htmlTableVisualCallbackMaker = function(table, className) {
 }
 
 
+var KeyboardHandler = (function() {
+	/**
+	 * @constructor KeyboardHandler
+	 * @private
+	 * @param {HTMLDivElement} container - The DIV containing the chart
+	 * @param {Player} player - AudioChart Player object
+	 * @todo mark up the DIV properly
+	 * @todo check what sort of element we get given? no; could be button?
+	 */
+	function KeyboardHandler(container, player) {
+		if (!container) {
+			throw Error('No container given')
+		}
+		container.setAttribute('tabindex', '0')
+		container.addEventListener('keydown', this.keypressHandler.bind(this))
+
+		if (!player) {
+			throw Error('No Player given')
+		}
+		this.player = player
+	}
+
+	/**
+	 * Support both standard and Safari methods of checking the key
+	 * @param {KeyboardEvent} keyboardEvent - the event
+	 * @returns {string} the name of the pressed key
+	 */
+	function keyName(keyboardEvent) {
+		if (keyboardEvent.key) {
+			return keyboardEvent.key
+		} else if (keyboardEvent.keyIdentifier) {
+			return keyboardEvent.keyIdentifier
+		}
+		throw new Error('Keyboard Events API unsupported')
+	}
+
+	/**
+	 * Handle keypresses
+	 *
+	 * Note: This is bound to the {@link KeyboardHandler} so that it can call
+	 *       the right handler methods.
+	 *
+	 * @param {KeyboardEvent} evt - the KeyboardEvent that occured
+	 * @todo make link work
+	 */
+	KeyboardHandler.prototype.keypressHandler = function(evt) {
+		evt.preventDefault()
+
+		if (keyName(evt) === 'Right') {
+			this.handleRight()
+		} else if (keyName(evt) === 'U+0020') {
+			this.handleSpace()
+		}
+	}
+
+	/** Handle a right arrow being pressed */
+	KeyboardHandler.prototype.handleRight = function() {
+		//
+	}
+
+	/** Handle the space key being pressed */
+	KeyboardHandler.prototype.handleSpace = function() {
+		this.player.playPause()
+	}
+
+	return KeyboardHandler
+})()
+
+
 var _AudioChart = (function() {
 	/**
 	 * @constructor _AudioChart
@@ -480,20 +619,29 @@ var _AudioChart = (function() {
 			dataWrapper.seriesMin(0),
 			dataWrapper.seriesMax(0),
 			options.frequencyLow,
-			options.frequencyHigh
-		)
+			options.frequencyHigh)
 
 		var sounder = new WebAudioSounder(context)
 
-		var player = new Player(
+		this.player = new Player(
 			options.duration,
 			dataWrapper,
 			frequencyPitchMapper,
 			sounder,
-			callback
-		)
+			callback)
 
-		player.play()
+		if (options.chartContainer) {
+			new KeyboardHandler(
+				options.chartContainer,
+				this.player)
+		}
+	}
+
+	/**
+	 * Passes through play/pause commands to the Player
+	 */
+	_AudioChart.prototype.playPause = function() {
+		this.player.playPause()
 	}
 
 	// This is being done as a sort of 'class/static method' because
@@ -557,23 +705,9 @@ var AudioChart = (function() {
 				throw Error(fail)
 			}
 		}
-		return _AudioChart(options, context)
+
+		return new _AudioChart(options, context)
 	}
+
 	return AudioChart
-})()
-
-
-var KeyboardHandler = (function() {
-	/**
-	 * @constructor KeyboardHandler
-	 * @private
-	 * @param {HTMLDivElement} container - The `<div>` containing the chart
-	 */
-	function KeyboardHandler(container) {
-		if (!container) {
-			throw Error('No container given')
-		}
-	}
-
-	return KeyboardHandler
 })()

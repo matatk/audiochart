@@ -13,12 +13,12 @@ function drawChart() {
 	data.addColumn('string', 'Top Secret Evil Project')
 	data.addColumn('number', 'Watermelons')
 	data.addRows([
-			['Alpha',    293],
-			['Beta',     329],
-			['Gamma',    261],
-			['Delta',    130],
-			['Epsilon',  196],
-			['Zeta',     196],
+		['Alpha',    293],
+		['Beta',     329],
+		['Gamma',    261],
+		['Delta',    130],
+		['Epsilon',  196],
+		['Zeta',     196],
 	])
 
 	// Prepare chart options, then create and draw the chart
@@ -28,7 +28,7 @@ function drawChart() {
 	}
 
 	var chart = new google.visualization.LineChart(
-			document.getElementById('chart'))
+		document.getElementById('chart'))
 
 	resizeChart()  // initial draw
 
@@ -48,14 +48,17 @@ function drawChart() {
 	// AudioChart Stuff
 	//
 
+	var ac = new AudioChart({
+		'type': 'google',      // (see the docs)
+		'data': data,          // the GoogleDataTable
+		'chart': chart,        // the Google Chart object
+		'duration': 5000,      // milliseconds
+		'frequencyLow': 200,   // Hz
+		'frequencyHigh': 600,  // Hz
+		'chartContainer': document.getElementById('chart')
+	})
+
 	document.getElementById('play').onclick = function() {
-		new AudioChart({
-			'type': 'google',      // (see the docs)
-			'data': data,          // the GoogleDataTable
-			'chart': chart,        // the Google Chart object
-			'duration': 5000,      // milliseconds
-			'frequencyLow': 200,   // Hz
-			'frequencyHigh': 600   // Hz
-		})
+		ac.playPause()
 	}
 }
