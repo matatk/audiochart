@@ -19,8 +19,8 @@ button, input, select {
 	font-size: inherit;
 }
 
-a:focus, button:focus, input:focus, select:focus,
-a:hover, button:hover, input:hover, select:hover {
+a:focus, button:focus, input:focus, select:focus, div:focus,
+a:hover, button:hover, input:hover, select:hover, div:hover {
 	outline: 4px solid yellow;
 }
 

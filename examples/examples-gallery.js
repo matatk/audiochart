@@ -40,7 +40,7 @@ function errorCheckToggleInvalid(toState) {
 	var numberInputs = document.querySelectorAll('input[type=number]')
 	for (var i = 0; i < numberInputs.length; i++ ) {
 		numberInputs[i].setAttribute('aria-invalid',
-				(toState === 'on') ? 'true' : 'false')
+			(toState === 'on') ? 'true' : 'false')
 	}
 }
 
@@ -51,11 +51,11 @@ function makeAudiochartOptions() {
 		// Fill in 'data' and 'chart'
 		//  or 'htmlDocument' and 'htmlTableId'
 		'duration':
-			parseInt(document.getElementById('opt-duration').value) * 1000,
+		parseInt(document.getElementById('opt-duration').value) * 1000,
 		'frequencyLow':
-			document.getElementById('opt-freq-low').valueAsNumber,
+		document.getElementById('opt-freq-low').valueAsNumber,
 		'frequencyHigh':
-			document.getElementById('opt-freq-high').valueAsNumber
+		document.getElementById('opt-freq-high').valueAsNumber
 	}
 }
 
@@ -76,20 +76,24 @@ function init() {
 	drawSalesAnnotated()
 
 	// JSON
+	// TODO DRY
+	var jsonOptions = makeAudiochartOptions()
+	jsonOptions['type'] = 'json'
+	jsonOptions['data'] = document.getElementById('json1').textContent
+	var jsonAC = new AudioChart(jsonOptions)
 	document.getElementById('btn-json1').onclick = function() {
-		var options = makeAudiochartOptions()
-		options['type'] = 'json'
-		options['data'] = document.getElementById('json1').textContent
-		new AudioChart(options)
+		jsonAC.playPause()
 	}
 
 	// HTML Table
+	// TODO DRY
+	var htmlOptions = makeAudiochartOptions()
+	htmlOptions['type'] = 'htmlTable'
+	htmlOptions['table'] = document.getElementById('table1')
+	htmlOptions['highlightClass'] = 'current-datum'
+	var htmlAC = new AudioChart(htmlOptions)
 	document.getElementById('btn-table1').onclick = function() {
-		var options = makeAudiochartOptions()
-		options['type'] = 'htmlTable'
-		options['table'] = document.getElementById('table1')
-		options['highlightClass'] = 'current-datum'
-		new AudioChart(options)
+		htmlAC.playPause()
 	}
 }
 
@@ -119,19 +123,22 @@ function _drawCore(Klass, data, chartId, btn) {
 	}
 	if (document.addEventListener) {
 		window.addEventListener('resize', resizeChart)
-	}	else if (document.attachEvent) {
+	} else if (document.attachEvent) {
 		window.attachEvent('onresize', resizeChart)
-	}	else {
+	} else {
 		window.resize = resizeChart
 	}
 
 	// Wire up to AudioChart
+	var audiochartOptions = makeAudiochartOptions()
+	audiochartOptions['type'] = 'google'
+	audiochartOptions['data'] = data
+	audiochartOptions['chart'] = chart
+	audiochartOptions['chartContainer'] = document.getElementById(chartId)
+	var ac = new AudioChart(audiochartOptions)
+
 	document.getElementById(btn).onclick = function() {
-		var audiochartOptions = makeAudiochartOptions()
-		audiochartOptions['type'] = 'google'
-		audiochartOptions['data'] = data
-		audiochartOptions['chart'] = chart
-		new AudioChart(audiochartOptions)
+		ac.playPause()
 	}
 }
 
@@ -209,10 +216,10 @@ function drawSalesLine() {
 	data.addColumn('string', 'Month') // Implicit domain label col.
 	data.addColumn('number', 'Sales') // Implicit series 1 data col.
 	data.addRows([
-			['April',1000],
-			['May',  1170],
-			['June',  660],
-			['July', 1030]
+		['April',1000],
+		['May',  1170],
+		['June',  660],
+		['July', 1030]
 	])
 
 	_drawLineChartCore(data, 'chart-sales-line', 'btn-sales-line')
@@ -235,10 +242,10 @@ function drawSalesAnnotated() {
 	data.addColumn({type:'boolean',role:'certainty'})
 	// certainty col.
 	data.addRows([
-			['April',1000,  900, 1100,  'A','Stolen data', true],
-			['May',  1170, 1000, 1200,  'B','Coffee spill', true],
-			['June',  660,  550,  800,  'C','Wumpus attack', true],
-			['July', 1030, null, null, null, null, false]
+		['April',1000,  900, 1100,  'A','Stolen data', true],
+		['May',  1170, 1000, 1200,  'B','Coffee spill', true],
+		['June',  660,  550,  800,  'C','Wumpus attack', true],
+		['July', 1030, null, null, null, null, false]
 	])
 
 	_drawLineChartCore(data, 'chart-sales-annotated', 'btn-sales-annotated')

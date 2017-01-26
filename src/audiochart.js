@@ -365,10 +365,13 @@ var Player = (function() {
 				this._pause()
 				break
 			case 'paused':
-				//
+				this._startPlaying()
+				break
+			case 'finished':
+				this._play()
 				break
 			default:
-				throw Error('Player error: invalid state', this._state)
+				throw Error('Player error: invalid state: ' + String(this._state))
 		}
 	}
 
@@ -383,8 +386,16 @@ var Player = (function() {
 		this.playIndex = 0
 		this.skippedCalls = 0
 
-		this._state = 'playing'
+		this._startPlaying()
+	}
 
+	/**
+	 * Set up _playCore() to run regularly, to render the sound (and optional
+	 * visual cursor movement).
+	 */
+	Player.prototype._startPlaying = function() {
+		this._state = 'playing'
+		this._playCore()  // so that it starts immediately
 		var that = this
 		this.intervalID = setInterval(function() {
 			that._playCore()
@@ -426,7 +437,10 @@ var Player = (function() {
 
 		if (this.playIndex === this.seriesMaxIndex) {
 			clearInterval(this.intervalID)
-			this.sounder.stop(0)
+			var that = this
+			setTimeout(function() {
+				that.sounder.stop()
+			}, this.interval)  // TODO test
 			this._state = 'finished'
 			// console.log('playback took:', new Date() - this.startTime)
 			// console.log('skipped calls:', this.skippedCalls)
@@ -435,6 +449,11 @@ var Player = (function() {
 		this.playIndex += 1
 	}
 
+	/**
+	 * Temporarily pause the rendering of the chart.
+	 * This inherently keeps the sound going at the frequency it was at when
+	 * the pause was triggered.
+	 */
 	Player.prototype._pause = function() {
 		clearInterval(this.intervalID)
 		this._state = 'paused'
@@ -515,6 +534,75 @@ var htmlTableVisualCallbackMaker = function(table, className) {
 }
 
 
+var KeyboardHandler = (function() {
+	/**
+	 * @constructor KeyboardHandler
+	 * @private
+	 * @param {HTMLDivElement} container - The DIV containing the chart
+	 * @param {Player} player - AudioChart Player object
+	 * @todo mark up the DIV properly
+	 * @todo check what sort of element we get given? no; could be button?
+	 */
+	function KeyboardHandler(container, player) {
+		if (!container) {
+			throw Error('No container given')
+		}
+		container.setAttribute('tabindex', '0')
+		container.addEventListener('keydown', this.keypressHandler.bind(this))
+
+		if (!player) {
+			throw Error('No Player given')
+		}
+		this.player = player
+	}
+
+	/**
+	 * Support both standard and Safari methods of checking the key
+	 * @param {KeyboardEvent} keyboardEvent - the event
+	 * @returns {string} the name of the pressed key
+	 */
+	function keyName(keyboardEvent) {
+		if (keyboardEvent.key) {
+			return keyboardEvent.key
+		} else if (keyboardEvent.keyIdentifier) {
+			return keyboardEvent.keyIdentifier
+		}
+		throw new Error('Keyboard Events API unsupported')
+	}
+
+	/**
+	 * Handle keypresses
+	 *
+	 * Note: This is bound to the {@link KeyboardHandler} so that it can call
+	 *       the right handler methods.
+	 *
+	 * @param {KeyboardEvent} evt - the KeyboardEvent that occured
+	 * @todo make link work
+	 */
+	KeyboardHandler.prototype.keypressHandler = function(evt) {
+		evt.preventDefault()
+
+		if (keyName(evt) === 'Right') {
+			this.handleRight()
+		} else if (keyName(evt) === 'U+0020') {
+			this.handleSpace()
+		}
+	}
+
+	/** Handle a right arrow being pressed */
+	KeyboardHandler.prototype.handleRight = function() {
+		//
+	}
+
+	/** Handle the space key being pressed */
+	KeyboardHandler.prototype.handleSpace = function() {
+		this.player.playPause()
+	}
+
+	return KeyboardHandler
+})()
+
+
 var _AudioChart = (function() {
 	/**
 	 * @constructor _AudioChart
@@ -531,20 +619,29 @@ var _AudioChart = (function() {
 			dataWrapper.seriesMin(0),
 			dataWrapper.seriesMax(0),
 			options.frequencyLow,
-			options.frequencyHigh
-		)
+			options.frequencyHigh)
 
 		var sounder = new WebAudioSounder(context)
 
-		var player = new Player(
+		this.player = new Player(
 			options.duration,
 			dataWrapper,
 			frequencyPitchMapper,
 			sounder,
-			callback
-		)
+			callback)
 
-		player.playPause()
+		if (options.chartContainer) {
+			new KeyboardHandler(
+				options.chartContainer,
+				this.player)
+		}
+	}
+
+	/**
+	 * Passes through play/pause commands to the Player
+	 */
+	_AudioChart.prototype.playPause = function() {
+		this.player.playPause()
 	}
 
 	// This is being done as a sort of 'class/static method' because
@@ -608,74 +705,9 @@ var AudioChart = (function() {
 				throw Error(fail)
 			}
 		}
-		return _AudioChart(options, context)
+
+		return new _AudioChart(options, context)
 	}
+
 	return AudioChart
-})()
-
-
-var KeyboardHandler = (function() {
-	/**
-	 * @constructor KeyboardHandler
-	 * @private
-	 * @param {HTMLDivElement} container - The DIV containing the chart
-	 * @param {Player} player - AudioChart Player object
-	 * @todo mark up the DIV properly
-	 * @todo check what sort of element we get given? no; could be button?
-	 */
-	function KeyboardHandler(container, player) {
-		if (!container) {
-			throw Error('No container given')
-		}
-		container.setAttribute('tabindex', '0')
-		container.addEventListener('keydown', this.keypressHandler.bind(this))
-
-		if (!player) {
-			throw Error('No Player given')
-		}
-		this.player = player
-	}
-
-	/**
-	 * Support both standard and Safari methods of checking the key
-	 * @param {KeyboardEvent} keyboardEvent - the event
-	 * @returns {string} the name of the pressed key
-	 */
-	function keyName(keyboardEvent) {
-		if (keyboardEvent.key) {
-			return keyboardEvent.key
-		} else if (keyboardEvent.keyIdentifier) {
-			return keyboardEvent.keyIdentifier
-		}
-		throw new Error('Keyboard Events API unsupported')
-	}
-
-	/**
-	 * Handle keypresses
-	 *
-	 * Note: This is bound to the {@link KeyboardHandler} so that it can call
-	 *       the right handler methods.
-	 *
-	 * @param {KeyboardEvent} evt - the KeyboardEvent that occured
-	 * @todo make link work
-	 */
-	KeyboardHandler.prototype.keypressHandler = function(evt) {
-		if (keyName(evt) === 'Right') {
-			this.handleRight()
-		} else if (keyName(evt) === 'U+0020') {
-			this.handleSpace()
-		}
-	}
-
-	/** Handle a right arrow being pressed */
-	KeyboardHandler.prototype.handleRight = function() {
-		console.log('RIGHT')
-	}
-
-	/** Handle the space key being pressed */
-	KeyboardHandler.prototype.handleSpace = function() {
-		this.player.playPause()
-	}
-
-	return KeyboardHandler
 })()

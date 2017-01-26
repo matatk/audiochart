@@ -186,6 +186,27 @@ var mixinDataWrapperCore = function(message, TestDataClass, testDuration, testCa
 			player.playPause()
 			expect(player._state).toBe('paused')
 		})
+
+		it('continues playing after a pause', function() {
+			spyOn(player, '_play').and.callThrough()
+			spyOn(player, '_startPlaying').and.callThrough()
+			spyOn(player, '_pause').and.callThrough()
+			player.playPause()
+			jasmine.clock().tick(testDuration / 2)
+			player.playPause()
+			jasmine.clock().tick(testDuration / 4)
+			player.playPause()
+			expect(player._play).toHaveBeenCalledTimes(1)
+			expect(player._startPlaying).toHaveBeenCalledTimes(2)
+			expect(player._pause).toHaveBeenCalledTimes(1)
+		})
+
+		it('complains if the state is invalid', function() {
+			player._state = 'moo'
+			expect(function() {
+				player.playPause()
+			}).toThrow()
+		})
 	})
 }
 

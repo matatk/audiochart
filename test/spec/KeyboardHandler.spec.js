@@ -10,7 +10,7 @@ var FakePlayer = (function() {
 })()
 
 
-function createAndDispatchKeydownEvent(keyName, shift, target) {
+function createKeydownEvent(keyName, shift) {
 	// Looks like Phantom doesn't support Event constructors
 	// https://github.com/ariya/phantomjs/issues/11289#issuecomment-38880333
 	//
@@ -25,8 +25,12 @@ function createAndDispatchKeydownEvent(keyName, shift, target) {
 		keydownEvent.initEvent('keydown', true, false)
 	}
 	keydownEvent.key = keyName
+	return keydownEvent
+}
 
-	target.dispatchEvent(keydownEvent)
+
+function createAndDispatchKeydownEvent(keyName, shift, target) {
+	target.dispatchEvent(createKeydownEvent(keyName, shift))
 }
 
 
@@ -60,6 +64,19 @@ describe('KeyboardHandler', function() {
 		expect(keyTargetDiv.tabIndex).toBe(-1)
 		new window.KeyboardHandler(keyTargetDiv, fakePlayer)
 		expect(keyTargetDiv.tabIndex).toBe(0)
+	})
+
+	// TODO DRY
+	it('stops the event default handler being called', function(done) {
+		new window.KeyboardHandler(keyTargetDiv, fakePlayer)
+		var evt = createKeydownEvent('Up', false)
+		spyOn(evt, 'preventDefault')
+		keyTargetDiv.dispatchEvent(evt)
+		// TODO how to not need the timeout?
+		setTimeout(function() {
+			expect(evt.preventDefault).toHaveBeenCalled()
+			done()
+		}, 100)
 	})
 
 	// TODO DRY
