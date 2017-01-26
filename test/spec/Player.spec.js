@@ -207,6 +207,47 @@ var mixinDataWrapperCore = function(message, TestDataClass, testDuration, testCa
 				player.playPause()
 			}).toThrow()
 		})
+
+		it('steps backward when requested', function() {
+			player.playPause()
+			jasmine.clock().tick(testDuration * 0.9)
+			var index1 = player.playIndex
+			player.stepBackward(2)
+			var index2 = player.playIndex
+			expect(index2).toBe(index1 - 2)
+		})
+
+		it('updates the sound (and visual cursor) when stepped backward whilst paused', function() {
+			spyOn(player, '_playCore').and.callThrough()
+			player.playPause()
+			jasmine.clock().tick(testDuration / 10)
+			player.playPause()
+			var numberOfTimesPlayCoreCalled = player._playCore.calls.count()
+			player.stepBackward()
+			var steppedNumberOfTimesPlayCoreCalled = player._playCore.calls.count()
+			expect(steppedNumberOfTimesPlayCoreCalled).toBe(
+				numberOfTimesPlayCoreCalled + 1)
+		})
+
+		it('steps forward when requested', function() {
+			player.playPause()
+			var index1 = player.playIndex
+			player.stepForward(2)
+			var index2 = player.playIndex
+			expect(index2).toBe(index1 + 2)
+		})
+
+		it('updates the sound (and visual cursor) when stepped forward whilst paused', function() {
+			spyOn(player, '_playCore').and.callThrough()
+			player.playPause()
+			jasmine.clock().tick(testDuration / 10)
+			player.playPause()
+			var numberOfTimesPlayCoreCalled = player._playCore.calls.count()
+			player.stepForward()
+			var steppedNumberOfTimesPlayCoreCalled = player._playCore.calls.count()
+			expect(steppedNumberOfTimesPlayCoreCalled).toBe(
+				numberOfTimesPlayCoreCalled + 1)
+		})
 	})
 }
 

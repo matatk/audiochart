@@ -6,6 +6,7 @@ var FakePlayer = (function() {
 	FakePlayer.prototype.pause = function() {}
 	FakePlayer.prototype.playPause = function() {}
 	FakePlayer.prototype.stop = function() {}
+	FakePlayer.prototype.stepForward = function() {}
 	return FakePlayer
 })()
 
@@ -87,6 +88,18 @@ describe('KeyboardHandler', function() {
 		// TODO how to not need the timeout?
 		setTimeout(function() {
 			expect(keyboardHandler.handleRight).toHaveBeenCalled()
+			done()
+		}, 100)
+	})
+
+	// TODO DRY
+	it('steps its player when the right arrow key is pressed', function(done) {
+		new window.KeyboardHandler(keyTargetDiv, fakePlayer)
+		spyOn(fakePlayer, 'stepForward')
+		createAndDispatchKeydownEvent('Right', false, keyTargetDiv)
+		// TODO how to not need the timeout?
+		setTimeout(function() {
+			expect(fakePlayer.stepForward).toHaveBeenCalled()
 			done()
 		}, 100)
 	})
