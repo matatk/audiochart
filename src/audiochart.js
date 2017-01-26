@@ -294,13 +294,13 @@ var WebAudioSounder = (function() {
 	 */
 	function WebAudioSounder(context) {
 		this.context = context
-		this.oscillator = this.context.createOscillator()
 	}
 
 	/**
 	 * Start the oscillator
 	 */
 	WebAudioSounder.prototype.start = function() {
+		this.oscillator = this.context.createOscillator()
 		this.oscillator.connect(this.context.destination)
 		this.oscillator.start(0)
 	}
@@ -459,6 +459,28 @@ var Player = (function() {
 		this._state = 'paused'
 	}
 
+	Player.prototype.stepBackward = function(skip) {
+		var delta = skip || 50
+		this.playIndex -= delta
+		if (this.playIndex < 0) {
+			this.playIndex = 0  // TODO test limiting
+		}
+		if (this._state === 'paused') {
+			this._playCore()
+		}
+	}
+
+	Player.prototype.stepForward = function(skip) {
+		var delta = skip || 50
+		this.playIndex += delta
+		if (this.playIndex > this.seriesMaxIndex) {
+			this.playIndex = this.seriesMaxIndex  // TODO test limiting
+		}
+		if (this._state === 'paused') {
+			this._playCore()
+		}
+	}
+
 	return Player
 })()
 
@@ -584,14 +606,21 @@ var KeyboardHandler = (function() {
 
 		if (keyName(evt) === 'Right') {
 			this.handleRight()
+		} else if (keyName(evt) === 'Left' ) {
+			this.handleLeft()
 		} else if (keyName(evt) === 'U+0020') {
 			this.handleSpace()
 		}
 	}
 
+	/** Handle a left arrow being pressed */
+	KeyboardHandler.prototype.handleLeft = function() {
+		this.player.stepBackward()
+	}
+
 	/** Handle a right arrow being pressed */
 	KeyboardHandler.prototype.handleRight = function() {
-		//
+		this.player.stepForward()
 	}
 
 	/** Handle the space key being pressed */
