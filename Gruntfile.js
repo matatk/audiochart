@@ -73,8 +73,8 @@ module.exports = function(grunt) {
 				options: {
 					beautify: false,
 					mangle: true,
-					banner: '/* <%= pkg.name %> ' +
-						'<%= grunt.template.today("yyyy-mm-dd") %>\n' +
+					banner: '/* <%= pkg.name %> <%= pkg.version %> - ' +
+						'<%= grunt.template.today("yyyy-mm-dd") %> - ' +
 						'<%= pkg.license %> licence */\n',
 					sourceMap: true,
 					enclose: {
@@ -89,10 +89,18 @@ module.exports = function(grunt) {
 		},
 
 		jsdoc: {
-			dist: {
+			pub: {
 				src: ['src/audiochart.js'],
 				options: {
-					'destination': 'doc',
+					'destination': 'doc/public',
+					'private': false,
+					'readme': 'README.md'
+				}
+			},
+			internal: {
+				src: ['src/audiochart.js'],
+				options: {
+					'destination': 'doc/internal',
 					'private': true,
 					'readme': 'README.md'
 				}
