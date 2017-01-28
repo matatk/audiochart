@@ -5,9 +5,9 @@ AudioChart
 
 Allows the user to explore charts on web pages using sound and the keyboard rather than, or in conjunction with, visually and with the mouse.  The code can easily be added to any page containing charts.
 
-Thanks to [The Paciello Group](http://paciellogroup.com) for allowing me to share this with you, and to [The Sonification Handbook](http://sonification.de/handbook/) for the research behind it.
+AudioChart uses the Web Audio API, which has [great support amongst browsers, including Microsoft Edge](http://caniuse.com/audio-api), though is not (yet) supported by Internet Explorer.  
 
-AudioChart uses the Web Audio API, which has [great support amongst browsers, including Microsoft Edge](http://caniuse.com/audio-api), though is not (yet) supported by Internet Explorer.
+Thanks to [The Paciello Group](http://paciellogroup.com) for allowing me to share this with you, and to [The Sonification Handbook](http://sonification.de/handbook/) for the research behind it.
 
 Use Cases and Examples
 -----------------------
@@ -24,20 +24,12 @@ What sort of charts/data does it work with?
 
 The [examples gallery](http://matatk.agrip.org.uk/audiochart/examples/examples-gallery.html) covers using AudioChart with Google Charts, JSON and HTML tables.
 
-Components
------------
+Tutorial and Documentation
+---------------------------
 
-The following objects are present in [AudioChart (JavaScript code)](src/audiochart.js).
-
- * A `DataWrapper` interface wraps third-party chart library/other data sources.
-    - `GoogleDataWrapper` wraps Google Charts `DataTable` objects.
-    - `JSONDataWrapper` wraps JSON strings or parsed/compatible objects.
-    - `HTMLTableWrapper`
- * A `PitchMapper` maps from data values to pitches.
-    - `FrequencyPitchMapper` does basic interpolation.
- * The `WebAudioSounder` wraps the Web Audio API.
- * The `Player` brings together wrapped data source, mapper and sounder.
- * The `AudioChart` object provides the public-facing interface.
+- The ["Hello, World" AudioChart and Google Charts tutorial](http://matatk.agrip.org.uk/audiochart/examples/hello-world-tutorial.html) demonstrates how to get started.
+- [AudioChart options reference](REFERENCE.md)
+- [Public API documentation](http://matatk.agrip.org.uk/audiochart/doc/public/)
 
 Development
 ------------
@@ -57,6 +49,10 @@ The build process uses Grunt and therefore also Node.  You can get set up for de
  5. Running `grunt` will lint the code, run the tests and make a minified production version.
 
 **Windows users:** this has not yet been extensively tested on Windows, but it doesn't use anything platform-specific, so should work fine. Please file a bug if you encounter any problems.
+
+### Documentation
+
+- [Internal API documentation](http://matatk.agrip.org.uk/audiochart/doc/public/)
 
 Future Work Ideas
 ------------------
