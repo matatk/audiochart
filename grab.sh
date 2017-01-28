@@ -32,7 +32,7 @@ if [ $PROG == 'grab.sh' ]; then
 	echo Updating index.md from README.md in master branch...
 	git checkout master README.md || exit 42
 	cp index.head.md index.md || exit 42
-	cat README.md | tail -n +6 >> index.md || exit 42
+	cat README.md | tail -n +8 >> index.md || exit 42
 	git rm --force README.md || exit 42
 	git add index.md || exit 42
 fi

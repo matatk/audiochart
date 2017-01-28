@@ -4,14 +4,14 @@ lsi: false
 
 # Site settings
 exclude:
-	- Gemfile
-	- Gemfile.lock
-	- LICENCE
-	- node_modules
-	- audiochart
-	- grab.sh
-	- clean.sh
-	- index.head.md
+  - Gemfile
+  - Gemfile.lock
+  - LICENCE
+  - node_modules
+  - audiochart
+  - grab.sh
+  - clean.sh
+  - index.head.md
 include:
-	- .grunt
-	- _AudioChart.spec.js
+  - .grunt
+  - _AudioChart.spec.js
