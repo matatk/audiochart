@@ -1,15 +1,15 @@
 #!/bin/sh
 PROG=`basename $0`
-AC='audiochart'
+AC='audiochart.master'
 GRUNT='.grunt'
 LIB='lib'
 TEST='test'
 EXAMPLES='examples'
 ESLINTRC='.eslintrc.json'
-DOC_ROOT='doc'
+DOC='doc/public'
 
 echo "Removing existing stuff..."
-rm -rfv $GRUNT $LIB $TEST $EXAMPLES $DOC_ROOT
+rm -rfv $GRUNT $LIB $TEST $EXAMPLES $DOC
 
 if [ $PROG == 'grab.sh' ]; then
 	echo
@@ -20,12 +20,13 @@ if [ $PROG == 'grab.sh' ]; then
 	cd -
 	echo
 	echo "Coyping in needed things..."
+	mkdir -pv "$DOC" || exit 42
 	cp -R \
 		"$AC/$GRUNT" \
 		"$AC/$LIB" \
 		"$AC/$TEST" \
 		"$AC/$EXAMPLES" \
-		"$AC/$DOC_ROOT" \
-		.
+		"$AC/$DOC" \
+		. || exit 42
 	rm "$TEST/spec/$ESLINTRC" "$EXAMPLES/$ESLINTRC"
 fi
