@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>hello-world-tutorial.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>hello-world-tutorial.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>This uses the Google Charts API along with AudioChart.</p>
+<p>You can check out the finished <a href="http://matatk.agrip.org.uk/audiochart/examples/hello/">“hello, world” HTML file</a> to experience the actual chart (this is just the code that makes it tick).</p>
+<p>Note that you can also use AudioChart with JSON and HTML tables (there are <a href="http://matatk.agrip.org.uk/audiochart/examples/examples-gallery.html">examples</a> to demonstrate this).</p>
+<p>More details on working with Google Charts can be found in the <a href="https://developers.google.com/chart/">Google Charts documentation</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-meta">'use strict'</span>
+google.load(<span class="hljs-string">'visualization'</span>, <span class="hljs-string">'1.0'</span>, {<span class="hljs-string">'packages'</span>:[<span class="hljs-string">'corechart'</span>]})
+google.setOnLoadCallback(drawChart)
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">drawChart</span>(<span class="hljs-params"></span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h2 id="google-charts-bits">Google Charts Bits</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Create a new data table</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">var</span> data = <span class="hljs-keyword">new</span> google.visualization.DataTable()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Populate the table</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	data.addColumn(<span class="hljs-string">'string'</span>, <span class="hljs-string">'Top Secret Evil Project'</span>)
+	data.addColumn(<span class="hljs-string">'number'</span>, <span class="hljs-string">'Watermelons'</span>)
+	data.addRows([
+		[<span class="hljs-string">'Alpha'</span>,    <span class="hljs-number">293</span>],
+		[<span class="hljs-string">'Beta'</span>,     <span class="hljs-number">329</span>],
+		[<span class="hljs-string">'Gamma'</span>,    <span class="hljs-number">261</span>],
+		[<span class="hljs-string">'Delta'</span>,    <span class="hljs-number">130</span>],
+		[<span class="hljs-string">'Epsilon'</span>,  <span class="hljs-number">196</span>],
+		[<span class="hljs-string">'Zeta'</span>,     <span class="hljs-number">196</span>],
+	])</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Google Chart options</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">var</span> chartOptions = {
+		<span class="hljs-string">'title'</span>: <span class="hljs-string">'Evil Project Efficacy'</span>,
+		<span class="hljs-string">'curveType'</span>: <span class="hljs-string">'function'</span>
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Initialise (but do not yet actually draw) the chart</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">var</span> chart = <span class="hljs-keyword">new</span> google.visualization.LineChart(
+		<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'chart'</span>))</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Trigger an initial draw</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	resizeChart()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Handle resizing when the viewport size changes (<a href="http://stackoverflow.com/a/23594901">thanks asgallant of StackOverflow</a>)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resizeChart</span>(<span class="hljs-params"></span>) </span>{
+		chart.draw(data, chartOptions)
+	}
+
+	<span class="hljs-keyword">if</span> (<span class="hljs-built_in">document</span>.addEventListener) {
+		<span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">'resize'</span>, resizeChart)
+	} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">document</span>.attachEvent) {
+		<span class="hljs-built_in">window</span>.attachEvent(<span class="hljs-string">'onresize'</span>, resizeChart)
+	} <span class="hljs-keyword">else</span> {
+		<span class="hljs-built_in">window</span>.resize = resizeChart
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h2 id="audiochart-stuff">AudioChart Stuff</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Create a new <code>AudioChart</code> object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">var</span> ac = <span class="hljs-keyword">new</span> AudioChart({
+		<span class="hljs-string">'type'</span>: <span class="hljs-string">'google'</span>,      <span class="hljs-comment">// (see the docs)</span>
+		<span class="hljs-string">'data'</span>: data,          <span class="hljs-comment">// the GoogleDataTable</span>
+		<span class="hljs-string">'chart'</span>: chart,        <span class="hljs-comment">// the Google Chart object</span>
+		<span class="hljs-string">'duration'</span>: <span class="hljs-number">5000</span>,      <span class="hljs-comment">// milliseconds</span>
+		<span class="hljs-string">'frequencyLow'</span>: <span class="hljs-number">200</span>,   <span class="hljs-comment">// Hz</span>
+		<span class="hljs-string">'frequencyHigh'</span>: <span class="hljs-number">600</span>,  <span class="hljs-comment">// Hz</span>
+		<span class="hljs-string">'chartContainer'</span>: <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'chart'</span>)  <span class="hljs-comment">// HTMLElement e.g. HTMLDivElement</span>
+	})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Attach the <code>.playPause()</code> function to the <code>click</code> event handler of
+the <code>&lt;button&gt;</code> element on the HTML page.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'play'</span>).onclick = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+		ac.playPause()
+	}
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
