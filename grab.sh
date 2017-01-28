@@ -6,9 +6,10 @@ LIB='lib'
 TEST='test'
 EXAMPLES='examples'
 ESLINTRC='.eslintrc.json'
+DOC_ROOT='doc'
 
 echo "Removing existing stuff..."
-rm -rfv $GRUNT $LIB $TEST $EXAMPLES
+rm -rfv $GRUNT $LIB $TEST $EXAMPLES $DOC_ROOT
 
 if [ $PROG == 'grab.sh' ]; then
 	echo
@@ -19,6 +20,12 @@ if [ $PROG == 'grab.sh' ]; then
 	cd -
 	echo
 	echo "Coyping in needed things..."
-	cp -R "$AC/$GRUNT" "$AC/$LIB" "$AC/$TEST" "$AC/$EXAMPLES" .
+	cp -R \
+		"$AC/$GRUNT" \
+		"$AC/$LIB" \
+		"$AC/$TEST" \
+		"$AC/$EXAMPLES" \
+		"$AC/$DOC_ROOT" \
+		.
 	rm "$TEST/spec/$ESLINTRC" "$EXAMPLES/$ESLINTRC"
 fi
