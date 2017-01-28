@@ -1,6 +1,5 @@
 .DS_Store
 *.swp
-
 node_modules
 
 # Generated during a build
@@ -13,4 +12,4 @@ doc
 
 # These are from the gh-pages branch
 _site
-audiochart
+audiochart.master
