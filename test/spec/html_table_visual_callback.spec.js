@@ -1,5 +1,4 @@
 'use strict'
-/* global loadFixtures */
 
 describe('htmlTableVisualCallback', function() {
 	jasmine.getFixtures().fixturesPath = 'spec/'
