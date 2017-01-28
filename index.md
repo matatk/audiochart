@@ -46,7 +46,7 @@ Development
 
 Development is carried out in a [test-driven](http://en.wikipedia.org/wiki/Test-driven_development) manner.  A Gruntfile is provided to run the tests and automate things like linting and minification.  The `pre-commit` hook can be used to ensure only code that passes tests is committed (it does this by running Grunt).  You can make a symlink from the `.git/hooks/` directory to it and thus it (and the tests) will be run before you are asked for a commit message.
 
-[Unit tests can be run in-browser](http://matatk.agrip.org.uk/audiochart/test/) or via the Gruntfile (printing output to the terminal).  You can also view the [test coverage details](http://matatk.agrip.org.uk/audiochart/test/coverage/).  In addition, [internal API documentation](http://matatk.agrip.org.uk/audiochart/doc/public/) is available.
+[Unit tests can be run in-browser](http://matatk.agrip.org.uk/audiochart/test/) or via the Gruntfile (printing output to the terminal).  You can also view the [test coverage details](http://matatk.agrip.org.uk/audiochart/test/coverage/).  In addition, [internal API documentation](http://matatk.agrip.org.uk/audiochart/doc/internal/) is available.
 
 **Warning:** AudioChart is still fairly early in development, so the internal APIs are changing quite fast.
 

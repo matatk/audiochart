@@ -15,6 +15,8 @@ if [ $PROG == 'grab.sh' ]; then
 	echo
 	echo "Building AudioChart..."
 	cd $AC || exit 42
+	git fetch || exit 42
+	git pull || exit 42
 	npm install || exit 42
 	grunt || exit 42
 	cd -
@@ -34,5 +36,4 @@ if [ $PROG == 'grab.sh' ]; then
 	cp index.head.md index.md || exit 42
 	cat README.md | tail -n +8 >> index.md || exit 42
 	git rm --force README.md || exit 42
-	git add index.md || exit 42
 fi
