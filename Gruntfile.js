@@ -14,25 +14,31 @@ module.exports = function(grunt) {
 			testSpecs: 'test/spec/*.spec.js',
 			testVendor: 'test/vendor',
 			testCoverage: 'test/coverage',
-			sourceDir: 'src'
+			sourceDir: 'src',
+			lib: 'lib',
+			dotGrunt: '.grunt',
+			doc: 'doc',
+			docPublic: '<%= paths.doc %>/public',
+			docInternal: '<%= paths.doc %>/internal'
 		},
 
 		clean: {
-			lib: 'lib/',
+			lib: '<%= paths.lib %>',
 			testVendor: '<%= paths.testVendor %>',
 			testIndex: '<%= paths.test %>/index.html',
 			testCoverage: '<%= paths.testCoverage %>',
-			dotGrunt: '.grunt'
+			dotGrunt: '<%= paths.dotGrunt %>',
+			doc: '<%= paths.doc %>'
 		},
 
 		curl: {
 			jquery: {
 				src: 'http://code.jquery.com/jquery-2.2.3.min.js',
-				dest: '<%= paths.testVendor%>/jquery.js'
+				dest: '<%= paths.testVendor %>/jquery.js'
 			},
 			jasmineJquery: {
 				src: 'https://raw.githubusercontent.com/velesin/jasmine-jquery/2.1.1/lib/jasmine-jquery.js',
-				dest: '<%= paths.testVendor%>/jasmine-jquery.js'
+				dest: '<%= paths.testVendor %>/jasmine-jquery.js'
 			}
 		},
 
@@ -73,8 +79,8 @@ module.exports = function(grunt) {
 				options: {
 					beautify: false,
 					mangle: true,
-					banner: '/* <%= pkg.name %> ' +
-						'<%= grunt.template.today("yyyy-mm-dd") %>\n' +
+					banner: '/* <%= pkg.name %> <%= pkg.version %> - ' +
+						'<%= grunt.template.today("yyyy-mm-dd") %> - ' +
 						'<%= pkg.license %> licence */\n',
 					sourceMap: true,
 					enclose: {
@@ -89,13 +95,28 @@ module.exports = function(grunt) {
 		},
 
 		jsdoc: {
-			dist: {
-				src: ['src/audiochart.js'],
+			pub: {
+				src: ['<%= paths.sourceDir %>/<%= pkg.name %>.js'],
 				options: {
-					'destination': 'doc',
+					'destination': '<%= paths.docPublic %>',
+					'private': false,
+					'readme': 'README.md'
+				}
+			},
+			internal: {
+				src: ['<%= paths.sourceDir %>/<%= pkg.name %>.js'],
+				options: {
+					'destination': '<%= paths.docInternal %>',
 					'private': true,
 					'readme': 'README.md'
 				}
+			}
+		},
+
+		docco: {
+			src: ['examples/hello/hello-world-tutorial.js'],
+			options: {
+				output: 'examples/hello/'
 			}
 		},
 
@@ -113,7 +134,8 @@ module.exports = function(grunt) {
 		'eslint',
 		'jasmine',
 		'uglify',
-		'jsdoc'
+		'jsdoc',
+		'docco'
 	])
 
 	// This task allows us to quickly check if there has been a new relase
