@@ -1,9 +1,9 @@
-AudioChart Reference
-=====================
+AudioChart Options Reference
+=============================
 
 AudioChart options objects are standard JavaScript data structures (like JSON, but as they often include references to in-memory objects, they are not necessarily valid JSON).  This document explains all of the options that you can pass to AudioChart when using different source chart/data types, and gives an example options data structure for each source chart/data type.
 
-You can supply the AudioChart options object to AudioChart as shown in the [Google Charts "Hello, World" example](http://matatk.agrip.org.uk/audiochart/hello-world-tutorial.html).
+You can supply the AudioChart options object to AudioChart as shown in the [Google Charts "Hello, World" example](http://matatk.agrip.org.uk/audiochart/hello/).
 
 Standard Options
 -----------------
@@ -16,7 +16,7 @@ These must always be specified, regardless of the type the source chart/data.
    - "htmlTable"
  * **`duration` (integer):** the length of the audio rendering in milliseconds.
  * **`frequencyLow` (integer):** the lower bound of the frequency range to be used, in Hz.
- * **`frequencyHigh` (integer):** the uppoer bound of the frequency range to be used, in Hz.
+ * **`frequencyHigh` (integer):** the upper bound of the frequency range to be used, in Hz.
 
 Source Chart/Data Types and their Options
 ------------------------------------------
