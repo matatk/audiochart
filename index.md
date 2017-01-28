@@ -12,7 +12,7 @@ abstract: <p>Allows the user to explore charts on web pages using sound and the 
 ---
 <div id="chartContainer">
 	<div id="chart"></div>
-	<button id="play">Play</button>
+	<button id="play">Play or Pause</button>
 </div>
 
 AudioChart uses the Web Audio API, which has [great support amongst browsers, including Microsoft Edge](http://caniuse.com/audio-api), though is not (yet) supported by Internet Explorer.

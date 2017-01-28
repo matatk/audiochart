@@ -12,6 +12,6 @@ abstract: <p>Allows the user to explore charts on web pages using sound and the 
 ---
 <div id="chartContainer">
 	<div id="chart"></div>
-	<button id="play">Play</button>
+	<button id="play">Play or Pause</button>
 </div>
 
