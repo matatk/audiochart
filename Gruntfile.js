@@ -14,25 +14,31 @@ module.exports = function(grunt) {
 			testSpecs: 'test/spec/*.spec.js',
 			testVendor: 'test/vendor',
 			testCoverage: 'test/coverage',
-			sourceDir: 'src'
+			sourceDir: 'src',
+			lib: 'lib',
+			dotGrunt: '.grunt',
+			doc: 'doc',
+			docPublic: '<%= paths.doc %>/public',
+			docInternal: '<%= paths.doc %>/internal'
 		},
 
 		clean: {
-			lib: 'lib/',
+			lib: '<%= paths.lib %>',
 			testVendor: '<%= paths.testVendor %>',
 			testIndex: '<%= paths.test %>/index.html',
 			testCoverage: '<%= paths.testCoverage %>',
-			dotGrunt: '.grunt'
+			dotGrunt: '<%= paths.dotGrunt %>',
+			doc: '<%= paths.doc %>'
 		},
 
 		curl: {
 			jquery: {
 				src: 'http://code.jquery.com/jquery-2.2.3.min.js',
-				dest: '<%= paths.testVendor%>/jquery.js'
+				dest: '<%= paths.testVendor %>/jquery.js'
 			},
 			jasmineJquery: {
 				src: 'https://raw.githubusercontent.com/velesin/jasmine-jquery/2.1.1/lib/jasmine-jquery.js',
-				dest: '<%= paths.testVendor%>/jasmine-jquery.js'
+				dest: '<%= paths.testVendor %>/jasmine-jquery.js'
 			}
 		},
 
@@ -90,17 +96,17 @@ module.exports = function(grunt) {
 
 		jsdoc: {
 			pub: {
-				src: ['src/audiochart.js'],
+				src: ['<%= paths.sourceDir %>/<%= pkg.name %>.js'],
 				options: {
-					'destination': 'doc/public',
+					'destination': '<%= paths.docPublic %>',
 					'private': false,
 					'readme': 'README.md'
 				}
 			},
 			internal: {
-				src: ['src/audiochart.js'],
+				src: ['<%= paths.sourceDir %>/<%= pkg.name %>.js'],
 				options: {
-					'destination': 'doc/internal',
+					'destination': '<%= paths.docInternal %>',
 					'private': true,
 					'readme': 'README.md'
 				}
