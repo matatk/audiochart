@@ -46,7 +46,7 @@
         <article><h1>AudioChart</h1><p><a href="https://travis-ci.org/matatk/audiochart"><img src="https://travis-ci.org/matatk/audiochart.svg?branch=gh-pages" alt="Build Status"></a></p>
 <p>Allows the user to explore charts on web pages using sound and the keyboard rather than, or in conjunction with, visually and with the mouse.  The code can easily be added to any page containing charts.</p>
 <p>AudioChart uses the Web Audio API, which has <a href="http://caniuse.com/audio-api">great support amongst browsers, including Microsoft Edge</a>, though is not (yet) supported by Internet Explorer.</p>
-<p>Thanks to <a href="http://paciellogroup.com">The Paciello Group</a> for allowing me to share this with you, and to <a href="http://sonification.de/handbook/">The Sonification Handbook</a> for the research behind it.</p>
+<p>Thanks to <a href="http://sonification.de/handbook/">The Sonification Handbook</a> for the research behind it and to <a href="http://paciellogroup.com">The Paciello Group</a> for allowing me to share this with you.</p>
 <h2>Use Cases and Examples</h2><p>What does it let your users do?</p>
 <ul>
 <li>Play an auditory version of the data represented by a Google Chart, JSON fragment or HTML table.</li>
@@ -60,11 +60,12 @@
 <p>The <a href="http://matatk.agrip.org.uk/audiochart/examples/gallery/">examples gallery</a> covers using AudioChart with Google Charts, JSON and HTML tables.</p>
 <h2>Tutorial and Documentation</h2><ul>
 <li>The <a href="http://matatk.agrip.org.uk/audiochart/examples/hello/">&quot;Hello, World&quot; AudioChart and Google Charts tutorial</a> demonstrates how to get started.</li>
-<li><a href="REFERENCE.md">AudioChart options reference</a></li>
+<li><a href="https://github.com/matatk/audiochart/blob/master/REFERENCE.md">AudioChart options reference</a></li>
 <li><a href="http://matatk.agrip.org.uk/audiochart/doc/public/">Public API documentation</a></li>
 </ul>
-<h2>Development</h2><p>A Gruntfile is provided to run the tests and automate things like linting and minification.  <a href="http://matatk.agrip.org.uk/audiochart/test/">Unit tests can be run in-browser</a> or via the Gruntfile, printing output to the terminal.  You can also view the <a href="http://matatk.agrip.org.uk/audiochart/test/coverage/">test coverage details</a>.</p>
-<p>Development is carried out in a <a href="http://en.wikipedia.org/wiki/Test-driven_development">test-driven</a> manner.  The <code>pre-commit</code> hook can be used to ensure only code that passes tests is committed.  You can make a symlink from the <code>.git/hooks/</code> directory to it and thus it (and the tests) will be run before you are asked for a commit message.</p>
+<h2>Development</h2><p>Development is carried out in a <a href="http://en.wikipedia.org/wiki/Test-driven_development">test-driven</a> manner.  A Gruntfile is provided to run the tests and automate things like linting and minification.  The <code>pre-commit</code> hook can be used to ensure only code that passes tests is committed (it does this by running Grunt).  You can make a symlink from the <code>.git/hooks/</code> directory to it and thus it (and the tests) will be run before you are asked for a commit message.</p>
+<p><a href="http://matatk.agrip.org.uk/audiochart/test/">Unit tests can be run in-browser</a> or via the Gruntfile (printing output to the terminal).  You can also view the <a href="http://matatk.agrip.org.uk/audiochart/test/coverage/">test coverage details</a>.  In addition, <a href="http://matatk.agrip.org.uk/audiochart/doc/public/">internal API documentation</a> is available.</p>
+<p><strong>Warning:</strong> AudioChart is still fairly early in development, so the internal APIs are changing quite fast.</p>
 <h3>Setting up for development</h3><p>The build process uses Grunt and therefore also Node.  You can get set up for development as follows (most of these instructions require the use of a command line).</p>
 <ol>
 <li>Install <a href="https://nodejs.org/">Node</a> (if you're a Mac user doing this via <a href="http://brew.sh">Homebrew</a> is recommended: <code>brew install node</code>).</li>
@@ -74,10 +75,7 @@
 <li>Running <code>grunt</code> will lint the code, run the tests and make a minified production version.</li>
 </ol>
 <p><strong>Windows users:</strong> this has not yet been extensively tested on Windows, but it doesn't use anything platform-specific, so should work fine. Please file a bug if you encounter any problems.</p>
-<h3>Documentation</h3><ul>
-<li><a href="http://matatk.agrip.org.uk/audiochart/doc/public/">Internal API documentation</a></li>
-</ul>
-<h2>Future Work Ideas</h2><p>Patches for and feedback on the following are welcome!</p>
+<h2>Future Work Ideas</h2><p>Feedback on the following is welcome.</p>
 <ul>
 <li>Play speed/duration.</li>
 <li>Support <a href="https://github.com/GoogleWebComponents/google-chart">Google Chart Web Component (Polymer)</a> charts.</li>
@@ -109,7 +107,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Jan 28 2017 18:50:20 GMT+0000 (GMT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Jan 28 2017 19:06:26 GMT+0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>

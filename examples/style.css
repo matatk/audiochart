@@ -32,27 +32,20 @@ header {
 	text-align: center;
 }
 
-/* In order to have seamless background fills */
-#hackContainer, #intro {
+/* In order to have seamless background fills, all content is wrapped */
+.wrapper {
 	margin: 0;
-}
-
-/* Now restore some sensible spacing around the content */
-#intro {
-	padding: 1em;
-}
-#hackContainer {
 	padding: 0.5em;
 }
 
-#intro {
-	background-color: #FFA;
+/* Now restore some sensible spacing around the content */
+.wrapper {
+	padding: 1em;
 }
 
-#chart {
-	/* Thanks to http://stackoverflow.com/a/17672214 */
-	width: 95vw;
-	height: 50vw;
+/* The abstract, if present, should be highlighted */
+.abstract {
+	background-color: #FFA;
 }
 
 
@@ -66,43 +59,14 @@ header {
 		font-size: 1.2em;
 	}
 
-	#intro {
-		padding: 1.5em;
-	}
-	#hackContainer {
+	.wrapper {
 		padding: 1em;
-	}
-}
-
-/* A slightly more exciting layout with chart floated,
-likely for landscape tablets and desktops */
-@media screen and (min-width: 60em) {
-	#chart {
-		width: 45vw;
-		height: 25vw;
-	}
-
-	#chartContainer {
-		float: right;
-		border: 1px solid black;
-		padding: 1em;
-		margin-left: 1em;
-		margin-bottom: 1em;
-		margin-top: 1em;
-	}
-
-	#chartContainer button {
-		float: right;
 	}
 }
 
 /* Wide margins for larger displays */
 @media screen and (min-width: 75em) {
-	#intro {
-		padding-left: 10vw;
-		padding-right: 10vw;
-	}
-	#hackContainer {
+	.wrapper {
 		padding-left: 10vw;
 		padding-right: 10vw;
 	}
