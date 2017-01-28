@@ -5,7 +5,7 @@ AudioChart
 
 Allows the user to explore charts on web pages using sound and the keyboard rather than, or in conjunction with, visually and with the mouse.  The code can easily be added to any page containing charts.
 
-AudioChart uses the Web Audio API, which has [great support amongst browsers, including Microsoft Edge](http://caniuse.com/audio-api), though is not (yet) supported by Internet Explorer.  
+AudioChart uses the Web Audio API, which has [great support amongst browsers, including Microsoft Edge](http://caniuse.com/audio-api), though is not (yet) supported by Internet Explorer.
 
 Thanks to [The Paciello Group](http://paciellogroup.com) for allowing me to share this with you, and to [The Sonification Handbook](http://sonification.de/handbook/) for the research behind it.
 
@@ -22,12 +22,12 @@ What sort of charts/data does it work with?
  * JSON (the format is detailed in the examples gallery).
  * HTML tables.
 
-The [examples gallery](http://matatk.agrip.org.uk/audiochart/examples/examples-gallery.html) covers using AudioChart with Google Charts, JSON and HTML tables.
+The [examples gallery](http://matatk.agrip.org.uk/audiochart/examples/gallery/) covers using AudioChart with Google Charts, JSON and HTML tables.
 
 Tutorial and Documentation
 ---------------------------
 
-- The ["Hello, World" AudioChart and Google Charts tutorial](http://matatk.agrip.org.uk/audiochart/examples/hello-world-tutorial.html) demonstrates how to get started.
+- The ["Hello, World" AudioChart and Google Charts tutorial](http://matatk.agrip.org.uk/audiochart/examples/hello/) demonstrates how to get started.
 - [AudioChart options reference](REFERENCE.md)
 - [Public API documentation](http://matatk.agrip.org.uk/audiochart/doc/public/)
 
