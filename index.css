@@ -1,0 +1,25 @@
+#chart {
+	/* Thanks to http://stackoverflow.com/a/17672214 */
+	width: 95vw;
+	height: 50vw;
+}
+
+@media screen and (min-width: 60em) {
+	#chart {
+		width: 45vw;
+		height: 25vw;
+	}
+
+	#chartContainer {
+		float: right;
+		border: 1px solid black;
+		padding: 1em;
+		margin-left: 1em;
+		margin-bottom: 1em;
+		margin-top: 1em;
+	}
+
+	#chartContainer button {
+		float: right;
+	}
+}

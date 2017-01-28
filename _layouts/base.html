@@ -5,7 +5,10 @@
 		<title>{{ page.title }}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="examples/style.css">
-		{% for js in page.extra-script %}
+		{% for css in page.extra-style %}
+		<link rel="stylesheet" href="{{ css }}">
+		{% endfor %}
+		{% for js in page.head-script %}
 		<script src="{{ js }}"></script>
 		{% endfor %}
 	</head>
@@ -21,6 +24,8 @@
 				{{ content }}
 			</div>
 		</main>
+		{% for js in page.body-script %}
 		<script src="{{ page.body-script }}"></script>
+		{% endfor %}
 	</body>
 </html>

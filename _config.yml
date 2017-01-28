@@ -1,16 +1,17 @@
-exclude:
- - Gemfile
- - Gemfile.lock
- - LICENCE
- - node_modules
- - audiochart
- - grab.sh
- - clean.sh
- - index.head.md
-include:
- - .grunt
- - _AudioChart.spec.js
-
 # GitHub defaults
 safe: true
 lsi: false
+
+# Site settings
+exclude:
+	- Gemfile
+	- Gemfile.lock
+	- LICENCE
+	- node_modules
+	- audiochart
+	- grab.sh
+	- clean.sh
+	- index.head.md
+include:
+	- .grunt
+	- _AudioChart.spec.js
