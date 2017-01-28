@@ -113,6 +113,13 @@ module.exports = function(grunt) {
 			}
 		},
 
+		docco: {
+			src: ['examples/hello/hello-world-tutorial.js'],
+			options: {
+				output: 'examples/hello/'
+			}
+		},
+
 		open: {
 			jasmineJqueryReleases: {
 				path: 'https://github.com/velesin/jasmine-jquery/releases'
@@ -127,7 +134,8 @@ module.exports = function(grunt) {
 		'eslint',
 		'jasmine',
 		'uglify',
-		'jsdoc'
+		'jsdoc',
+		'docco'
 	])
 
 	// This task allows us to quickly check if there has been a new relase
