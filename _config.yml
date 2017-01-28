@@ -6,6 +6,7 @@ exclude:
  - audiochart
  - grab.sh
  - clean.sh
+ - index.head.md
 include:
  - .grunt
  - _AudioChart.spec.js

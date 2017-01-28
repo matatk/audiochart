@@ -14,7 +14,13 @@
 			<h1>{{ page.title }}</h1>
 		</header>
 		<main role="main">
-		{{ content }}
+			<div class="abstract wrapper">
+				{{ page.abstract }}
+			</div>
+			<div class="wrapper">
+				{{ content }}
+			</div>
 		</main>
+		<script src="{{ page.body-script }}"></script>
 	</body>
 </html>
