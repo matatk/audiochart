@@ -12,10 +12,18 @@ echo "Removing existing stuff..."
 rm -rfv $GRUNT $LIB $TEST $EXAMPLES $DOC_ROOT
 
 if [ $PROG == 'grab.sh' ]; then
+	if [ ! -f "$AC/package.json" ]; then
+		echo
+		echo "Checking out submodule..."
+		git submodule init || exit 42
+		git submodule update --remote || exit 42
+		cd $AC || exit 42
+		git checkout master || exit 42
+		cd - || exit 42
+	fi
 	echo
 	echo "Building AudioChart..."
 	cd $AC || exit 42
-	git fetch || exit 42
 	git pull || exit 42
 	npm install || exit 42
 	grunt || exit 42
