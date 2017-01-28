@@ -3,7 +3,7 @@ AudioChart Options Reference
 
 AudioChart options objects are standard JavaScript data structures (like JSON, but as they often include references to in-memory objects, they are not necessarily valid JSON).  This document explains all of the options that you can pass to AudioChart when using different source chart/data types, and gives an example options data structure for each source chart/data type.
 
-You can supply the AudioChart options object to AudioChart as shown in the [Google Charts "Hello, World" example](http://matatk.agrip.org.uk/audiochart/hello/).
+You can supply the AudioChart options object to AudioChart as shown in the [Google Charts "Hello, World" example](http://matatk.agrip.org.uk/audiochart/examples/hello/).
 
 Standard Options
 -----------------
@@ -23,7 +23,7 @@ Source Chart/Data Types and their Options
 
 ### AudioChart using Google Chart Tools
 
-The steps to create the [Google Charts "Hello, World" example](http://matatk.agrip.org.uk/audiochart/hello-world-tutorial.html) are detailed in the [README](https://github.com/matatk/audiochart/blob/gh-pages/README.md).
+The steps to create the [Google Charts "Hello, World" example](http://matatk.agrip.org.uk/audiochart/examples/hello/) are detailed on its page and the commented code documentation linked from that page.
 
  * **`type` (string):** "google"
  * **`data` (object):** the [`GoogleDataTable`](https://developers.google.com/chart/interactive/docs/reference#DataTable) behind the chart.
@@ -44,7 +44,7 @@ The steps to create the [Google Charts "Hello, World" example](http://matatk.agr
 
 ### AudioChart using JSON Data
 
-There is [a JSON example](http://matatk.agrip.org.uk/audiochart/examples-gallery.html#json) in the examples gallery.
+There is [a JSON example](http://matatk.agrip.org.uk/audiochart/examples/gallery/#json) in the examples gallery.
 
  * **`type` (string):** "json"
  * **`data` (JSON string or object):** The JSON fragment, as a string or the JSON's root object.
@@ -63,7 +63,7 @@ There is [a JSON example](http://matatk.agrip.org.uk/audiochart/examples-gallery
 
 ### HTML Table Options
 
-There is [an HTML example](http://matatk.agrip.org.uk/audiochart/examples-gallery.html#table) in the examples gallery.
+There is [an HTML example](http://matatk.agrip.org.uk/audiochart/examples/gallery/#table) in the examples gallery.
 
  * **`type` (string):** "htmlTable"
  * **`table` (object):** the table element's in-memory DOM object.
