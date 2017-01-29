@@ -10,16 +10,15 @@
 		height: 25vw;
 	}
 
-	#chartContainer {
+	#chart-container {
 		float: right;
-		border: 1px solid black;
 		padding: 1em;
 		margin-left: 1em;
 		margin-bottom: 1em;
 		margin-top: 1em;
 	}
 
-	#chartContainer button {
+	#chart-container button {
 		float: right;
 	}
 }
