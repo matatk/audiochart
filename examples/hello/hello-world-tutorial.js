@@ -2,7 +2,7 @@
 //
 // You can check out the finished ["hello, world" HTML file](http://matatk.agrip.org.uk/audiochart/examples/hello/) to experience the actual chart (this is just the code that makes it tick).
 //
-// Note that you can also use AudioChart with JSON and HTML tables (there are [examples](http://matatk.agrip.org.uk/audiochart/examples/) to demonstrate this).
+// Note that you can also use AudioChart with JSON and HTML tables (there are [examples](http://matatk.agrip.org.uk/audiochart/examples/gallery/) to demonstrate this).
 //
 // More details on working with Google Charts can be found in the [Google Charts documentation](https://developers.google.com/chart/).
 'use strict'
