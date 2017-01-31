@@ -19,7 +19,10 @@ module.exports = function(grunt) {
 			dotGrunt: '.grunt',
 			doc: 'doc',
 			docPublic: '<%= paths.doc %>/public',
-			docInternal: '<%= paths.doc %>/internal'
+			docInternal: '<%= paths.doc %>/internal',
+			doccoCss: 'examples/hello/docco.css',
+			doccoCssWithStringsReplaced: 'examples/hello/docco.css.tmp',
+			doccoPublic: 'examples/hello/public'
 		},
 
 		clean: {
@@ -28,7 +31,8 @@ module.exports = function(grunt) {
 			testIndex: '<%= paths.test %>/index.html',
 			testCoverage: '<%= paths.testCoverage %>',
 			dotGrunt: '<%= paths.dotGrunt %>',
-			doc: '<%= paths.doc %>'
+			doc: '<%= paths.doc %>',
+			docco: '<%= paths.doccoPublic %>'
 		},
 
 		curl: {
@@ -80,8 +84,8 @@ module.exports = function(grunt) {
 					beautify: false,
 					mangle: true,
 					banner: '/* <%= pkg.name %> <%= pkg.version %> - ' +
-						'<%= grunt.template.today("yyyy-mm-dd") %> - ' +
-						'<%= pkg.license %> licence */\n',
+					'<%= grunt.template.today("yyyy-mm-dd") %> - ' +
+					'<%= pkg.license %> licence */\n',
 					sourceMap: true,
 					enclose: {
 						'window': 'exports'
@@ -89,7 +93,7 @@ module.exports = function(grunt) {
 				},
 				files: {
 					'lib/<%= pkg.name %>.min.js':
-						'<%= paths.sourceDir %>/*.js'
+					'<%= paths.sourceDir %>/*.js'
 				}
 			}
 		},
@@ -116,7 +120,39 @@ module.exports = function(grunt) {
 		docco: {
 			src: ['examples/hello/hello-world-tutorial.js'],
 			options: {
-				output: 'examples/hello/'
+				output: 'examples/hello/',
+				layout: 'classic'
+			}
+		},
+
+		'string-replace': {
+			all: {
+				files: [{
+					src: '<%= paths.doccoCss %>',
+					dest: '<%= paths.doccoCssWithStringsReplaced %>'
+				}],
+				options: {
+					replacements: [{
+						pattern: /f5f5ff/ig,
+						replacement: 'ffd'
+					}, {
+						pattern: "'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif",
+						replacement: 'Verdana, sans-serif'
+					}, {
+						pattern: '#261a3b;',
+						replacement: 'auto'
+					}, {
+						pattern: '#261a3b;',
+						replacement: 'auto'
+					}]
+				}
+			}
+		},
+
+		move: {
+			'docco-css': {
+				src: '<%= paths.doccoCssWithStringsReplaced %>',
+				dest: '<%= paths.doccoCss %>'
 			}
 		},
 
@@ -135,7 +171,10 @@ module.exports = function(grunt) {
 		'jasmine',
 		'uglify',
 		'jsdoc',
-		'docco'
+		'docco',
+		'string-replace',
+		'clean:docco',
+		'move:docco-css'
 	])
 
 	// This task allows us to quickly check if there has been a new relase
