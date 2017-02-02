@@ -5,7 +5,6 @@ GRUNT='.grunt'
 LIB='lib'
 TEST='test'
 EXAMPLES='examples'
-EXAMPLES_DOCCO_CSS='examples/hello/docco.css'
 EXAMPLES_DOCCO_FONTS='examples/hello/public'
 ESLINTRC='.eslintrc.json'
 DOC_ROOT='doc'
@@ -41,7 +40,7 @@ if [ $PROG == 'grab.sh' ]; then
 		. || exit 42
 	echo "Removing some development/unused files..."
 	rm -fv "$TEST/spec/$ESLINTRC" "$EXAMPLES/$ESLINTRC" || exit 42
-	rm -rfv "$EXAMPLES_DOCCO_CSS" "$EXAMPLES_DOCCO_FONTS" || exit 42
+	rm -rfv "$EXAMPLES_DOCCO_FONTS" || exit 42
 	echo
 	echo Updating index.md from README.md in master branch...
 	git checkout master README.md || exit 42
