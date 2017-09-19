@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2>
-            <span class="ancestors"><a href="module-audiochart.html">audiochart</a>~</span>Player</h2>
+        <h2><span class="attribs"><span class="type-signature">(private) </span></span>
+            <span class="ancestors"><a href="module-audiochart.html">audiochart</a>~</span>Player<span class="signature">(duration, data, pitchMapper, sounder, visualCallback)</span><span class="type-signature"></span></h2>
         
     
 </header>
@@ -41,7 +41,9 @@
 
     
 
+    
     <h4 class="name" id="Player"><span class="type-signature">(private) </span>new Player<span class="signature">(duration, data, pitchMapper, sounder, visualCallback)</span><span class="type-signature"></span></h4>
+    
 
     
 
@@ -233,7 +235,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line328">line 328</a>
+        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line329">line 329</a>
     </li></ul></dd>
     
 
@@ -259,6 +261,8 @@
 
 
 
+
+
     
     </div>
 
@@ -268,7 +272,9 @@
 
     
 
-     
+    
+
+    
 
     
 
@@ -282,7 +288,9 @@
 
     
 
+    
     <h4 class="name" id="_pause"><span class="type-signature"></span>_pause<span class="signature">()</span><span class="type-signature"></span></h4>
+    
 
     
 
@@ -335,7 +343,7 @@ the pause was triggered.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line457">line 457</a>
+        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line465">line 465</a>
     </li></ul></dd>
     
 
@@ -344,7 +352,16 @@ the pause was triggered.
     
 
     
+    <dt class="tag-todo">To Do:</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li>feature/object to stop/fade the sound after n seconds?</li>
+        </ul>
+    </dd>
+    
 </dl>
+
+
 
 
 
@@ -366,15 +383,18 @@ the pause was triggered.
 
     
 
+    
     <h4 class="name" id="_play"><span class="type-signature"></span>_play<span class="signature">()</span><span class="type-signature"></span></h4>
+    
 
     
 
 
 
 <div class="description">
-    Sets up a recurring function to update the sound (and, optionally,
-visual callback) at an interval dependant on the number of data.
+    Resets play state and sets up a recurring function to update the sound
+(and, optionally, visual callback) at an interval dependant on the
+number of data.
 </div>
 
 
@@ -418,7 +438,7 @@ visual callback) at an interval dependant on the number of data.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line382">line 382</a>
+        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line383">line 383</a>
     </li></ul></dd>
     
 
@@ -444,12 +464,103 @@ visual callback) at an interval dependant on the number of data.
 
 
 
+
+
         
             
 
     
 
-    <h4 class="name" id="_playCore"><span class="type-signature"></span>_playCore<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    <h4 class="name" id="_playLoop"><span class="type-signature"></span>_playLoop<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Update state and set _playOne() to run regularly, to render the sound
+(and optional visual cursor movement).
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line397">line 397</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="_playOne"><span class="type-signature"></span>_playOne<span class="signature">()</span><span class="type-signature"></span></h4>
+    
 
     
 
@@ -502,7 +613,7 @@ datum as the playback occurs.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line410">line 410</a>
+        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line436">line 436</a>
     </li></ul></dd>
     
 
@@ -528,20 +639,26 @@ datum as the playback occurs.
 
 
 
+
+
         
             
 
     
 
-    <h4 class="name" id="_startPlaying"><span class="type-signature"></span>_startPlaying<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    <h4 class="name" id="_playOneWrapper"><span class="type-signature"></span>_playOneWrapper<span class="signature">()</span><span class="type-signature"></span></h4>
+    
 
     
 
 
 
 <div class="description">
-    Set up _playCore() to run regularly, to render the sound (and optional
-visual cursor movement).
+    Firefox and Chrome both seem to handle running `_playOne()` with an
+interval of ~5ms fine, but Safari really lags when doing so, so here is
+an unfortunately hacky workaround untill I'm better able to understand
+what's going on.
 </div>
 
 
@@ -585,7 +702,7 @@ visual cursor movement).
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line396">line 396</a>
+        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line418">line 418</a>
     </li></ul></dd>
     
 
@@ -611,20 +728,23 @@ visual cursor movement).
 
 
 
+
+
         
             
 
     
 
+    
     <h4 class="name" id="playPause"><span class="type-signature"></span>playPause<span class="signature">()</span><span class="type-signature"></span></h4>
+    
 
     
 
 
 
 <div class="description">
-    Main entry point. Set up and start playing.
-If we have already been playing
+    Main entry point; manages state.
 </div>
 
 
@@ -694,6 +814,8 @@ If we have already been playing
 
 
 
+
+
         
     
 
@@ -716,7 +838,7 @@ If we have already been playing
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Thu Feb 02 2017 08:14:24 GMT+0000 (GMT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Sep 19 2017 23:59:25 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>
