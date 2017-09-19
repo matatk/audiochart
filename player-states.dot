@@ -1,0 +1,8 @@
+digraph player_states {
+	rankdir=LR
+	"ready" -> "playing";
+	"playing" -> "finished";
+	"playing" -> "paused";
+	"paused" -> "playing";
+	"finished" -> "playing";
+}

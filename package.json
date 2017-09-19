@@ -14,7 +14,7 @@
     "grunt-docco": "~0.5",
     "grunt-eslint": "~20.0",
     "grunt-if-missing": "~1.0",
-    "grunt-jsdoc": "~2.1",
+    "grunt-jsdoc": "github:matatk/grunt-jsdoc",
     "grunt-move": "~0.1",
     "grunt-open": "~0.2",
     "grunt-string-replace": "~1.3",
