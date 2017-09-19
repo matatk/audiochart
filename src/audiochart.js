@@ -300,6 +300,7 @@ var WebAudioSounder = (function() {
 	 * Start the oscillator
 	 */
 	WebAudioSounder.prototype.start = function() {
+		// Oscillators cannot be re-used
 		this.oscillator = this.context.createOscillator()
 		this.oscillator.connect(this.context.destination)
 		this.oscillator.start(0)
@@ -353,8 +354,7 @@ var Player = (function() {
 	}
 
 	/**
-	 * Main entry point. Set up and start playing.
-	 * If we have already been playing
+	 * Main entry point; manages state.
 	 */
 	Player.prototype.playPause = function() {
 		switch (this._state) {
@@ -365,7 +365,7 @@ var Player = (function() {
 				this._pause()
 				break
 			case 'paused':
-				this._startPlaying()
+				this._playLoop()
 				break
 			case 'finished':
 				this._play()
@@ -376,48 +376,46 @@ var Player = (function() {
 	}
 
 	/**
-	 * Sets up a recurring function to update the sound (and, optionally,
-	 * visual callback) at an interval dependant on the number of data.
+	 * Resets play state and sets up a recurring function to update the sound
+	 * (and, optionally, visual callback) at an interval dependant on the
+	 * number of data.
 	 */
 	Player.prototype._play = function() {
-		this.startTime = new Date()
+		// this.startTime = new Date()
 		this.sounder.start(0)
 
 		this.playIndex = 0
 		this.skippedCalls = 0
 
-		this._startPlaying()
+		this._playLoop()
 	}
 
 	/**
-	 * Set up _playCore() to run regularly, to render the sound (and optional
-	 * visual cursor movement).
+	 * Update state and set _playOne() to run regularly, to render the sound
+	 * (and optional visual cursor movement).
 	 */
-	Player.prototype._startPlaying = function() {
+	Player.prototype._playLoop = function() {
 		this._state = 'playing'
-		this._playCore()  // so that it starts immediately
+		this._playOne()  // so that it starts immediately
 		var that = this
 		this.intervalID = setInterval(function() {
-			that._playCore()
+			that._playOneWrapper()
 		}, this.interval)
 	}
 
 	/**
-	 * This is where the sound is actually played.  If a visual callback was
-	 * specified, this also coordinates the visual highlighting of the current
-	 * datum as the playback occurs.
+	 * Firefox and Chrome both seem to handle running `_playOne()` with an
+	 * interval of ~5ms fine, but Safari really lags when doing so, so here is
+	 * an unfortunately hacky workaround untill I'm better able to understand
+	 * what's going on.
+	 *
+	 * @todo: this may only apply to Google charts visual callbacks.
+	 *
+	 * @todo: ascertain if it's worth changing frequency at <10ms intervals;
+	 * if not then the incoming data should be filtered in some way,
+	 * thus negating this issue.
 	 */
-	Player.prototype._playCore = function() {
-		// Firefox and Chrome both seem to handle running this function
-		// with an interval of ~5ms fine, but Safari really lags when
-		// doing so, so here is an unfortunately hacky workaround untill
-		// I'm better able to understand what's going on.
-		//
-		// TODO: this may only apply to Google charts visual callbacks
-		//
-		// TODO: ascertain if it's worth changing frequency at <10ms
-		//       intervals; if not then the incoming data should be
-		//       filtered in some way, thus negating this issue.
+	Player.prototype._playOneWrapper = function() {
 		if (isProbablySafari
 			&& this.interval < 10
 			&& this.playIndex !== this.seriesMaxIndex
@@ -427,6 +425,15 @@ var Player = (function() {
 			return
 		}
 
+		this._playOne()
+	}
+
+	/**
+	 * This is where the sound is actually played.  If a visual callback was
+	 * specified, this also coordinates the visual highlighting of the current
+	 * datum as the playback occurs.
+	 */
+	Player.prototype._playOne = function() {
 		if (this.visualCallback !== null) {
 			this.visualCallback(0, this.playIndex)
 		}
@@ -453,6 +460,7 @@ var Player = (function() {
 	 * Temporarily pause the rendering of the chart.
 	 * This inherently keeps the sound going at the frequency it was at when
 	 * the pause was triggered.
+	 * @todo feature/object to stop/fade the sound after n seconds?
 	 */
 	Player.prototype._pause = function() {
 		clearInterval(this.intervalID)
@@ -466,7 +474,7 @@ var Player = (function() {
 			this.playIndex = 0  // TODO test limiting
 		}
 		if (this._state === 'paused') {
-			this._playCore()
+			this._playOne()
 		}
 	}
 
@@ -477,7 +485,7 @@ var Player = (function() {
 			this.playIndex = this.seriesMaxIndex  // TODO test limiting
 		}
 		if (this._state === 'paused') {
-			this._playCore()
+			this._playOne()
 		}
 	}
 

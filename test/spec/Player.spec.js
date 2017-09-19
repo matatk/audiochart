@@ -189,7 +189,7 @@ var mixinDataWrapperCore = function(message, TestDataClass, testDuration, testCa
 
 		it('continues playing after a pause', function() {
 			spyOn(player, '_play').and.callThrough()
-			spyOn(player, '_startPlaying').and.callThrough()
+			spyOn(player, '_playLoop').and.callThrough()
 			spyOn(player, '_pause').and.callThrough()
 			player.playPause()
 			jasmine.clock().tick(testDuration / 2)
@@ -197,7 +197,7 @@ var mixinDataWrapperCore = function(message, TestDataClass, testDuration, testCa
 			jasmine.clock().tick(testDuration / 4)
 			player.playPause()
 			expect(player._play).toHaveBeenCalledTimes(1)
-			expect(player._startPlaying).toHaveBeenCalledTimes(2)
+			expect(player._playLoop).toHaveBeenCalledTimes(2)
 			expect(player._pause).toHaveBeenCalledTimes(1)
 		})
 
@@ -218,13 +218,13 @@ var mixinDataWrapperCore = function(message, TestDataClass, testDuration, testCa
 		})
 
 		it('updates the sound (and visual cursor) when stepped backward whilst paused', function() {
-			spyOn(player, '_playCore').and.callThrough()
+			spyOn(player, '_playOne').and.callThrough()
 			player.playPause()
 			jasmine.clock().tick(testDuration / 10)
 			player.playPause()
-			var numberOfTimesPlayCoreCalled = player._playCore.calls.count()
+			var numberOfTimesPlayCoreCalled = player._playOne.calls.count()
 			player.stepBackward()
-			var steppedNumberOfTimesPlayCoreCalled = player._playCore.calls.count()
+			var steppedNumberOfTimesPlayCoreCalled = player._playOne.calls.count()
 			expect(steppedNumberOfTimesPlayCoreCalled).toBe(
 				numberOfTimesPlayCoreCalled + 1)
 		})
@@ -238,13 +238,13 @@ var mixinDataWrapperCore = function(message, TestDataClass, testDuration, testCa
 		})
 
 		it('updates the sound (and visual cursor) when stepped forward whilst paused', function() {
-			spyOn(player, '_playCore').and.callThrough()
+			spyOn(player, '_playOne').and.callThrough()
 			player.playPause()
 			jasmine.clock().tick(testDuration / 10)
 			player.playPause()
-			var numberOfTimesPlayCoreCalled = player._playCore.calls.count()
+			var numberOfTimesPlayCoreCalled = player._playOne.calls.count()
 			player.stepForward()
-			var steppedNumberOfTimesPlayCoreCalled = player._playCore.calls.count()
+			var steppedNumberOfTimesPlayCoreCalled = player._playOne.calls.count()
 			expect(steppedNumberOfTimesPlayCoreCalled).toBe(
 				numberOfTimesPlayCoreCalled + 1)
 		})
