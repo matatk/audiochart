@@ -86,7 +86,9 @@ module.exports = function(grunt) {
 					banner: '/* <%= pkg.name %> <%= pkg.version %> - ' +
 					'<%= grunt.template.today("yyyy-mm-dd") %> - ' +
 					'<%= pkg.license %> licence */\n',
-					sourceMap: true,
+					sourceMap: {
+						includeSources: true
+					},
 					enclose: {
 						'window': 'exports'
 					}
