@@ -17,24 +17,9 @@
   "devDependencies": {
     "docco": "~0.7.0",
     "eslint": "~4.7.1",
-    "grunt": "~1.0",
-    "grunt-contrib-clean": "~1.1",
-    "grunt-contrib-jasmine": "~1.1",
-    "grunt-contrib-uglify": "~3.1",
-    "grunt-curl": "~2.2",
-    "grunt-docco": "~0.5",
-    "grunt-eslint": "~20.0",
-    "grunt-if-missing": "~1.0",
-    "grunt-jsdoc": "github:matatk/grunt-jsdoc",
-    "grunt-move": "~0.1",
-    "grunt-open": "~0.2",
-    "grunt-string-replace": "~1.3",
-    "grunt-template-jasmine-istanbul": "~0.5",
     "jsdoc": "~3.5.5",
-    "load-grunt-tasks": "~3.5",
     "mkdirp": "~0.5.1",
     "rimraf": "~2.6.2",
-    "time-grunt": "~1.4",
     "uglify-js": "~3.1.1"
   }
 }
