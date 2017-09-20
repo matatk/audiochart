@@ -1,11 +1,22 @@
 {
   "name": "audiochart",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "private": true,
   "homepage": "http://matatk.agrip.org.uk/audiochart/",
   "repository": "https://github.com/matatk/audiochart.git",
   "license": "MIT",
+  "scripts": {
+    "lint": "eslint .",
+    "uglify": "mkdirp lib && uglifyjs src/* --mangle --source-map=\"includeSources\" --output lib/audiochart.min.js",
+    "jsdoc:public": "rimraf doc/public/ && jsdoc src/audiochart.js --readme README.md --destination doc/public/",
+    "jsdoc:internal": "rimraf doc/internal/ && jsdoc src/audiochart.js --readme README.md --private --destination doc/internal/",
+    "docco": "docco examples/hello/hello-world-tutorial.js --output examples/hello --layout classic",
+    "build": "npm run lint && npm run uglify && npm run jsdoc:public && npm run jsdoc:internal && npm run docco",
+    "clean": "git clean -force -dx --exclude node_modules"
+  },
   "devDependencies": {
+    "docco": "~0.7.0",
+    "eslint": "~4.7.1",
     "grunt": "~1.0",
     "grunt-contrib-clean": "~1.1",
     "grunt-contrib-jasmine": "~1.1",
@@ -19,7 +30,11 @@
     "grunt-open": "~0.2",
     "grunt-string-replace": "~1.3",
     "grunt-template-jasmine-istanbul": "~0.5",
+    "jsdoc": "~3.5.5",
     "load-grunt-tasks": "~3.5",
-    "time-grunt": "~1.4"
+    "mkdirp": "~0.5.1",
+    "rimraf": "~2.6.2",
+    "time-grunt": "~1.4",
+    "uglify-js": "~3.1.1"
   }
 }

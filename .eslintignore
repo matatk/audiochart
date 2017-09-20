@@ -1,7 +1,6 @@
 _site
-audiochart
 src/export.js
 test/vendor
 test/coverage
 lib
-doc/scripts
+doc/*/scripts
