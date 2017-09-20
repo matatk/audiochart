@@ -13,7 +13,8 @@
     "jsdoc:public": "rimraf doc/public/ && jsdoc src/audiochart.js --readme README.md --destination doc/public/",
     "jsdoc:internal": "rimraf doc/internal/ && jsdoc src/audiochart.js --readme README.md --private --destination doc/internal/",
     "docco": "docco examples/hello/hello-world-tutorial.js --output examples/hello --layout classic",
-    "build": "npm run lint && npm run uglify && npm run jsdoc:public && npm run jsdoc:internal && npm run docco",
+    "prebuild": "npm run test",
+    "build": "npm run uglify && npm run jsdoc:public && npm run jsdoc:internal && npm run docco",
     "clean": "git clean --force -dx --exclude node_modules"
   },
   "devDependencies": {
