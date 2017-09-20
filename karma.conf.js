@@ -12,8 +12,7 @@ module.exports = function(config) {
 		colors: true,
 		logLevel: config.LOG_INFO,
 		autoWatch: true,
-		// browsers: ['Chrome', 'Firefox', 'Safari'],
-		browsers: ['Chrome'],
+		browsers: ['Chrome', 'Firefox'],
 		singleRun: true,
 		concurrency: Infinity
 	})
