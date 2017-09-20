@@ -12,21 +12,10 @@ var FakePlayer = (function() {
 
 
 function createKeydownEvent(keyName, shift) {
-	// Looks like Phantom doesn't support Event constructors
-	// https://github.com/ariya/phantomjs/issues/11289#issuecomment-38880333
-	//
-	// Also Phantom doesn't seem to support assigning the shiftKey property
-	var keydownEvent
-	try {
-		keydownEvent = new KeyboardEvent('keydown', {
-			shiftKey: shift
-		})
-	} catch (error) {
-		keydownEvent = document.createEvent('KeyboardEvent')
-		keydownEvent.initEvent('keydown', true, false)
-	}
-	keydownEvent.key = keyName
-	return keydownEvent
+	return new KeyboardEvent('keydown', {
+		key: keyName,
+		shiftKey: shift
+	})
 }
 
 
