@@ -8,12 +8,21 @@ module.exports = function(config) {
 			'spec/*.html',
 			'spec/*.js'
 		],
-		reporters: ['progress'],
+		preprocessors: {
+			'src/audiochart.js': ['coverage']
+		},
+		reporters: ['spec', 'coverage'],
 		colors: true,
 		logLevel: config.LOG_INFO,
 		autoWatch: true,
-		browsers: ['Chrome', 'Firefox'],
+		browsers: ['ChromeHeadless', 'Firefox'],
 		singleRun: true,
-		concurrency: Infinity
+		concurrency: Infinity,
+		coverageReporter: {
+			reporters: [
+				{type: 'html', dir: 'coverage/', subdir: '.'},
+				{type: 'text'},
+			]
+		}
 	})
 }

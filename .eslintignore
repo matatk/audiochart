@@ -1,6 +1,5 @@
-_site
+_site/
 src/export.js
-test/vendor
-test/coverage
-lib
-doc/*/scripts
+coverage/
+lib/
+doc/
