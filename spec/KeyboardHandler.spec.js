@@ -41,7 +41,7 @@ describe('KeyboardHandler', function() {
 	var fakePlayer
 
 	beforeEach(function() {
-		jasmine.getFixtures().fixturesPath = 'spec/'
+		jasmine.getFixtures().fixturesPath = 'base/spec/'
 		loadFixtures('KeyboardHandler.fixtures.html')
 
 		nonExistantDiv = document.getElementById('moo')

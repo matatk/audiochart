@@ -7,6 +7,8 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "karma start",
     "uglify": "mkdirp lib && uglifyjs src/* --mangle --source-map=\"includeSources\" --output lib/audiochart.min.js",
     "jsdoc:public": "rimraf doc/public/ && jsdoc src/audiochart.js --readme README.md --destination doc/public/",
     "jsdoc:internal": "rimraf doc/internal/ && jsdoc src/audiochart.js --readme README.md --private --destination doc/internal/",
@@ -17,17 +19,16 @@
   "devDependencies": {
     "docco": "~0.7.0",
     "eslint": "~4.7.1",
+    "jasmine-core": "~2.8.0",
     "jsdoc": "~3.5.5",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-firefox-launcher": "^1.0.1",
-    "karma-jasmine": "^1.1.0",
-    "karma-phantomjs-launcher": "^1.0.4",
-    "karma-safari-launcher": "^1.0.0",
+    "karma": "~1.7.1",
+    "karma-chrome-launcher": "~2.2.0",
+    "karma-firefox-launcher": "~1.0.1",
+    "karma-jasmine": "~1.1.0",
+    "karma-jasmine-jquery": "~0.1.1",
+    "karma-safari-launcher": "~1.0.0",
     "mkdirp": "~0.5.1",
     "rimraf": "~2.6.2",
     "uglify-js": "~3.1.1"
-  },
-  "dependencies": {
-    "karma": "^1.7.1"
   }
 }
