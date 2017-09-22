@@ -26,20 +26,20 @@
     "uglify": "mkdirp lib && uglifyjs src/* --mangle --source-map=\"includeSources\" --output lib/audiochart.min.js"
   },
   "devDependencies": {
-    "docco": "~0.7.0",
-    "eslint": "~4.7.1",
-    "jasmine-core": "~2.8.0",
-    "jsdoc": "~3.5.5",
-    "karma": "~1.7.1",
-    "karma-chrome-launcher": "~2.2.0",
-    "karma-coverage": "~1.1.1",
-    "karma-firefox-launcher": "~1.0.1",
-    "karma-jasmine": "~1.1.0",
-    "karma-jasmine-jquery": "~0.1.1",
-    "karma-spec-reporter": "0.0.31",
-    "mkdirp": "~0.5.1",
+    "docco": "~0.7",
+    "eslint": "~4.7",
+    "jasmine-core": "~2.8",
+    "jsdoc": "~3.5",
+    "karma": "~1.7",
+    "karma-chrome-launcher": "~2.2",
+    "karma-coverage": "~1.1",
+    "karma-firefox-launcher": "~1.0",
+    "karma-jasmine": "~1.1",
+    "karma-jasmine-jquery": "~0.1",
+    "karma-spec-reporter": "~0.0",
+    "mkdirp": "~0.5",
     "replace-in-file": "~3.0.0-beta.2",
-    "rimraf": "~2.6.2",
-    "uglify-js": "~3.1.1"
+    "rimraf": "~2.6",
+    "uglify-js": "~3.1"
   }
 }
