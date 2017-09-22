@@ -1,7 +1,7 @@
 'use strict'
 
 describe('htmlTableVisualCallback', function() {
-	jasmine.getFixtures().fixturesPath = 'spec/'
+	jasmine.getFixtures().fixturesPath = 'base/spec/'
 
 	var htmlTableVisualCallback = null
 	var highlightClassName = 'audiochart-playing'

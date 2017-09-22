@@ -2,7 +2,7 @@
 /* global dataWrappersTestCore */
 
 describe('HTMLTableDataWrapper', function() {
-	jasmine.getFixtures().fixturesPath = 'spec/'
+	jasmine.getFixtures().fixturesPath = 'base/spec/'
 	loadFixtures('HTMLTableDataWrapper.fixtures.html')
 
 	var nonExistantTable = document.getElementById('moo')
