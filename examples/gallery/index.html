@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+	<head>
+		<meta charset="utf-8">
+		<title>AudioChart Examples Gallery</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="../style.css">
+		<link rel="stylesheet" href="examples-gallery.css">
+		<script src="https://www.google.com/jsapi"></script>
+		<script src="../../lib/audiochart.min.js"></script>
+	</head>
+	<body>
+		<header>
+			<h1>AudioChart Examples Gallery</h1>
+		</header>
+		<main role="main" class="wrapper">
+			<h2>Contents</h2>
+			<h3>Options</h3>
+			<ul>
+				<li><a href='#options'>Set Audio Options</a></li>
+			</ul>
+			<h3>Google Charts</h3>
+			<ul>
+				<li><a href='#horizontal-line'>Horizontal Line</a></li>
+				<li><a href='#gradient'>Gradient</a></li>
+				<li><a href='#sine'>Sine</a></li>
+				<li><a href='#sales'>Sales&mdash;Line Chart</a></li>
+				<li><a href='#sales-bar'>Sales&mdash;Bar Chart</a></li>
+				<li>
+					<a href='#sales-annotated'>Sales&mdash;Line Chart with Annotations</a>
+				</li>
+			</ul>
+			<h3>JSON</h3>
+			<ul>
+				<li><a href='#json'>JSON example</a></li>
+			</ul>
+			<h3>HTML Tables</h3>
+			<ul>
+				<li><a href='#table'>HTML table example</a></li>
+			</ul>
+			<hr>
+
+			<h2 id="options">Set Audio Options</h2>
+			<div class="form-field">
+				<label for="opt-duration">Duration (seconds):</label>
+				<select id="opt-duration">
+					<option value="1">1</option>
+					<option value="3" selected>3</option>
+					<option value="5">5</option>
+					<option value="10">10</option>
+				</select>
+			</div>
+			<div class="form-field">
+				<p>
+				<label for="opt-freq-low">Lowest frequency (Hz):</label>
+				<input id="opt-freq-low" type="number" value="200"
+										   min="50" max="5000" step="1">
+				</p>
+				<p class="hidden-error-message" id="opt-freq-low-err">Error: lowest frequency must be set lower than the highest frequency.</p>
+			</div>
+			<div class="form-field">
+				<p>
+				<label for="opt-freq-high">Highest frequency (Hz):</label>
+				<input id="opt-freq-high" type="number" value="800"
+											min="50" max="5000" step="1">
+				</p>
+				<p class="hidden-error-message" id="opt-freq-high-err">Error: highest frequency must be set higher than the lowest frequency.</p>
+			</div>
+			<hr>
+
+			<h2>Google Charts</h2>
+			<h3 id='horizontal-line'>Horizontal Line</h3>
+			<p>This one has many data points.</p>
+			<div class="google-chart" id="chart-line"></div>
+			<button id="btn-line">Play or pause horizontal line (Google line chart)</button>
+			<hr>
+
+			<h3 id='gradient'>Gradient</h3>
+			<p>This one has many data points.</p>
+			<div class="google-chart" id="chart-gradient"></div>
+			<button id="btn-gradient">Play or pause gradient (Google line chart)</button>
+			<hr>
+
+			<h3 id='sine'>Sine</h3>
+			<p>This one has many data points.</p>
+			<div class="google-chart" id="chart-sine"></div>
+			<button id="btn-sine">Play or pause sine wave (Google line chart)</button>
+			<hr>
+
+			<h3 id='sales'>Sales&mdash;Line Chart</h3>
+			<p>This one has few data points.</p>
+			<div class="google-chart" id="chart-sales-line"></div>
+			<button id="btn-sales-line">Play or pause sales (Google line chart)</button>
+			<hr>
+
+			<h3 id='sales-bar'>Sales&mdash;Bar Chart</h3>
+			<p>This one has few data points.</p>
+			<div class="google-chart" id="chart-sales-bar"></div>
+			<button id="btn-sales-bar">Play or pause sales (Google bar chart)</button>
+			<hr>
+
+			<h3 id='sales-annotated'>Sales&mdash;Line Chart with Annotations</h3>
+			<p>This one has few data points.</p>
+			<div class="google-chart" id="chart-sales-annotated"></div>
+			<button id="btn-sales-annotated">Play or pause sales (annotated Google line chart)</button>
+			<hr>
+
+			<h2>JSON</h2>
+			<h3 id='json'>Example</h3>
+			<pre id='json1'>{
+  "data": [
+	{
+	  "series": "Test",
+	  "values": [ 21, 42, 84, 42, 21 ]
+	}
+  ]
+}</pre>
+			<button id="btn-json1">Play or pause JSON</button>
+			<hr>
+
+			<h2>HTML Tables</h2>
+			<h3 id='table'>Example</h3>
+			<table id='table1'>
+				<tr><th>Test Series</th></tr>
+				<tr><td>0</td></tr>
+				<tr><td>42</td></tr>
+				<tr><td>84</td></tr>
+				<tr><td>198</td></tr>
+				<tr><td>84</td></tr>
+				<tr><td>42</td></tr>
+				<tr><td>0</td></tr>
+			</table>
+			<button id="btn-table1">Play or pause HTML table</button>
+			<hr>
+		</main>
+		<script src="examples-gallery.js"></script>
+	</body>
+</html>
