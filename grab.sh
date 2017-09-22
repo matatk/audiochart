@@ -12,15 +12,14 @@ echo "Removing existing stuff..."
 rm -rfv $LIB $COVERAGE $EXAMPLES $DOC_ROOT
 
 if [ $PROG == 'grab.sh' ]; then
-	if [ ! -f "$AC/package.json" ]; then
-		echo
-		echo "Checking out submodule..."
-		git submodule init || exit 42
-		git submodule update --remote || exit 42
-		cd $AC || exit 42
-		git checkout master || exit 42
-		cd - || exit 42
-	fi
+	echo
+	echo "Checking out submodule..."
+	git submodule init || exit 42
+	git submodule update --remote || exit 42
+	cd $AC || exit 42
+	git checkout master || exit 42
+	git reset --hard || exit 42
+	cd - || exit 42
 	echo
 	echo "Building AudioChart..."
 	cd $AC || exit 42
