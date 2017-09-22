@@ -1,10 +1,10 @@
 'use strict'
 /* global dataWrappersTestCore */
 
-var testOne = [[0, 2], [1, 3], [2, 3], [3, 4]]
-var testNeg = [[0, 20], [1, -10], [2, 0], [3, 8], [4, -90]]
+const testOne = [[0, 2], [1, 3], [2, 3], [3, 4]]
+const testNeg = [[0, 20], [1, -10], [2, 0], [3, 8], [4, -90]]
 
-var FakeGoogleDataTable = (function() {
+const FakeGoogleDataTable = (function() {
 	function FakeGoogleDataTable(table) {
 		this.table = table
 	}
@@ -26,14 +26,6 @@ var FakeGoogleDataTable = (function() {
 	}
 
 	FakeGoogleDataTable.prototype.getColumnRange = function(columnIndex) {
-		var i
-		var len
-		var max
-		var min
-		var ref
-		var row
-		var value
-
 		if (columnIndex === 0) {
 			return {
 				min: 0,
@@ -41,12 +33,12 @@ var FakeGoogleDataTable = (function() {
 			}
 		}
 
-		min = this.table[0][columnIndex]
-		max = this.table[0][columnIndex]
-		ref = this.table
-		for (i = 0, len = ref.length; i < len; i++) {
-			row = ref[i]
-			value = row[columnIndex]
+		let min = this.table[0][columnIndex]
+		let max = this.table[0][columnIndex]
+		const ref = this.table
+		for (let i = 0, len = ref.length; i < len; i++) {
+			const row = ref[i]
+			const value = row[columnIndex]
 			if (min > value) {
 				min = value
 			}

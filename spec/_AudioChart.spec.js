@@ -3,7 +3,7 @@
 
 describe('_AudioChart', function() {
 	it('throws when an errant `options.type` is supplied', function() {
-		var options = {
+		const options = {
 			'type': 'moo'
 		}
 
@@ -13,7 +13,7 @@ describe('_AudioChart', function() {
 	})
 
 	it('assigns a JSON data wrapper, parameter and no callback', function() {
-		var options = {
+		const options = {
 			'type': 'json',
 			'data': 42
 		}
@@ -27,7 +27,7 @@ describe('_AudioChart', function() {
 	})
 
 	it('assigns a Google wrapper and parameter without a chart', function() {
-		var options = {
+		const options = {
 			'type': 'google',
 			'data': 42
 		}
@@ -41,7 +41,7 @@ describe('_AudioChart', function() {
 	})
 
 	it('assigns a Google wrapper, parameter and chart callback', function() {
-		var options = {
+		const options = {
 			'type': 'google',
 			'data': 42,
 			'chart': {}
@@ -62,7 +62,7 @@ describe('_AudioChart', function() {
 	})
 
 	it('assigns a HTML data wrapper, parameter and no callback', function() {
-		var options = {
+		const options = {
 			'type': 'htmlTable',
 			'table': 42
 		}
@@ -76,7 +76,7 @@ describe('_AudioChart', function() {
 	})
 
 	it('assigns a HTML data wrapper, parameter and callback', function() {
-		var options = {
+		const options = {
 			'type': 'htmlTable',
 			'table': 42,
 			'highlightClass': 'moo'

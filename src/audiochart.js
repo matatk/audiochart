@@ -1,7 +1,7 @@
 'use strict'
 /** @module */
 
-var isProbablySafari = false  // try to detect Safari
+let isProbablySafari = false  // try to detect Safari
 
 /**
  * Array index number (starts at zero).
@@ -86,8 +86,8 @@ var GoogleDataWrapper = (function() {
 	}
 
 	GoogleDataWrapper.prototype.seriesNames = function() {
-		var results = []
-		for (var i = 0; i < this.data.getNumberOfColumns() - 1; i++) {
+		const results = []
+		for (let i = 0; i < this.data.getNumberOfColumns() - 1; i++) {
 			results.push(this.data.getColumnLabel(i))
 		}
 		return results
@@ -135,8 +135,8 @@ var JSONDataWrapper = (function() {
 	}
 
 	JSONDataWrapper.prototype.seriesNames = function() {
-		var results = []
-		for (var i = 0; i < this.object.data.length; i++) {
+		const results = []
+		for (let i = 0; i < this.object.data.length; i++) {
 			results.push(this.object.data[i].series)
 		}
 		return results
@@ -182,18 +182,18 @@ var HTMLTableDataWrapper = (function() {
 	}
 
 	HTMLTableDataWrapper.prototype.seriesNames = function() {
-		var headerCells = this.table.getElementsByTagName('th')
-		var results = []
-		for (var i = 0; i < headerCells.length; i++) {
+		const headerCells = this.table.getElementsByTagName('th')
+		const results = []
+		for (let i = 0; i < headerCells.length; i++) {
 			results.push(headerCells[i].textContent)
 		}
 		return results
 	}
 
 	HTMLTableDataWrapper.prototype._seriesFloats = function(series) {
-		var dataCells = this.table.getElementsByTagName('td')
-		var results = []
-		for (var i = 0; i < dataCells.length; i++) {
+		const dataCells = this.table.getElementsByTagName('td')
+		const results = []
+		for (let i = 0; i < dataCells.length; i++) {
 			results.push(parseFloat(dataCells[i].textContent))
 		}
 		return results
@@ -273,7 +273,7 @@ var FrequencyPitchMapper = (function() {
 	 * @returns {number} frequency for this datum
 	 */
 	FrequencyPitchMapper.prototype.map = function(datum) {
-		var ratio
+		let ratio
 		if (this.dataRange) {
 			ratio = (datum - this.minimumDatum) / this.dataRange
 		} else {
@@ -397,7 +397,7 @@ var Player = (function() {
 	Player.prototype._playLoop = function() {
 		this._state = 'playing'
 		this._playOne()  // so that it starts immediately
-		var that = this
+		const that = this
 		this.intervalID = setInterval(function() {
 			that._playOneWrapper()
 		}, this.interval)
@@ -444,7 +444,7 @@ var Player = (function() {
 
 		if (this.playIndex === this.seriesMaxIndex) {
 			clearInterval(this.intervalID)
-			var that = this
+			const that = this
 			setTimeout(function() {
 				that.sounder.stop()
 			}, this.interval)  // TODO test
@@ -468,7 +468,7 @@ var Player = (function() {
 	}
 
 	Player.prototype.stepBackward = function(skip) {
-		var delta = skip || 50
+		const delta = skip || 50
 		this.playIndex -= delta
 		if (this.playIndex < 0) {
 			this.playIndex = 0  // TODO test limiting
@@ -479,7 +479,7 @@ var Player = (function() {
 	}
 
 	Player.prototype.stepForward = function(skip) {
-		var delta = skip || 50
+		const delta = skip || 50
 		this.playIndex += delta
 		if (this.playIndex > this.seriesMaxIndex) {
 			this.playIndex = this.seriesMaxIndex  // TODO test limiting
@@ -500,9 +500,9 @@ var AudioContextGetter = (function() {
 	 */
 	function AudioContextGetter() {}
 
-	var audioContext = null
+	let audioContext = null
 
-	var _getAudioContext = function() {
+	const _getAudioContext = function() {
 		if (window.AudioContext !== undefined) {
 			return new window.AudioContext()
 		} else if (window.webkitAudioContext !== undefined) {
@@ -552,9 +552,9 @@ var googleVisualCallbackMaker = function(chart) {
  */
 var htmlTableVisualCallbackMaker = function(table, className) {
 	return function(series, row) {
-		var tds = table.getElementsByTagName('td')
-		var cell  // TODO remove
-		for (var i = 0; i < tds.length; i++) {
+		const tds = table.getElementsByTagName('td')
+		let cell  // TODO remove
+		for (let i = 0; i < tds.length; i++) {
 			cell = tds[i]
 			cell.classList.remove(className)
 		}
@@ -648,17 +648,17 @@ var _AudioChart = (function() {
 	 * @param {AudioContext} context - the window's AudioContext
 	 */
 	function _AudioChart(options, context) {
-		var result = _AudioChart._assignWrapperCallback(options)
-		var dataWrapper = new result.Wrapper(result.parameter)
-		var callback = result.callback
+		const result = _AudioChart._assignWrapperCallback(options)
+		const dataWrapper = new result.Wrapper(result.parameter)
+		const callback = result.callback
 
-		var frequencyPitchMapper = new FrequencyPitchMapper(
+		const frequencyPitchMapper = new FrequencyPitchMapper(
 			dataWrapper.seriesMin(0),
 			dataWrapper.seriesMax(0),
 			options.frequencyLow,
 			options.frequencyHigh)
 
-		var sounder = new WebAudioSounder(context)
+		const sounder = new WebAudioSounder(context)
 
 		this.player = new Player(
 			options.duration,
@@ -685,7 +685,7 @@ var _AudioChart = (function() {
 	// it doesn't need 'this'.
 	// http://stackoverflow.com/a/1635143
 	_AudioChart._assignWrapperCallback = function(options) {
-		var result = {
+		const result = {
 			'Wrapper': null,
 			'parameter': null,
 			'callback': null
@@ -735,7 +735,7 @@ var AudioChart = (function() {
 	 * @returns {_AudioChart} the real AudioChart object
 	 */
 	function AudioChart(options, context) {
-		var fail = "Sorry, your browser doesn't support the Web Audio API."
+		const fail = "Sorry, your browser doesn't support the Web Audio API."
 		if (arguments.length < 2) {
 			context = AudioContextGetter.get()
 			if (context === null) {

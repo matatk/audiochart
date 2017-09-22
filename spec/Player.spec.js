@@ -1,15 +1,15 @@
 'use strict'
 
-var expectedFrequencyCalls = function(playbackTime, seriesLength) {
-	var out = []
-	for (var i = 0; i <= seriesLength - 1; i++) {
+const expectedFrequencyCalls = function(playbackTime, seriesLength) {
+	const out = []
+	for (let i = 0; i <= seriesLength - 1; i++) {
 		out.push([21])
 	}
 	return out
 }
 
 
-var BaseFakeDataWrapper = (function() {
+const BaseFakeDataWrapper = (function() {
 	function BaseFakeDataWrapper() {}
 
 	BaseFakeDataWrapper.prototype.numSeries = function() {
@@ -28,7 +28,7 @@ var BaseFakeDataWrapper = (function() {
 })()
 
 
-var ShortFakeDataWrapper = (function() {
+const ShortFakeDataWrapper = (function() {
 	function ShortFakeDataWrapper() {
 		return BaseFakeDataWrapper.call(this, arguments)
 	}
@@ -44,7 +44,7 @@ var ShortFakeDataWrapper = (function() {
 })()
 
 
-var LongFakeDataWrapper = (function() {
+const LongFakeDataWrapper = (function() {
 	function LongFakeDataWrapper() {
 		return BaseFakeDataWrapper.call(this, arguments)
 	}
@@ -60,7 +60,7 @@ var LongFakeDataWrapper = (function() {
 })()
 
 
-var FakeMapper = (function() {
+const FakeMapper = (function() {
 	function FakeMapper() {}
 
 	FakeMapper.prototype.map = function(datum) {
@@ -71,7 +71,7 @@ var FakeMapper = (function() {
 })()
 
 
-var FakeSounder = (function() {
+const FakeSounder = (function() {
 	function FakeSounder() {}
 	FakeSounder.prototype.frequency = function(frequency) {}
 	FakeSounder.prototype.start = function() {}
@@ -80,13 +80,13 @@ var FakeSounder = (function() {
 })()
 
 
-var mixinDataWrapperCore = function(message, TestDataClass, testDuration, testCallCount, testInterval, useVisualCallback) {
+const mixinDataWrapperCore = function(message, TestDataClass, testDuration, testCallCount, testInterval, useVisualCallback) {
 	describe(message, function() {
-		var fakeData = null
-		var fakeMapper = null
-		var fakeSounder = null
-		var player = null
-		var fakeVisualCallback = null  // may not be used
+		let fakeData = null
+		let fakeMapper = null
+		let fakeSounder = null
+		let player = null
+		let fakeVisualCallback = null  // may not be used
 
 		beforeEach(function() {
 			fakeData = new TestDataClass()
@@ -211,9 +211,9 @@ var mixinDataWrapperCore = function(message, TestDataClass, testDuration, testCa
 		it('steps backward when requested', function() {
 			player.playPause()
 			jasmine.clock().tick(testDuration * 0.9)
-			var index1 = player.playIndex
+			const index1 = player.playIndex
 			player.stepBackward(2)
-			var index2 = player.playIndex
+			const index2 = player.playIndex
 			expect(index2).toBe(index1 - 2)
 		})
 
@@ -222,18 +222,18 @@ var mixinDataWrapperCore = function(message, TestDataClass, testDuration, testCa
 			player.playPause()
 			jasmine.clock().tick(testDuration / 10)
 			player.playPause()
-			var numberOfTimesPlayCoreCalled = player._playOne.calls.count()
+			const numberOfTimesPlayCoreCalled = player._playOne.calls.count()
 			player.stepBackward()
-			var steppedNumberOfTimesPlayCoreCalled = player._playOne.calls.count()
+			const steppedNumberOfTimesPlayCoreCalled = player._playOne.calls.count()
 			expect(steppedNumberOfTimesPlayCoreCalled).toBe(
 				numberOfTimesPlayCoreCalled + 1)
 		})
 
 		it('steps forward when requested', function() {
 			player.playPause()
-			var index1 = player.playIndex
+			const index1 = player.playIndex
 			player.stepForward(2)
-			var index2 = player.playIndex
+			const index2 = player.playIndex
 			expect(index2).toBe(index1 + 2)
 		})
 
@@ -242,9 +242,9 @@ var mixinDataWrapperCore = function(message, TestDataClass, testDuration, testCa
 			player.playPause()
 			jasmine.clock().tick(testDuration / 10)
 			player.playPause()
-			var numberOfTimesPlayCoreCalled = player._playOne.calls.count()
+			const numberOfTimesPlayCoreCalled = player._playOne.calls.count()
 			player.stepForward()
-			var steppedNumberOfTimesPlayCoreCalled = player._playOne.calls.count()
+			const steppedNumberOfTimesPlayCoreCalled = player._playOne.calls.count()
 			expect(steppedNumberOfTimesPlayCoreCalled).toBe(
 				numberOfTimesPlayCoreCalled + 1)
 		})
@@ -252,7 +252,7 @@ var mixinDataWrapperCore = function(message, TestDataClass, testDuration, testCa
 }
 
 
-var mixinDataWrapper = function(message, TestDataClass, testDuration, testCallCount, testInterval) {
+const mixinDataWrapper = function(message, TestDataClass, testDuration, testCallCount, testInterval) {
 	describe(message, function() {
 		mixinDataWrapperCore('when not having a callback', TestDataClass, testDuration, testCallCount, testInterval, false)
 		mixinDataWrapperCore('when having a callback', TestDataClass, testDuration, testCallCount, testInterval, true)

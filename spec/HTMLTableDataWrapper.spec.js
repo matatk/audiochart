@@ -5,8 +5,8 @@ describe('HTMLTableDataWrapper', function() {
 	jasmine.getFixtures().fixturesPath = 'base/spec/'
 	loadFixtures('HTMLTableDataWrapper.fixtures.html')
 
-	var nonExistantTable = document.getElementById('moo')
-	var actualTable = document.getElementById('testOne')
+	const nonExistantTable = document.getElementById('moo')
+	const actualTable = document.getElementById('testOne')
 
 	dataWrappersTestCore(
 		'HTMLTableDataWrapper (data wrapper core)',
