@@ -15,7 +15,7 @@ abstract: <p>Allows the user to explore charts on web pages using sound and the 
 	<button id="play">Play or Pause</button>
 </div>
 
-AudioChart uses the Web Audio API, which has [great support amongst browsers, including Microsoft Edge](http://caniuse.com/audio-api), though is not (yet) supported by Internet Explorer.
+AudioChart uses the Web Audio API, which is [supported by modern browsers, including Microsoft Edge](http://caniuse.com/audio-api) (but not Internet Explorer).
 
 Thanks to [The Sonification Handbook](http://sonification.de/handbook/) for the research behind it and to [The Paciello Group](http://paciellogroup.com) for allowing me to share this with you.
 
@@ -46,19 +46,18 @@ Development
 
 Development is carried out in a [test-driven](http://en.wikipedia.org/wiki/Test-driven_development) manner.  A Gruntfile is provided to run the tests and automate things like linting and minification.  The `pre-commit` hook can be used to ensure only code that passes tests is committed (it does this by running Grunt).  You can make a symlink from the `.git/hooks/` directory to it and thus it (and the tests) will be run before you are asked for a commit message.
 
-[Unit tests can be run in-browser](http://matatk.agrip.org.uk/audiochart/test/) or via the Gruntfile (printing output to the terminal).  You can also view the [test coverage details](http://matatk.agrip.org.uk/audiochart/test/coverage/).  In addition, [internal API documentation](http://matatk.agrip.org.uk/audiochart/doc/internal/) is available.
+When building the software locally, unit tests are automatically run in Chrome and Firefox.  The [unit tests are also run on Travis](https://travis-ci.org/matatk/audiochart/) (as part of a build).  You can view the [test coverage details](http://matatk.agrip.org.uk/audiochart/coverage/).  In addition, [internal API documentation](http://matatk.agrip.org.uk/audiochart/doc/internal/) is available.
 
-**Warning:** AudioChart is still fairly early in development, so the internal APIs are changing quite fast.
+**Warning:** AudioChart is still fairly early in development, so the APIs are changing quite fast.
 
 ### Setting up for development
 
-The build process uses Grunt and therefore also Node.  You can get set up for development as follows (most of these instructions require the use of a command line).
+The build process uses npm and therefore also Node.  You can get set up for development as follows (most of these instructions require the use of a command line).
 
  1. Install [Node](https://nodejs.org/) (if you're a Mac user doing this via [Homebrew](http://brew.sh) is recommended: `brew install node`).
- 2. Install [Grunt](http://gruntjs.com) globally via `npm -g install grunt-cli` in order to be able to run the `grunt` command in any directory.
- 3. Get AudioChart's code by using `git clone https://github.com/matatk/audiochart.git` or [downloading a ZIP of the latest code](https://github.com/matatk/audiochart/archive/gh-pages.zip).
- 4. Locally install AudioChart's dependencies by running `npm install` in the newly-cloned/extracted `audiochart/` directory (the packages will be stored inside `node_modules/`).
- 5. Running `grunt` will lint the code, run the tests and make a minified production version.
+ 2. Get AudioChart's code by using `git clone https://github.com/matatk/audiochart.git` or [downloading a ZIP of the latest code](https://github.com/matatk/audiochart/archive/gh-pages.zip).
+ 3. Locally install AudioChart's dependencies by running `npm install` in the newly-cloned/extracted `audiochart/` directory (the packages will be stored inside `node_modules/`).
+ 4. Issuing `npm run build` will lint the code, run the tests and make a minified production version.
 
 **Windows users:** this has not yet been extensively tested on Windows, but it doesn't use anything platform-specific, so should work fine. Please file a bug if you encounter any problems.
 
