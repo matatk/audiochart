@@ -77,22 +77,22 @@ function init() {
 
 	// JSON
 	// TODO DRY
-	const jsonOptions = makeAudiochartOptions()
-	jsonOptions['type'] = 'json'
-	jsonOptions['data'] = document.getElementById('json1').textContent
-	const jsonAC = new AudioChart(jsonOptions)
 	document.getElementById('btn-json1').onclick = function() {
+		const jsonOptions = makeAudiochartOptions()
+		jsonOptions['type'] = 'json'
+		jsonOptions['data'] = document.getElementById('json1').textContent
+		const jsonAC = new AudioChart(jsonOptions)
 		jsonAC.playPause()
 	}
 
 	// HTML Table
 	// TODO DRY
-	const htmlOptions = makeAudiochartOptions()
-	htmlOptions['type'] = 'htmlTable'
-	htmlOptions['table'] = document.getElementById('table1')
-	htmlOptions['highlightClass'] = 'current-datum'
-	const htmlAC = new AudioChart(htmlOptions)
 	document.getElementById('btn-table1').onclick = function() {
+		const htmlOptions = makeAudiochartOptions()
+		htmlOptions['type'] = 'htmlTable'
+		htmlOptions['table'] = document.getElementById('table1')
+		htmlOptions['highlightClass'] = 'current-datum'
+		const htmlAC = new AudioChart(htmlOptions)
 		htmlAC.playPause()
 	}
 }
@@ -130,14 +130,13 @@ function _drawCore(Klass, data, chartId, btn) {
 	}
 
 	// Wire up to AudioChart
-	const audiochartOptions = makeAudiochartOptions()
-	audiochartOptions['type'] = 'google'
-	audiochartOptions['data'] = data
-	audiochartOptions['chart'] = chart
-	audiochartOptions['chartContainer'] = document.getElementById(chartId)
-	const ac = new AudioChart(audiochartOptions)
-
 	document.getElementById(btn).onclick = function() {
+		const audiochartOptions = makeAudiochartOptions()
+		audiochartOptions['type'] = 'google'
+		audiochartOptions['data'] = data
+		audiochartOptions['chart'] = chart
+		audiochartOptions['chartContainer'] = document.getElementById(chartId)
+		const ac = new AudioChart(audiochartOptions)
 		ac.playPause()
 	}
 }
