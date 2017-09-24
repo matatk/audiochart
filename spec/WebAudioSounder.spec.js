@@ -1,7 +1,7 @@
 'use strict'
 
 describe('WebAudioSounder', function() {
-	var FakeOscillator = (function() {
+	const FakeOscillator = (function() {
 		function FakeOscillator() {
 			this.frequency = {
 				value: 0
@@ -14,7 +14,7 @@ describe('WebAudioSounder', function() {
 		return FakeOscillator
 	})()
 
-	var FakeAudioContext = (function() {
+	const FakeAudioContext = (function() {
 		function FakeAudioContext() {
 			this.currentTime = 42
 		}
@@ -29,23 +29,21 @@ describe('WebAudioSounder', function() {
 	})()
 
 
-	var fakeAudioContext = null
+	let fakeAudioContext = null
 
 	beforeEach(function() {
 		fakeAudioContext = new FakeAudioContext()
 	})
 
 	it('has no oscillator to start with', function() {
-		var sounder = new window.WebAudioSounder(fakeAudioContext)
+		const sounder = new window.WebAudioSounder(fakeAudioContext)
 		expect(sounder.oscillator).not.toBeDefined()
 	})
 
 	it('[TODO] connects and starts its oscillator', function() {
-		var fakeOscillator
-		var sounder
-		sounder = new window.WebAudioSounder(fakeAudioContext)
+		const sounder = new window.WebAudioSounder(fakeAudioContext)
 		sounder.start()
-		fakeOscillator = sounder.oscillator
+		const fakeOscillator = sounder.oscillator
 		spyOn(fakeOscillator, 'connect')
 		spyOn(fakeOscillator, 'start')
 		// expect(fakeOscillator.connect).toHaveBeenCalledWith(fakeAudioContext.destination)
@@ -54,8 +52,8 @@ describe('WebAudioSounder', function() {
 	})
 
 	it('changes frequency', function() {
-		var fakeOscillator = null
-		var sounder = new window.WebAudioSounder(fakeAudioContext)
+		let fakeOscillator = null
+		const sounder = new window.WebAudioSounder(fakeAudioContext)
 		jasmine.clock().install()
 		sounder.start()
 		fakeOscillator = sounder.oscillator
@@ -67,23 +65,21 @@ describe('WebAudioSounder', function() {
 	})
 
 	it('stops its oscillator', function() {
-		var fakeOscillator
-		var sounder
-		sounder = new window.WebAudioSounder(fakeAudioContext)
+		const sounder = new window.WebAudioSounder(fakeAudioContext)
 		sounder.start()
-		fakeOscillator = sounder.oscillator
+		const fakeOscillator = sounder.oscillator
 		spyOn(fakeOscillator, 'stop')
 		sounder.stop()
 		expect(fakeOscillator.stop).toHaveBeenCalled()
 	})
 
 	it('creates a new oscillator after the previous one has been stopped', function() {
-		var sounder = new window.WebAudioSounder(fakeAudioContext)
+		const sounder = new window.WebAudioSounder(fakeAudioContext)
 		sounder.start()
-		var fakeOscillator1 = sounder.oscillator
+		const fakeOscillator1 = sounder.oscillator
 		sounder.stop()
 		sounder.start()
-		var fakeOscillator2 = sounder.oscillator
+		const fakeOscillator2 = sounder.oscillator
 		sounder.stop()
 		expect(fakeOscillator1).not.toBe(fakeOscillator2)
 	})

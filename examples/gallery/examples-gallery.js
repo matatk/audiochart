@@ -9,8 +9,8 @@ google.setOnLoadCallback(init)
 
 /* Check for errors */
 function errorCheck() {
-	var freqLowInput = document.getElementById('opt-freq-low')
-	var freqHighInput = document.getElementById('opt-freq-high')
+	const freqLowInput = document.getElementById('opt-freq-low')
+	const freqHighInput = document.getElementById('opt-freq-high')
 	if (freqLowInput.valueAsNumber >= freqHighInput.valueAsNumber) {
 		errorCheckToggle('on')
 	} else {
@@ -26,19 +26,19 @@ function errorCheckToggle(toState) {
 
 /* Toggle error message visibility */
 function errorCheckToggleMessages(toState) {
-	var classNames = ['hidden-error-message', 'error-message']
-	var currentClass = (toState === 'on') ? classNames[0] : classNames[1]
-	var desiredClass = (toState === 'on') ? classNames[1] : classNames[0]
-	var errorParas = document.querySelectorAll('p.' + currentClass)
-	for (var i = 0; i < errorParas.length; i++ ) {
+	const classNames = ['hidden-error-message', 'error-message']
+	const currentClass = (toState === 'on') ? classNames[0] : classNames[1]
+	const desiredClass = (toState === 'on') ? classNames[1] : classNames[0]
+	const errorParas = document.querySelectorAll('p.' + currentClass)
+	for (let i = 0; i < errorParas.length; i++ ) {
 		errorParas[i].className = desiredClass
 	}
 }
 
 /* Toggle aria-invalid on controls */
 function errorCheckToggleInvalid(toState) {
-	var numberInputs = document.querySelectorAll('input[type=number]')
-	for (var i = 0; i < numberInputs.length; i++ ) {
+	const numberInputs = document.querySelectorAll('input[type=number]')
+	for (let i = 0; i < numberInputs.length; i++ ) {
 		numberInputs[i].setAttribute('aria-invalid',
 			(toState === 'on') ? 'true' : 'false')
 	}
@@ -77,21 +77,21 @@ function init() {
 
 	// JSON
 	// TODO DRY
-	var jsonOptions = makeAudiochartOptions()
+	const jsonOptions = makeAudiochartOptions()
 	jsonOptions['type'] = 'json'
 	jsonOptions['data'] = document.getElementById('json1').textContent
-	var jsonAC = new AudioChart(jsonOptions)
+	const jsonAC = new AudioChart(jsonOptions)
 	document.getElementById('btn-json1').onclick = function() {
 		jsonAC.playPause()
 	}
 
 	// HTML Table
 	// TODO DRY
-	var htmlOptions = makeAudiochartOptions()
+	const htmlOptions = makeAudiochartOptions()
 	htmlOptions['type'] = 'htmlTable'
 	htmlOptions['table'] = document.getElementById('table1')
 	htmlOptions['highlightClass'] = 'current-datum'
-	var htmlAC = new AudioChart(htmlOptions)
+	const htmlAC = new AudioChart(htmlOptions)
 	document.getElementById('btn-table1').onclick = function() {
 		htmlAC.playPause()
 	}
@@ -109,11 +109,11 @@ function _drawBarChartCore(data, id, btn) {
 
 function _drawCore(Klass, data, chartId, btn) {
 	// Instantiate and draw our chart, passing in some options
-	var googleOptions = {
+	const googleOptions = {
 		'title': 'Example',
 		'curveType': 'function'
 	}
-	var chart = new Klass(document.getElementById(chartId))
+	const chart = new Klass(document.getElementById(chartId))
 
 	resizeChart()  // initial draw
 
@@ -130,12 +130,12 @@ function _drawCore(Klass, data, chartId, btn) {
 	}
 
 	// Wire up to AudioChart
-	var audiochartOptions = makeAudiochartOptions()
+	const audiochartOptions = makeAudiochartOptions()
 	audiochartOptions['type'] = 'google'
 	audiochartOptions['data'] = data
 	audiochartOptions['chart'] = chart
 	audiochartOptions['chartContainer'] = document.getElementById(chartId)
-	var ac = new AudioChart(audiochartOptions)
+	const ac = new AudioChart(audiochartOptions)
 
 	document.getElementById(btn).onclick = function() {
 		ac.playPause()
@@ -149,14 +149,14 @@ function _drawCore(Klass, data, chartId, btn) {
 
 function drawLine() {
 	// Create the data table.
-	var data = new google.visualization.DataTable()
+	const data = new google.visualization.DataTable()
 
-	var MIN = 0
-	var MAX = 1
-	var DELTA = 0.1
-	var results = []
-	var index = 0
-	for( var i = MIN; i <= MAX; i = i + DELTA ) {
+	const MIN = 0
+	const MAX = 1
+	const DELTA = 0.1
+	const results = []
+	let index = 0
+	for( let i = MIN; i <= MAX; i = i + DELTA ) {
 		results[index] = [i, 42]
 		index++
 	}
@@ -170,14 +170,14 @@ function drawLine() {
 
 function drawGradient() {
 	// Create the data table.
-	var data = new google.visualization.DataTable()
+	const data = new google.visualization.DataTable()
 
-	var MIN = 0
-	var MAX = 1
-	var DELTA = 0.01
-	var results = []
-	var index = 0
-	for( var i = MIN; i <= MAX; i += DELTA ) {
+	const MIN = 0
+	const MAX = 1
+	const DELTA = 0.01
+	const results = []
+	let index = 0
+	for( let i = MIN; i <= MAX; i += DELTA ) {
 		results[index] = [i, i]
 		index++
 	}
@@ -191,14 +191,14 @@ function drawGradient() {
 
 function drawSine() {
 	// Create the data table.
-	var data = new google.visualization.DataTable()
+	const data = new google.visualization.DataTable()
 
-	var MIN = -Math.PI
-	var MAX = Math.PI
-	var DELTA = 0.01
-	var results = []
-	var index = 0
-	for( var i = MIN; i <= MAX; i = i + DELTA ) {
+	const MIN = -Math.PI
+	const MAX = Math.PI
+	const DELTA = 0.01
+	const results = []
+	let index = 0
+	for( let i = MIN; i <= MAX; i = i + DELTA ) {
 		results[index] = [i, Math.sin(i)]
 		index++
 	}
@@ -212,7 +212,7 @@ function drawSine() {
 
 function drawSalesLine() {
 	// Create the data table.
-	var data = new google.visualization.DataTable()
+	const data = new google.visualization.DataTable()
 	data.addColumn('string', 'Month') // Implicit domain label col.
 	data.addColumn('number', 'Sales') // Implicit series 1 data col.
 	data.addRows([
@@ -228,7 +228,7 @@ function drawSalesLine() {
 
 function drawSalesAnnotated() {
 	// Create the data table.
-	var data = new google.visualization.DataTable()
+	const data = new google.visualization.DataTable()
 	data.addColumn('string', 'Month') // Implicit domain label col.
 	data.addColumn('number', 'Sales') // Implicit series 1 data col.
 	data.addColumn({type:'number', role:'interval'})

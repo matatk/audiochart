@@ -2,7 +2,7 @@
 /* global AudioChart _AudioChart AudioContextGetter */
 
 describe('AudioChart', function() {
-	var fakeOptions = null
+	let fakeOptions = null
 
 	beforeEach(function() {
 		fakeOptions = { type: 'test' }
@@ -10,10 +10,10 @@ describe('AudioChart', function() {
 
 	it('passes its context to _AudioChart', function() {
 		function FakeAudioContext() {}
-		var fakeAudioContext = new FakeAudioContext()
+		const fakeAudioContext = new FakeAudioContext()
 		spyOn(window, '_AudioChart')
 
-		var audiochart = new AudioChart(fakeOptions, fakeAudioContext)
+		new AudioChart(fakeOptions, fakeAudioContext)
 		expect(_AudioChart)
 			.toHaveBeenCalledWith(fakeOptions, fakeAudioContext)
 	})
@@ -22,7 +22,7 @@ describe('AudioChart', function() {
 		spyOn(window, '_AudioChart')
 		spyOn(AudioContextGetter, 'get').and.returnValue(42)
 
-		var audiochart = new AudioChart(fakeOptions)
+		new AudioChart(fakeOptions)
 		expect(_AudioChart)
 			.toHaveBeenCalledWith(fakeOptions, 42)
 	})

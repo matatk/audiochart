@@ -1,14 +1,14 @@
 'use strict'
 
 describe('googleVisualCallback', function() {
-	var FakeChart = (function() {
+	const FakeChart = (function() {
 		function FakeChart() {}
 		FakeChart.prototype.setSelection = function(selection) {}
 		return FakeChart
 	})()
 
-	var fakeChart = null
-	var googleVisualCallback = null
+	let fakeChart = null
+	let googleVisualCallback = null
 
 	beforeEach(function() {
 		fakeChart = new FakeChart()

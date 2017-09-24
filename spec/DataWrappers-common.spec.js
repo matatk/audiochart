@@ -1,9 +1,10 @@
 'use strict'
+/* exported dataWrappersTestCore */
 
-var dataWrappersTestCore = function(thing, wrapper1, wrapper2) {
+function dataWrappersTestCore(thing, wrapper1, wrapper2) {
 	describe(thing + ' (via common interface)', function() {
 		describe('when storing positive-valued data', function() {
-			var data = null
+			let data = null
 			beforeEach(function() {
 				data = wrapper1
 			})
@@ -34,7 +35,7 @@ var dataWrappersTestCore = function(thing, wrapper1, wrapper2) {
 		})
 
 		describe('when storing negative-valued data', function() {
-			var data = null
+			let data = null
 			beforeEach(function() {
 				data = wrapper2
 			})

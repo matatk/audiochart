@@ -1,6 +1,6 @@
 'use strict'
 
-var FakePlayer = (function() {
+const FakePlayer = (function() {
 	function FakePlayer() {}
 	FakePlayer.prototype.play = function() {}
 	FakePlayer.prototype.pause = function() {}
@@ -25,9 +25,9 @@ function createAndDispatchKeydownEvent(keyName, shift, target) {
 
 
 describe('KeyboardHandler', function() {
-	var nonExistantDiv
-	var keyTargetDiv
-	var fakePlayer
+	let nonExistantDiv
+	let keyTargetDiv
+	let fakePlayer
 
 	beforeEach(function() {
 		jasmine.getFixtures().fixturesPath = 'base/spec/'
@@ -59,7 +59,7 @@ describe('KeyboardHandler', function() {
 	// TODO DRY
 	it('stops the event default handler being called', function(done) {
 		new window.KeyboardHandler(keyTargetDiv, fakePlayer)
-		var evt = createKeydownEvent('Up', false)
+		const evt = createKeydownEvent('Up', false)
 		spyOn(evt, 'preventDefault')
 		keyTargetDiv.dispatchEvent(evt)
 		// TODO how to not need the timeout?
@@ -71,7 +71,7 @@ describe('KeyboardHandler', function() {
 
 	// TODO DRY
 	it('knows when the right arrow key has been pressed', function(done) {
-		var keyboardHandler = new window.KeyboardHandler(keyTargetDiv, fakePlayer)
+		const keyboardHandler = new window.KeyboardHandler(keyTargetDiv, fakePlayer)
 		spyOn(keyboardHandler, 'handleRight').and.callThrough()
 		createAndDispatchKeydownEvent('Right', false, keyTargetDiv)
 		// TODO how to not need the timeout?
@@ -95,7 +95,7 @@ describe('KeyboardHandler', function() {
 
 	// TODO DRY
 	it('knows when the space key has been pressed', function(done) {
-		var keyboardHandler = new window.KeyboardHandler(keyTargetDiv, fakePlayer)
+		const keyboardHandler = new window.KeyboardHandler(keyTargetDiv, fakePlayer)
 		spyOn(keyboardHandler, 'handleSpace').and.callThrough()
 		createAndDispatchKeydownEvent('U+0020', false, keyTargetDiv)
 		// TODO how to not need the timeout?
