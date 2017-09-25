@@ -6,6 +6,7 @@
   "license": "MIT",
   "repository": "https://github.com/matatk/audiochart.git",
   "scripts": {
+    "precommit": "npm run build",
     "prebuild": "npm run test",
     "build": "npm run build:core",
     "prebuild:ci": "npm run test:ci",
@@ -28,6 +29,7 @@
   "devDependencies": {
     "docco": "~0.7",
     "eslint": "~4.7",
+    "husky": "~0.14",
     "jasmine-core": "~2.8",
     "jsdoc": "~3.5",
     "karma": "~1.7",
