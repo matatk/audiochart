@@ -349,6 +349,7 @@ var Player = (function() {
 		this.seriesMaxIndex = this.data.seriesLength(0) - 1
 
 		this._state = 'ready'
+		this.playTimes = []  // Debugging info
 	}
 
 	/**
@@ -404,6 +405,7 @@ var Player = (function() {
 	 * datum as the playback occurs.
 	 */
 	Player.prototype._playOne = function() {
+		const thisPlayTimeStart = performance.now()
 		if (this.visualCallback !== null) {
 			this.visualCallback(0, this.playIndex)
 		}
@@ -417,12 +419,17 @@ var Player = (function() {
 			const that = this
 			setTimeout(function() {
 				that.sounder.stop()
+				// Debugging info...
+				console.log(`Playing ${that.playIndex} took ${Math.round(performance.now() - that.startTime)} ms`)
+				const sum = that.playTimes.reduce((acc, cur) => acc + cur)
+				const mean = sum / that.playTimes.length
+				console.log(`Average play func time: ${mean.toFixed(2)} ms`)
 			}, this.interval)  // TODO test
 			this._state = 'finished'
-			console.log('playback took:', performance.now() - this.startTime)
 		}
 
 		this.playIndex += 1
+		this.playTimes.push(performance.now() - thisPlayTimeStart)
 	}
 
 	/**
