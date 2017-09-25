@@ -59,7 +59,7 @@ describe('KeyboardHandler', function() {
 	// TODO DRY
 	it('stops the event default handler being called', function(done) {
 		new window.KeyboardHandler(keyTargetDiv, fakePlayer)
-		const evt = createKeydownEvent('Up', false)
+		const evt = createKeydownEvent('Meta', false)
 		spyOn(evt, 'preventDefault')
 		keyTargetDiv.dispatchEvent(evt)
 		// TODO how to not need the timeout?
@@ -73,7 +73,7 @@ describe('KeyboardHandler', function() {
 	it('knows when the right arrow key has been pressed', function(done) {
 		const keyboardHandler = new window.KeyboardHandler(keyTargetDiv, fakePlayer)
 		spyOn(keyboardHandler, 'handleRight').and.callThrough()
-		createAndDispatchKeydownEvent('Right', false, keyTargetDiv)
+		createAndDispatchKeydownEvent('ArrowRight', false, keyTargetDiv)
 		// TODO how to not need the timeout?
 		setTimeout(function() {
 			expect(keyboardHandler.handleRight).toHaveBeenCalled()
@@ -85,7 +85,7 @@ describe('KeyboardHandler', function() {
 	it('steps its player when the right arrow key is pressed', function(done) {
 		new window.KeyboardHandler(keyTargetDiv, fakePlayer)
 		spyOn(fakePlayer, 'stepForward')
-		createAndDispatchKeydownEvent('Right', false, keyTargetDiv)
+		createAndDispatchKeydownEvent('ArrowRight', false, keyTargetDiv)
 		// TODO how to not need the timeout?
 		setTimeout(function() {
 			expect(fakePlayer.stepForward).toHaveBeenCalled()
@@ -97,7 +97,7 @@ describe('KeyboardHandler', function() {
 	it('knows when the space key has been pressed', function(done) {
 		const keyboardHandler = new window.KeyboardHandler(keyTargetDiv, fakePlayer)
 		spyOn(keyboardHandler, 'handleSpace').and.callThrough()
-		createAndDispatchKeydownEvent('U+0020', false, keyTargetDiv)
+		createAndDispatchKeydownEvent(' ', false, keyTargetDiv)
 		// TODO how to not need the timeout?
 		setTimeout(function() {
 			expect(keyboardHandler.handleSpace).toHaveBeenCalled()
@@ -109,7 +109,7 @@ describe('KeyboardHandler', function() {
 	it('pauses its player when space is pressed', function(done) {
 		new window.KeyboardHandler(keyTargetDiv, fakePlayer)
 		spyOn(fakePlayer, 'playPause')
-		createAndDispatchKeydownEvent('U+0020', false, keyTargetDiv)
+		createAndDispatchKeydownEvent(' ', false, keyTargetDiv)
 		// TODO how to not need the timeout?
 		setTimeout(function() {
 			expect(fakePlayer.playPause).toHaveBeenCalled()
