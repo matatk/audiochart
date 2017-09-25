@@ -393,10 +393,7 @@ var Player = (function() {
 	Player.prototype._playLoop = function() {
 		this._state = 'playing'
 		this._playOne()  // so that it starts immediately
-		const that = this
-		this.intervalID = setInterval(function() {
-			that._playOne()
-		}, this.interval)
+		this.intervalID = setInterval(() => this._playOne(), this.interval)
 	}
 
 	/**
@@ -416,13 +413,12 @@ var Player = (function() {
 
 		if (this.playIndex === this.seriesMaxIndex) {
 			clearInterval(this.intervalID)
-			const that = this
-			setTimeout(function() {
-				that.sounder.stop()
+			setTimeout(() => {
+				this.sounder.stop()
 				// Debugging info...
-				console.log(`Playing ${that.playIndex} took ${Math.round(performance.now() - that.startTime)} ms`)
-				const sum = that.playTimes.reduce((acc, cur) => acc + cur)
-				const mean = sum / that.playTimes.length
+				console.log(`Playing ${this.playIndex} took ${Math.round(performance.now() - this.startTime)} ms`)
+				const sum = this.playTimes.reduce((acc, cur) => acc + cur)
+				const mean = sum / this.playTimes.length
 				console.log(`Average play func time: ${mean.toFixed(2)} ms`)
 			}, this.interval)  // TODO test
 			this._state = 'finished'
