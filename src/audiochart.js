@@ -1,8 +1,6 @@
 'use strict'
 /** @module */
 
-let isProbablySafari = false  // try to detect Safari
-
 /**
  * Array index number (starts at zero).
  * Used to specify series and row in visual callbacks.
@@ -347,7 +345,7 @@ var Player = (function() {
 		}
 
 		this.interval = Math.ceil(duration / this.data.seriesLength(0))
-		// console.log('Player: duration', duration, 'interval', this.interval)
+		console.log('Player: duration', duration, 'interval', this.interval)
 		this.seriesMaxIndex = this.data.seriesLength(0) - 1
 
 		this._state = 'ready'
@@ -381,12 +379,9 @@ var Player = (function() {
 	 * number of data.
 	 */
 	Player.prototype._play = function() {
-		// this.startTime = new Date()
+		this.startTime = performance.now()
 		this.sounder.start(0)
-
 		this.playIndex = 0
-		this.skippedCalls = 0
-
 		this._playLoop()
 	}
 
@@ -399,33 +394,8 @@ var Player = (function() {
 		this._playOne()  // so that it starts immediately
 		const that = this
 		this.intervalID = setInterval(function() {
-			that._playOneWrapper()
+			that._playOne()
 		}, this.interval)
-	}
-
-	/**
-	 * Firefox and Chrome both seem to handle running `_playOne()` with an
-	 * interval of ~5ms fine, but Safari really lags when doing so, so here is
-	 * an unfortunately hacky workaround untill I'm better able to understand
-	 * what's going on.
-	 *
-	 * @todo: this may only apply to Google charts visual callbacks.
-	 *
-	 * @todo: ascertain if it's worth changing frequency at <10ms intervals;
-	 * if not then the incoming data should be filtered in some way,
-	 * thus negating this issue.
-	 */
-	Player.prototype._playOneWrapper = function() {
-		if (isProbablySafari
-			&& this.interval < 10
-			&& this.playIndex !== this.seriesMaxIndex
-			&& this.playIndex % 2 === 0) {
-			this.playIndex++
-			this.skippedCalls++
-			return
-		}
-
-		this._playOne()
 	}
 
 	/**
@@ -449,8 +419,7 @@ var Player = (function() {
 				that.sounder.stop()
 			}, this.interval)  // TODO test
 			this._state = 'finished'
-			// console.log('playback took:', new Date() - this.startTime)
-			// console.log('skipped calls:', this.skippedCalls)
+			console.log('playback took:', performance.now() - this.startTime)
 		}
 
 		this.playIndex += 1
@@ -507,7 +476,6 @@ var AudioContextGetter = (function() {
 			return new window.AudioContext()
 		} else if (window.webkitAudioContext !== undefined) {
 			/* eslint-disable new-cap */
-			isProbablySafari = true
 			return new window.webkitAudioContext()
 			/* eslint-enable new-cap */
 		}
@@ -577,27 +545,13 @@ var KeyboardHandler = (function() {
 		if (!container) {
 			throw Error('No container given')
 		}
-		container.setAttribute('tabindex', '0')
-		container.addEventListener('keydown', this.keypressHandler.bind(this))
-
 		if (!player) {
 			throw Error('No Player given')
 		}
-		this.player = player
-	}
 
-	/**
-	 * Support both standard and Safari methods of checking the key
-	 * @param {KeyboardEvent} keyboardEvent - the event
-	 * @returns {string} the name of the pressed key
-	 */
-	function keyName(keyboardEvent) {
-		if (keyboardEvent.key) {
-			return keyboardEvent.key
-		} else if (keyboardEvent.keyIdentifier) {
-			return keyboardEvent.keyIdentifier
-		}
-		throw new Error('Keyboard Events API unsupported')
+		container.setAttribute('tabindex', '0')
+		container.addEventListener('keydown', this.keypressHandler.bind(this))
+		this.player = player
 	}
 
 	/**
@@ -606,17 +560,17 @@ var KeyboardHandler = (function() {
 	 * Note: This is bound to the {@link KeyboardHandler} so that it can call
 	 *       the right handler methods.
 	 *
-	 * @param {KeyboardEvent} evt - the KeyboardEvent that occured
+	 * @param {KeyboardEvent} event - the KeyboardEvent that occured
 	 * @todo make link work
 	 */
-	KeyboardHandler.prototype.keypressHandler = function(evt) {
-		evt.preventDefault()
+	KeyboardHandler.prototype.keypressHandler = function(event) {
+		event.preventDefault()  // TODO should this be here or later? check for defaultPrevented?
 
-		if (keyName(evt) === 'Right') {
+		if (event.key === 'ArrowRight') {
 			this.handleRight()
-		} else if (keyName(evt) === 'Left' ) {
+		} else if (event.key === 'ArrowLeft' ) {
 			this.handleLeft()
-		} else if (keyName(evt) === 'U+0020') {
+		} else if (event.key === ' ') {
 			this.handleSpace()
 		}
 	}
