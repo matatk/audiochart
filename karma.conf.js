@@ -25,4 +25,12 @@ module.exports = function(config) {
 			]
 		}
 	})
+
+	if (config.grep) {
+		config.set({
+			client: {
+				args: ['--grep', config.grep]
+			}
+		})
+	}
 }
