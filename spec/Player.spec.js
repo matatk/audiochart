@@ -1,6 +1,16 @@
 'use strict'
 
-const expectedFrequencyCalls = function(playbackTime, seriesLength) {
+describe('Player sampling rate', () => {
+	it('calculates the correct sampling rates', () => {
+		expect(window.Player.samplingRate(1000,  50)).toEqual({ sample: 1, in: 1 })
+		expect(window.Player.samplingRate(1000, 100)).toEqual({ sample: 1, in: 1 })
+		expect(window.Player.samplingRate(1000, 629)).toEqual({ sample: 1, in: 6 })
+		expect(window.Player.samplingRate(1000, 250)).toEqual({ sample: 1, in: 3 })
+	})
+})
+
+
+function expectedFrequencyCalls(seriesLength) {
 	const out = []
 	for (let i = 0; i <= seriesLength - 1; i++) {
 		out.push([21])
@@ -80,7 +90,7 @@ const FakeSounder = (function() {
 })()
 
 
-const mixinDataWrapperCore = function(message, TestDataClass, testDuration, testCallCount, testInterval, useVisualCallback) {
+function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCount, testInterval, useVisualCallback) {
 	describe(message, function() {
 		let fakeData = null
 		let fakeMapper = null
@@ -142,7 +152,7 @@ const mixinDataWrapperCore = function(message, TestDataClass, testDuration, test
 			spyOn(fakeSounder, 'frequency')
 			player.playPause()
 			jasmine.clock().tick(testDuration)
-			expect(fakeSounder.frequency.calls.allArgs()).toEqual(expectedFrequencyCalls(testDuration, testCallCount))
+			expect(fakeSounder.frequency.calls.allArgs()).toEqual(expectedFrequencyCalls(testCallCount))
 		})
 
 		if (useVisualCallback) {
@@ -252,7 +262,7 @@ const mixinDataWrapperCore = function(message, TestDataClass, testDuration, test
 }
 
 
-const mixinDataWrapper = function(message, TestDataClass, testDuration, testCallCount, testInterval) {
+function mixinDataWrapper(message, TestDataClass, testDuration, testCallCount, testInterval) {
 	describe(message, function() {
 		mixinDataWrapperCore('when not having a callback', TestDataClass, testDuration, testCallCount, testInterval, false)
 		mixinDataWrapperCore('when having a callback', TestDataClass, testDuration, testCallCount, testInterval, true)
