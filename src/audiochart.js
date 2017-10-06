@@ -346,27 +346,17 @@ var Player = (function() {
 		}
 
 		const seriesLen = this.data.seriesLength(0)
-		const idealInterval = Math.ceil(duration / seriesLen)
-		console.log(`duration: ${duration}; ideal interval: ${idealInterval}`)
 
-		this.sampleOneIn = 0
-		if (idealInterval < minInterval) {
-			this.interval = minInterval
-			console.log(`Set interval to ${this.interval}`)
-			const slots = Math.floor(duration / minInterval)
-			this.sampleOneInFloat = seriesLen / slots
-			this.sampleOneIn = Math.floor(seriesLen / slots)
-			console.log(`Need to sample 1 in ${this.sampleOneIn} (${this.sampleOneInFloat})`)
-		} else {
-			this.interval = idealInterval
-		}
+		const sampling = Player.samplingInfo(duration, seriesLen)
+		this.interval = sampling.interval
+		this.sampleOneIn = sampling.in
 
-		this.seriesMaxIndex = seriesLen - 1
+		this.seriesMaxIndex = seriesLen - 1  // TODO just use seriesLen?
 		this._state = 'ready'
 	}
 
 	/* static function to work out sampling rate */
-	Player.samplingRate = function(duration, seriesLen) {
+	Player.samplingInfo = function(duration, seriesLen) {
 		const minInterval = 10
 
 		const idealInterval = Math.ceil(duration / seriesLen)
@@ -394,7 +384,8 @@ var Player = (function() {
 
 		return {
 			'sample': 1,
-			'in': sampleOneIn
+			'in': sampleOneIn,
+			'interval': interval
 		}
 	}
 

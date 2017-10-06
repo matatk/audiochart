@@ -1,11 +1,15 @@
 'use strict'
 
-describe('Player sampling rate', () => {
-	it('calculates the correct sampling rates', () => {
-		expect(window.Player.samplingRate(1000,  50)).toEqual({ sample: 1, in: 1 })
-		expect(window.Player.samplingRate(1000, 100)).toEqual({ sample: 1, in: 1 })
-		expect(window.Player.samplingRate(1000, 629)).toEqual({ sample: 1, in: 6 })
-		expect(window.Player.samplingRate(1000, 250)).toEqual({ sample: 1, in: 3 })
+describe('Player sampling rate and interval', () => {
+	it('calculates the correct sampling rates and intervals', () => {
+		expect(window.Player.samplingInfo(1000,  50)).toEqual(
+			{ sample: 1, in: 1, interval: 20 })
+		expect(window.Player.samplingInfo(1000, 100)).toEqual(
+			{ sample: 1, in: 1, interval: 10 })
+		expect(window.Player.samplingInfo(1000, 629)).toEqual(
+			{ sample: 1, in: 6, interval: 10 })
+		expect(window.Player.samplingInfo(1000, 250)).toEqual(
+			{ sample: 1, in: 3, interval: 10 })
 	})
 })
 
