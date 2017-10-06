@@ -271,8 +271,13 @@ function mixinDataWrapper(message, TestDataClass, testDuration, testCallCount, t
 
 
 describe('Player', function() {
+	// With 'long' intervals
 	mixinDataWrapper('instantiated with short fake data source for 5000ms', ShortFakeDataWrapper, 5000, 4, 1250)
 	mixinDataWrapper('instantiated with short fake data source for 3000ms', ShortFakeDataWrapper, 3000, 4, 750)
 	mixinDataWrapper('instantiated with long fake data source for 5000ms', LongFakeDataWrapper, 5000, 100, 50)
 	mixinDataWrapper('instantiated with long fake data source for 2500ms', LongFakeDataWrapper, 2500, 100, 25)
+
+	// With minimum intervals
+	mixinDataWrapper('instantiated with long fake data source for 500ms', LongFakeDataWrapper, 500, 50, 10)
+	mixinDataWrapper('instantiated with long fake data source for 500ms', LongFakeDataWrapper, 100, 10, 10)
 })
