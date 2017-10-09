@@ -1,5 +1,5 @@
 'use strict'
-/* global dataWrappersTestCore */
+/* global dataWrappersTestCore GoogleDataWrapper */
 
 const testOne = [[0, 2], [1, 3], [2, 3], [3, 4]]
 const testNeg = [[0, 20], [1, -10], [2, 0], [3, 8], [4, -90]]
@@ -57,5 +57,5 @@ const FakeGoogleDataTable = (function() {
 
 dataWrappersTestCore(
 	'GoogleDataWrapper',
-	new window.GoogleDataWrapper(new FakeGoogleDataTable(testOne)),
-	new window.GoogleDataWrapper(new FakeGoogleDataTable(testNeg)))
+	new GoogleDataWrapper(new FakeGoogleDataTable(testOne)),
+	new GoogleDataWrapper(new FakeGoogleDataTable(testNeg)))

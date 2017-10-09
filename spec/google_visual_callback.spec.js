@@ -1,4 +1,5 @@
 'use strict'
+/* global googleVisualCallbackMaker */
 
 describe('googleVisualCallback', function() {
 	const FakeChart = (function() {
@@ -12,7 +13,7 @@ describe('googleVisualCallback', function() {
 
 	beforeEach(function() {
 		fakeChart = new FakeChart()
-		googleVisualCallback = window.googleVisualCallbackMaker(fakeChart)
+		googleVisualCallback = googleVisualCallbackMaker(fakeChart)
 		spyOn(fakeChart, 'setSelection')
 	})
 

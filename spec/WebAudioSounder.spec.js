@@ -1,4 +1,5 @@
 'use strict'
+/* global WebAudioSounder */
 
 describe('WebAudioSounder', function() {
 	const FakeOscillator = (function() {
@@ -36,12 +37,12 @@ describe('WebAudioSounder', function() {
 	})
 
 	it('has no oscillator to start with', function() {
-		const sounder = new window.WebAudioSounder(fakeAudioContext)
+		const sounder = new WebAudioSounder(fakeAudioContext)
 		expect(sounder.oscillator).not.toBeDefined()
 	})
 
 	it('[TODO] connects and starts its oscillator', function() {
-		const sounder = new window.WebAudioSounder(fakeAudioContext)
+		const sounder = new WebAudioSounder(fakeAudioContext)
 		sounder.start()
 		const fakeOscillator = sounder.oscillator
 		spyOn(fakeOscillator, 'connect')
@@ -53,7 +54,7 @@ describe('WebAudioSounder', function() {
 
 	it('changes frequency', function() {
 		let fakeOscillator = null
-		const sounder = new window.WebAudioSounder(fakeAudioContext)
+		const sounder = new WebAudioSounder(fakeAudioContext)
 		jasmine.clock().install()
 		sounder.start()
 		fakeOscillator = sounder.oscillator
@@ -65,7 +66,7 @@ describe('WebAudioSounder', function() {
 	})
 
 	it('stops its oscillator', function() {
-		const sounder = new window.WebAudioSounder(fakeAudioContext)
+		const sounder = new WebAudioSounder(fakeAudioContext)
 		sounder.start()
 		const fakeOscillator = sounder.oscillator
 		spyOn(fakeOscillator, 'stop')
@@ -74,7 +75,7 @@ describe('WebAudioSounder', function() {
 	})
 
 	it('creates a new oscillator after the previous one has been stopped', function() {
-		const sounder = new window.WebAudioSounder(fakeAudioContext)
+		const sounder = new WebAudioSounder(fakeAudioContext)
 		sounder.start()
 		const fakeOscillator1 = sounder.oscillator
 		sounder.stop()
