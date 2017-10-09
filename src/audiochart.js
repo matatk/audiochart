@@ -358,29 +358,26 @@ var Player = (function() {
 	/* static function to work out sampling rate */
 	Player.samplingInfo = function(duration, seriesLen) {
 		const minInterval = 10
-
-		const idealInterval = Math.ceil(duration / seriesLen)
-		console.log(`duration: ${duration}; ideal interval: ${idealInterval}`)
-
 		let interval
 		let sampleOneIn
 		let slots
 
+		const idealInterval = Math.ceil(duration / seriesLen)
+		console.log(`sampleInfo: duration: ${duration}; series length: ${seriesLen}; ideal interval: ${idealInterval}`)
+
 		if (idealInterval < minInterval) {
 			interval = minInterval
-			console.log(`Set interval to ${interval}`)
 			slots = Math.floor(duration / minInterval)
 			const sampleOneInFloat = seriesLen / slots
 			sampleOneIn = Math.round(seriesLen / slots)
-			console.log(`Need to sample 1 in ${sampleOneIn} (${sampleOneInFloat})`)
+			console.log(`sampleInfo: Need to sample 1 in ${sampleOneIn} (${sampleOneInFloat})`)
 		} else {
 			slots = Math.floor(duration / minInterval)
 			interval = idealInterval
 			sampleOneIn = 1
 		}
 
-		console.log(`it will take ${ slots * interval}`)
-		console.log(`it will take ${ (seriesLen / sampleOneIn) * interval}`)
+		console.log(`sampleInfo: it will take ${ (seriesLen / sampleOneIn) * interval}`)
 
 		return {
 			'sample': 1,
@@ -460,10 +457,10 @@ var Player = (function() {
 			this._state = 'finished'
 
 			// Debugging info
-			console.log(`Playing ${this.playCount} of ${this.playIndex} took ${Math.round(performance.now() - this.startTime)} ms`)
+			console.log(`Player: Playing ${this.playCount} of ${this.playIndex} took ${Math.round(performance.now() - this.startTime)} ms`)
 			const sum = this.playTimes.reduce((acc, cur) => acc + cur)
 			const mean = sum / this.playTimes.length
-			console.log(`Average play func time: ${mean.toFixed(2)} ms`)
+			console.log(`Player: Average play func time: ${mean.toFixed(2)} ms`)
 		}
 
 		this.playIndex += this.sampleOneIn > 0 ? this.sampleOneIn : 1  // TODO sl
