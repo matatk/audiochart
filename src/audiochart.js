@@ -322,7 +322,6 @@ var WebAudioSounder = (function() {
 	return WebAudioSounder
 })()
 
-
 var Player = (function() {
 	/**
 	 * Orchestrates the audible (and visual cursor) rendering of the chart
@@ -335,6 +334,8 @@ var Player = (function() {
 	 * @param {VisualCallback} visualCallback - the callback function that highlights the current datum
 	 */
 	function Player(duration, data, pitchMapper, sounder, visualCallback) {
+		const minInterval = 10  // ms between soundings of successive datum points
+
 		this.data = data
 		this.pitchMapper = pitchMapper
 		this.sounder = sounder
@@ -344,11 +345,45 @@ var Player = (function() {
 			this.visualCallback = visualCallback
 		}
 
-		this.interval = Math.ceil(duration / this.data.seriesLength(0))
-		console.log('Player: duration', duration, 'interval', this.interval)
-		this.seriesMaxIndex = this.data.seriesLength(0) - 1
+		const seriesLen = this.data.seriesLength(0)
 
+		const sampling = Player.samplingInfo(duration, seriesLen)
+		this.interval = sampling.interval
+		this.sampleOneIn = sampling.in
+
+		this.seriesMaxIndex = seriesLen - 1  // TODO just use seriesLen?
 		this._state = 'ready'
+	}
+
+	/* static function to work out sampling rate */
+	Player.samplingInfo = function(duration, seriesLen) {
+		const minInterval = 10
+		let interval
+		let sampleOneIn
+		let slots
+
+		const idealInterval = Math.ceil(duration / seriesLen)
+		console.log(`sampleInfo: duration: ${duration}; series length: ${seriesLen}; ideal interval: ${idealInterval}`)
+
+		if (idealInterval < minInterval) {
+			interval = minInterval
+			slots = Math.floor(duration / minInterval)
+			const sampleOneInFloat = seriesLen / slots
+			sampleOneIn = Math.round(seriesLen / slots)
+			console.log(`sampleInfo: Need to sample 1 in ${sampleOneIn} (${sampleOneInFloat})`)
+		} else {
+			slots = Math.floor(duration / minInterval)
+			interval = idealInterval
+			sampleOneIn = 1
+		}
+
+		console.log(`sampleInfo: it will take ${ (seriesLen / sampleOneIn) * interval}`)
+
+		return {
+			'sample': 1,
+			'in': sampleOneIn,
+			'interval': interval
+		}
 	}
 
 	/**
@@ -379,9 +414,14 @@ var Player = (function() {
 	 * number of data.
 	 */
 	Player.prototype._play = function() {
+		// Debugging info
+		this.playTimes = []  // store all lengths of time that playOne took
+		this.playCount = 0   // how many datum points were actually sounded?
+
 		this.startTime = performance.now()
 		this.sounder.start(0)
 		this.playIndex = 0
+
 		this._playLoop()
 	}
 
@@ -392,10 +432,7 @@ var Player = (function() {
 	Player.prototype._playLoop = function() {
 		this._state = 'playing'
 		this._playOne()  // so that it starts immediately
-		const that = this
-		this.intervalID = setInterval(function() {
-			that._playOne()
-		}, this.interval)
+		this.intervalID = setInterval(() => this._playOne(), this.interval)
 	}
 
 	/**
@@ -404,25 +441,31 @@ var Player = (function() {
 	 * datum as the playback occurs.
 	 */
 	Player.prototype._playOne = function() {
-		if (this.visualCallback !== null) {
-			this.visualCallback(0, this.playIndex)
-		}
+		const thisPlayTimeStart = performance.now()
 
-		this.sounder.frequency(
-			this.pitchMapper.map(
-				this.data.seriesValue(0, this.playIndex)))
+		if (this.playIndex <= this.seriesMaxIndex) {
+			if (this.visualCallback !== null) {
+				this.visualCallback(0, this.playIndex)
+			}
 
-		if (this.playIndex === this.seriesMaxIndex) {
+			this.sounder.frequency(
+				this.pitchMapper.map(
+					this.data.seriesValue(0, this.playIndex)))
+		} else {
 			clearInterval(this.intervalID)
-			const that = this
-			setTimeout(function() {
-				that.sounder.stop()
-			}, this.interval)  // TODO test
+			this.sounder.stop()
 			this._state = 'finished'
-			console.log('playback took:', performance.now() - this.startTime)
+
+			// Debugging info
+			console.log(`Player: Playing ${this.playCount} of ${this.playIndex} took ${Math.round(performance.now() - this.startTime)} ms`)
+			const sum = this.playTimes.reduce((acc, cur) => acc + cur)
+			const mean = sum / this.playTimes.length
+			console.log(`Player: Average play func time: ${mean.toFixed(2)} ms`)
 		}
 
-		this.playIndex += 1
+		this.playIndex += this.sampleOneIn > 0 ? this.sampleOneIn : 1  // TODO sl
+		this.playCount += 1
+		this.playTimes.push(performance.now() - thisPlayTimeStart)
 	}
 
 	/**

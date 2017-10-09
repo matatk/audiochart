@@ -1,6 +1,20 @@
 'use strict'
 
-const expectedFrequencyCalls = function(playbackTime, seriesLength) {
+describe('Player sampling rate and interval', () => {
+	it('calculates the correct sampling rates and intervals', () => {
+		expect(window.Player.samplingInfo(1000,  50)).toEqual(
+			{ sample: 1, in: 1, interval: 20 })
+		expect(window.Player.samplingInfo(1000, 100)).toEqual(
+			{ sample: 1, in: 1, interval: 10 })
+		expect(window.Player.samplingInfo(1000, 629)).toEqual(
+			{ sample: 1, in: 6, interval: 10 })
+		expect(window.Player.samplingInfo(1000, 250)).toEqual(
+			{ sample: 1, in: 3, interval: 10 })
+	})
+})
+
+
+function expectedFrequencyCalls(seriesLength) {
 	const out = []
 	for (let i = 0; i <= seriesLength - 1; i++) {
 		out.push([21])
@@ -80,7 +94,7 @@ const FakeSounder = (function() {
 })()
 
 
-const mixinDataWrapperCore = function(message, TestDataClass, testDuration, testCallCount, testInterval, useVisualCallback) {
+function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCount, testInterval, useVisualCallback) {
 	describe(message, function() {
 		let fakeData = null
 		let fakeMapper = null
@@ -142,7 +156,7 @@ const mixinDataWrapperCore = function(message, TestDataClass, testDuration, test
 			spyOn(fakeSounder, 'frequency')
 			player.playPause()
 			jasmine.clock().tick(testDuration)
-			expect(fakeSounder.frequency.calls.allArgs()).toEqual(expectedFrequencyCalls(testDuration, testCallCount))
+			expect(fakeSounder.frequency.calls.allArgs()).toEqual(expectedFrequencyCalls(testCallCount))
 		})
 
 		if (useVisualCallback) {
@@ -252,7 +266,7 @@ const mixinDataWrapperCore = function(message, TestDataClass, testDuration, test
 }
 
 
-const mixinDataWrapper = function(message, TestDataClass, testDuration, testCallCount, testInterval) {
+function mixinDataWrapper(message, TestDataClass, testDuration, testCallCount, testInterval) {
 	describe(message, function() {
 		mixinDataWrapperCore('when not having a callback', TestDataClass, testDuration, testCallCount, testInterval, false)
 		mixinDataWrapperCore('when having a callback', TestDataClass, testDuration, testCallCount, testInterval, true)
@@ -261,8 +275,13 @@ const mixinDataWrapper = function(message, TestDataClass, testDuration, testCall
 
 
 describe('Player', function() {
+	// With 'long' intervals
 	mixinDataWrapper('instantiated with short fake data source for 5000ms', ShortFakeDataWrapper, 5000, 4, 1250)
 	mixinDataWrapper('instantiated with short fake data source for 3000ms', ShortFakeDataWrapper, 3000, 4, 750)
 	mixinDataWrapper('instantiated with long fake data source for 5000ms', LongFakeDataWrapper, 5000, 100, 50)
 	mixinDataWrapper('instantiated with long fake data source for 2500ms', LongFakeDataWrapper, 2500, 100, 25)
+
+	// With minimum intervals
+	mixinDataWrapper('instantiated with long fake data source for 500ms', LongFakeDataWrapper, 500, 50, 10)
+	mixinDataWrapper('instantiated with long fake data source for 500ms', LongFakeDataWrapper, 100, 10, 10)
 })
