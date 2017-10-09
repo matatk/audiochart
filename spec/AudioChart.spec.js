@@ -1,5 +1,4 @@
 'use strict'
-/* global AudioChart _AudioChart AudioContextGetter */
 
 describe('AudioChart', function() {
 	let fakeOptions = null
@@ -13,24 +12,24 @@ describe('AudioChart', function() {
 		const fakeAudioContext = new FakeAudioContext()
 		spyOn(window, '_AudioChart')
 
-		new AudioChart(fakeOptions, fakeAudioContext)
-		expect(_AudioChart)
+		new window.AudioChart(fakeOptions, fakeAudioContext)
+		expect(window._AudioChart)
 			.toHaveBeenCalledWith(fakeOptions, fakeAudioContext)
 	})
 
 	it('can create a new context and pass it to _AudioChart', function() {
 		spyOn(window, '_AudioChart')
-		spyOn(AudioContextGetter, 'get').and.returnValue(42)
+		spyOn(window, 'getAudioContext').and.returnValue(42)
 
-		new AudioChart(fakeOptions)
-		expect(_AudioChart)
+		new window.AudioChart(fakeOptions)
+		expect(window._AudioChart)
 			.toHaveBeenCalledWith(fakeOptions, 42)
 	})
 
 	it('throws with a message if Web Audio API is unsupported', function() {
-		spyOn(AudioContextGetter, 'get').and.returnValue(null)
+		spyOn(window, 'getAudioContext').and.returnValue(null)
 		expect(function() {
-			new AudioChart(fakeOptions)
+			new window.AudioChart(fakeOptions)
 		}).toThrow(
 			Error("Sorry, your browser doesn't support the Web Audio API.")
 		)

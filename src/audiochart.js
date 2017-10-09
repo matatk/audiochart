@@ -75,36 +75,38 @@ var GoogleDataWrapper = (function() {
 	 * @implements {DataWrapper}
 	 * @param {GoogleDataTable} data - The in-memory GoogleDataTable
 	 */
-	function GoogleDataWrapper(data) {
-		this.data = data
-	}
-
-	GoogleDataWrapper.prototype.numSeries = function() {
-		return this.data.getNumberOfColumns() - 1
-	}
-
-	GoogleDataWrapper.prototype.seriesNames = function() {
-		const results = []
-		for (let i = 0; i < this.data.getNumberOfColumns() - 1; i++) {
-			results.push(this.data.getColumnLabel(i))
+	class GoogleDataWrapper {
+		constructor(data) {
+			this.data = data
 		}
-		return results
-	}
 
-	GoogleDataWrapper.prototype.seriesMin = function(series) {
-		return this.data.getColumnRange(series + 1).min
-	}
+		numSeries() {
+			return this.data.getNumberOfColumns() - 1
+		}
 
-	GoogleDataWrapper.prototype.seriesMax = function(series) {
-		return this.data.getColumnRange(series + 1).max
-	}
+		seriesNames() {
+			const results = []
+			for (let i = 0; i < this.data.getNumberOfColumns() - 1; i++) {
+				results.push(this.data.getColumnLabel(i))
+			}
+			return results
+		}
 
-	GoogleDataWrapper.prototype.seriesValue = function(series, index) {
-		return this.data.getValue(index, series + 1)
-	}
+		seriesMin(series) {
+			return this.data.getColumnRange(series + 1).min
+		}
 
-	GoogleDataWrapper.prototype.seriesLength = function(series) {
-		return this.data.getNumberOfRows()
+		seriesMax(series) {
+			return this.data.getColumnRange(series + 1).max
+		}
+
+		seriesValue(series, index) {
+			return this.data.getValue(index, series + 1)
+		}
+
+		seriesLength(series) {
+			return this.data.getNumberOfRows()
+		}
 	}
 
 	return GoogleDataWrapper
@@ -118,42 +120,44 @@ var JSONDataWrapper = (function() {
 	 * @implements {DataWrapper}
 	 * @param {JSON} json - The JSON data, as a string or object
 	 */
-	function JSONDataWrapper(json) {
-		if (typeof json === 'string') {
-			this.object = JSON.parse(json)
-		} else if (typeof json === 'object') {
-			this.object = json
-		} else {
-			throw Error('Please provide a JSON string or derived object.')
+	class JSONDataWrapper {
+		constructor(json) {
+			if (typeof json === 'string') {
+				this.object = JSON.parse(json)
+			} else if (typeof json === 'object') {
+				this.object = json
+			} else {
+				throw Error('Please provide a JSON string or derived object.')
+			}
 		}
-	}
 
-	JSONDataWrapper.prototype.numSeries = function() {
-		return this.object.data.length
-	}
-
-	JSONDataWrapper.prototype.seriesNames = function() {
-		const results = []
-		for (let i = 0; i < this.object.data.length; i++) {
-			results.push(this.object.data[i].series)
+		numSeries() {
+			return this.object.data.length
 		}
-		return results
-	}
 
-	JSONDataWrapper.prototype.seriesMin = function(series) {
-		return Math.min.apply(this, this.object.data[series].values)
-	}
+		seriesNames() {
+			const results = []
+			for (let i = 0; i < this.object.data.length; i++) {
+				results.push(this.object.data[i].series)
+			}
+			return results
+		}
 
-	JSONDataWrapper.prototype.seriesMax = function(series) {
-		return Math.max.apply(this, this.object.data[series].values)
-	}
+		seriesMin(series) {
+			return Math.min.apply(this, this.object.data[series].values)
+		}
 
-	JSONDataWrapper.prototype.seriesValue = function(series, index) {
-		return this.object.data[series].values[index]
-	}
+		seriesMax(series) {
+			return Math.max.apply(this, this.object.data[series].values)
+		}
 
-	JSONDataWrapper.prototype.seriesLength = function(series) {
-		return this.object.data[series].values.length
+		seriesValue(series, index) {
+			return this.object.data[series].values[index]
+		}
+
+		seriesLength(series) {
+			return this.object.data[series].values.length
+		}
 	}
 
 	return JSONDataWrapper
@@ -168,49 +172,51 @@ var HTMLTableDataWrapper = (function() {
 	 * @param {HTMLTableElement} table - The in-DOM table element
 	 * @todo check it's a table
 	 */
-	function HTMLTableDataWrapper(table) {
-		this.table = table
-		if (!this.table) {
-			throw Error('No table given.')
+	class HTMLTableDataWrapper {
+		constructor(table) {
+			this.table = table
+			if (!this.table) {
+				throw Error('No table given.')
+			}
 		}
-	}
 
-	HTMLTableDataWrapper.prototype.numSeries = function() {
-		return this.table.getElementsByTagName('tr')[0].children.length
-	}
-
-	HTMLTableDataWrapper.prototype.seriesNames = function() {
-		const headerCells = this.table.getElementsByTagName('th')
-		const results = []
-		for (let i = 0; i < headerCells.length; i++) {
-			results.push(headerCells[i].textContent)
+		numSeries() {
+			return this.table.getElementsByTagName('tr')[0].children.length
 		}
-		return results
-	}
 
-	HTMLTableDataWrapper.prototype._seriesFloats = function(series) {
-		const dataCells = this.table.getElementsByTagName('td')
-		const results = []
-		for (let i = 0; i < dataCells.length; i++) {
-			results.push(parseFloat(dataCells[i].textContent))
+		seriesNames() {
+			const headerCells = this.table.getElementsByTagName('th')
+			const results = []
+			for (let i = 0; i < headerCells.length; i++) {
+				results.push(headerCells[i].textContent)
+			}
+			return results
 		}
-		return results
-	}
 
-	HTMLTableDataWrapper.prototype.seriesMin = function(series) {
-		return Math.min.apply(this, this._seriesFloats(series))
-	}
+		_seriesFloats(series) {
+			const dataCells = this.table.getElementsByTagName('td')
+			const results = []
+			for (let i = 0; i < dataCells.length; i++) {
+				results.push(parseFloat(dataCells[i].textContent))
+			}
+			return results
+		}
 
-	HTMLTableDataWrapper.prototype.seriesMax = function(series) {
-		return Math.max.apply(this, this._seriesFloats(series))
-	}
+		seriesMin(series) {
+			return Math.min.apply(this, this._seriesFloats(series))
+		}
 
-	HTMLTableDataWrapper.prototype.seriesValue = function(series, index) {
-		return parseFloat(this.table.getElementsByTagName('tr')[index + 1].children[series].textContent)
-	}
+		seriesMax(series) {
+			return Math.max.apply(this, this._seriesFloats(series))
+		}
 
-	HTMLTableDataWrapper.prototype.seriesLength = function(series) {
-		return this.table.getElementsByTagName('tr').length - 1
+		seriesValue(series, index) {
+			return parseFloat(this.table.getElementsByTagName('tr')[index + 1].children[series].textContent)
+		}
+
+		seriesLength(series) {
+			return this.table.getElementsByTagName('tr').length - 1
+		}
 	}
 
 	return HTMLTableDataWrapper
@@ -224,20 +230,22 @@ var PitchMapper = (function() {
 	 * @param {number} minimumDatum - the minimum value in this data series
 	 * @param {number} maximumDatum - the maximum value in this data series
 	 */
-	function PitchMapper(minimumDatum, maximumDatum) {
-		this.minimumDatum = minimumDatum
-		this.maximumDatum = maximumDatum
-		if (this.minimumDatum > this.maximumDatum) {
-			throw Error('minimum datum should be <= maximum datum')
+	class PitchMapper {
+		constructor(minimumDatum, maximumDatum) {
+			this.minimumDatum = minimumDatum
+			this.maximumDatum = maximumDatum
+			if (this.minimumDatum > this.maximumDatum) {
+				throw Error('minimum datum should be <= maximum datum')
+			}
 		}
-	}
 
-	/**
-	 * Map a datum to an output value
-	 * @abstract
-	 * @param {number} datum - the datum to be mapped
-	 */
-	PitchMapper.prototype.map = function(datum) {}  // FIXME naming conflict?
+		/**
+		 * Map a datum to an output value
+		 * @abstract
+		 * @param {number} datum - the datum to be mapped
+		 */
+		map(datum) {}  // FIXME naming conflict?
+	}
 
 	return PitchMapper
 })()
@@ -253,31 +261,30 @@ var FrequencyPitchMapper = (function() {
 	 * @param {number} minimumFrequency - the minimum output frequency
 	 * @param {number} maximumFrequency - the maximum output frequency
 	 */
-	function FrequencyPitchMapper(minimumDatum, maximumDatum, minimumFrequency, maximumFrequency) {
-		this.minimumFrequency = minimumFrequency
-		this.maximumFrequency = maximumFrequency
-		PitchMapper.call(this, minimumDatum, maximumDatum)
-		if (this.minimumFrequency > this.maximumFrequency) {
-			throw Error('minimum frequency should be <= maximum frequency')
+	class FrequencyPitchMapper extends PitchMapper {
+		constructor(minimumDatum, maximumDatum, minimumFrequency, maximumFrequency) {
+			super(minimumDatum, maximumDatum)
+			this.minimumFrequency = minimumFrequency
+			this.maximumFrequency = maximumFrequency
+			if (this.minimumFrequency > this.maximumFrequency) {
+				throw Error('minimum frequency should be <= maximum frequency')
+			}
+			this.dataRange = this.maximumDatum - this.minimumDatum
 		}
-		this.dataRange = this.maximumDatum - this.minimumDatum
-	}
 
-	FrequencyPitchMapper.prototype = Object.create(PitchMapper.prototype)
-	FrequencyPitchMapper.prototype.constructor = FrequencyPitchMapper
-
-	/**
-	 * @param {number} datum - the datum to be mapped
-	 * @returns {number} frequency for this datum
-	 */
-	FrequencyPitchMapper.prototype.map = function(datum) {
-		let ratio
-		if (this.dataRange) {
-			ratio = (datum - this.minimumDatum) / this.dataRange
-		} else {
-			ratio = 0.5
+		/**
+		 * @param {number} datum - the datum to be mapped
+		 * @returns {number} frequency for this datum
+		 */
+		map(datum) {
+			let ratio
+			if (this.dataRange) {
+				ratio = (datum - this.minimumDatum) / this.dataRange
+			} else {
+				ratio = 0.5
+			}
+			return this.minimumFrequency + ratio * (this.maximumFrequency - this.minimumFrequency)
 		}
-		return this.minimumFrequency + ratio * (this.maximumFrequency - this.minimumFrequency)
 	}
 
 	return FrequencyPitchMapper
@@ -290,33 +297,35 @@ var WebAudioSounder = (function() {
 	 * @private
 	 * @param {AudioContext} context - the Web Audio API context
 	 */
-	function WebAudioSounder(context) {
-		this.context = context
-	}
+	class WebAudioSounder {
+		constructor(context) {
+			this.context = context
+		}
 
-	/**
-	 * Start the oscillator
-	 */
-	WebAudioSounder.prototype.start = function() {
-		// Oscillators cannot be re-used
-		this.oscillator = this.context.createOscillator()
-		this.oscillator.connect(this.context.destination)
-		this.oscillator.start(0)
-	}
+		/**
+		 * Start the oscillator
+		 */
+		start() {
+			// Oscillators cannot be re-used
+			this.oscillator = this.context.createOscillator()
+			this.oscillator.connect(this.context.destination)
+			this.oscillator.start(0)
+		}
 
-	/**
-	 * Set the frequency of the oscillator at a given point in time
-	 * @param {number} frequency - the frequency to change to
-	 */
-	WebAudioSounder.prototype.frequency = function(frequency) {
-		this.oscillator.frequency.value = frequency
-	}
+		/**
+		 * Set the frequency of the oscillator at a given point in time
+		 * @param {number} frequency - the frequency to change to
+		 */
+		frequency(frequency) {
+			this.oscillator.frequency.value = frequency
+		}
 
-	/**
-	 * Stop the oscillator at a given time
-	 */
-	WebAudioSounder.prototype.stop = function() {
-		this.oscillator.stop()
+		/**
+		 * Stop the oscillator at a given time
+		 */
+		stop() {
+			this.oscillator.stop()
+		}
 	}
 
 	return WebAudioSounder
@@ -333,171 +342,173 @@ var Player = (function() {
 	 * @param {WebAudioSounder} sounder - the sounder object
 	 * @param {VisualCallback} visualCallback - the callback function that highlights the current datum
 	 */
-	function Player(duration, data, pitchMapper, sounder, visualCallback) {
-		const minInterval = 10  // ms between soundings of successive datum points
+	class Player {
+		constructor(duration, data, pitchMapper, sounder, visualCallback) {
+			const minInterval = 10  // ms between soundings of successive datum points
 
-		this.data = data
-		this.pitchMapper = pitchMapper
-		this.sounder = sounder
-		if (arguments.length < 5) {
-			this.visualCallback = null
-		} else {
-			this.visualCallback = visualCallback
-		}
-
-		const seriesLen = this.data.seriesLength(0)
-
-		const sampling = Player.samplingInfo(duration, seriesLen)
-		this.interval = sampling.interval
-		this.sampleOneIn = sampling.in
-
-		this.seriesMaxIndex = seriesLen - 1  // TODO just use seriesLen?
-		this._state = 'ready'
-	}
-
-	/* static function to work out sampling rate */
-	Player.samplingInfo = function(duration, seriesLen) {
-		const minInterval = 10
-		let interval
-		let sampleOneIn
-		let slots
-
-		const idealInterval = Math.ceil(duration / seriesLen)
-		console.log(`sampleInfo: duration: ${duration}; series length: ${seriesLen}; ideal interval: ${idealInterval}`)
-
-		if (idealInterval < minInterval) {
-			interval = minInterval
-			slots = Math.floor(duration / minInterval)
-			const sampleOneInFloat = seriesLen / slots
-			sampleOneIn = Math.round(seriesLen / slots)
-			console.log(`sampleInfo: Need to sample 1 in ${sampleOneIn} (${sampleOneInFloat})`)
-		} else {
-			slots = Math.floor(duration / minInterval)
-			interval = idealInterval
-			sampleOneIn = 1
-		}
-
-		console.log(`sampleInfo: it will take ${ (seriesLen / sampleOneIn) * interval}`)
-
-		return {
-			'sample': 1,
-			'in': sampleOneIn,
-			'interval': interval
-		}
-	}
-
-	/**
-	 * Main entry point; manages state.
-	 */
-	Player.prototype.playPause = function() {
-		switch (this._state) {
-			case 'ready':
-				this._play()
-				break
-			case 'playing':
-				this._pause()
-				break
-			case 'paused':
-				this._playLoop()
-				break
-			case 'finished':
-				this._play()
-				break
-			default:
-				throw Error('Player error: invalid state: ' + String(this._state))
-		}
-	}
-
-	/**
-	 * Resets play state and sets up a recurring function to update the sound
-	 * (and, optionally, visual callback) at an interval dependant on the
-	 * number of data.
-	 */
-	Player.prototype._play = function() {
-		// Debugging info
-		this.playTimes = []  // store all lengths of time that playOne took
-		this.playCount = 0   // how many datum points were actually sounded?
-
-		this.startTime = performance.now()
-		this.sounder.start(0)
-		this.playIndex = 0
-
-		this._playLoop()
-	}
-
-	/**
-	 * Update state and set _playOne() to run regularly, to render the sound
-	 * (and optional visual cursor movement).
-	 */
-	Player.prototype._playLoop = function() {
-		this._state = 'playing'
-		this._playOne()  // so that it starts immediately
-		this.intervalID = setInterval(() => this._playOne(), this.interval)
-	}
-
-	/**
-	 * This is where the sound is actually played.  If a visual callback was
-	 * specified, this also coordinates the visual highlighting of the current
-	 * datum as the playback occurs.
-	 */
-	Player.prototype._playOne = function() {
-		const thisPlayTimeStart = performance.now()
-
-		if (this.playIndex <= this.seriesMaxIndex) {
-			if (this.visualCallback !== null) {
-				this.visualCallback(0, this.playIndex)
+			this.data = data
+			this.pitchMapper = pitchMapper
+			this.sounder = sounder
+			if (arguments.length < 5) {
+				this.visualCallback = null
+			} else {
+				this.visualCallback = visualCallback
 			}
 
-			this.sounder.frequency(
-				this.pitchMapper.map(
-					this.data.seriesValue(0, this.playIndex)))
-		} else {
-			clearInterval(this.intervalID)
-			this.sounder.stop()
-			this._state = 'finished'
+			const seriesLen = this.data.seriesLength(0)
 
+			const sampling = Player.samplingInfo(duration, seriesLen)
+			this.interval = sampling.interval
+			this.sampleOneIn = sampling.in
+
+			this.seriesMaxIndex = seriesLen - 1  // TODO just use seriesLen?
+			this._state = 'ready'
+		}
+
+		/* static function to work out sampling rate */
+		static samplingInfo(duration, seriesLen) {
+			const minInterval = 10
+			let interval
+			let sampleOneIn
+			let slots
+
+			const idealInterval = Math.ceil(duration / seriesLen)
+			console.log(`sampleInfo: duration: ${duration}; series length: ${seriesLen}; ideal interval: ${idealInterval}`)
+
+			if (idealInterval < minInterval) {
+				interval = minInterval
+				slots = Math.floor(duration / minInterval)
+				const sampleOneInFloat = seriesLen / slots
+				sampleOneIn = Math.round(seriesLen / slots)
+				console.log(`sampleInfo: Need to sample 1 in ${sampleOneIn} (${sampleOneInFloat})`)
+			} else {
+				slots = Math.floor(duration / minInterval)
+				interval = idealInterval
+				sampleOneIn = 1
+			}
+
+			console.log(`sampleInfo: it will take ${ (seriesLen / sampleOneIn) * interval}`)
+
+			return {
+				'sample': 1,
+				'in': sampleOneIn,
+				'interval': interval
+			}
+		}
+
+		/**
+		 * Main entry point; manages state.
+		 */
+		playPause() {
+			switch (this._state) {
+				case 'ready':
+					this._play()
+					break
+				case 'playing':
+					this._pause()
+					break
+				case 'paused':
+					this._playLoop()
+					break
+				case 'finished':
+					this._play()
+					break
+				default:
+					throw Error('Player error: invalid state: ' + String(this._state))
+			}
+		}
+
+		/**
+		 * Resets play state and sets up a recurring function to update the sound
+		 * (and, optionally, visual callback) at an interval dependant on the
+		 * number of data.
+		 */
+		_play() {
 			// Debugging info
-			console.log(`Player: Playing ${this.playCount} of ${this.playIndex} took ${Math.round(performance.now() - this.startTime)} ms`)
-			const sum = this.playTimes.reduce((acc, cur) => acc + cur)
-			const mean = sum / this.playTimes.length
-			console.log(`Player: Average play func time: ${mean.toFixed(2)} ms`)
+			this.playTimes = []  // store all lengths of time that playOne took
+			this.playCount = 0   // how many datum points were actually sounded?
+
+			this.startTime = performance.now()
+			this.sounder.start(0)
+			this.playIndex = 0
+
+			this._playLoop()
 		}
 
-		this.playIndex += this.sampleOneIn > 0 ? this.sampleOneIn : 1  // TODO sl
-		this.playCount += 1
-		this.playTimes.push(performance.now() - thisPlayTimeStart)
-	}
-
-	/**
-	 * Temporarily pause the rendering of the chart.
-	 * This inherently keeps the sound going at the frequency it was at when
-	 * the pause was triggered.
-	 * @todo feature/object to stop/fade the sound after n seconds?
-	 */
-	Player.prototype._pause = function() {
-		clearInterval(this.intervalID)
-		this._state = 'paused'
-	}
-
-	Player.prototype.stepBackward = function(skip) {
-		const delta = skip || 50
-		this.playIndex -= delta
-		if (this.playIndex < 0) {
-			this.playIndex = 0  // TODO test limiting
+		/**
+		 * Update state and set _playOne() to run regularly, to render the sound
+		 * (and optional visual cursor movement).
+		 */
+		_playLoop() {
+			this._state = 'playing'
+			this._playOne()  // so that it starts immediately
+			this.intervalID = setInterval(() => this._playOne(), this.interval)
 		}
-		if (this._state === 'paused') {
-			this._playOne()
-		}
-	}
 
-	Player.prototype.stepForward = function(skip) {
-		const delta = skip || 50
-		this.playIndex += delta
-		if (this.playIndex > this.seriesMaxIndex) {
-			this.playIndex = this.seriesMaxIndex  // TODO test limiting
+		/**
+		 * This is where the sound is actually played.  If a visual callback was
+		 * specified, this also coordinates the visual highlighting of the current
+		 * datum as the playback occurs.
+		 */
+		_playOne() {
+			const thisPlayTimeStart = performance.now()
+
+			if (this.playIndex <= this.seriesMaxIndex) {
+				if (this.visualCallback !== null) {
+					this.visualCallback(0, this.playIndex)
+				}
+
+				this.sounder.frequency(
+					this.pitchMapper.map(
+						this.data.seriesValue(0, this.playIndex)))
+			} else {
+				clearInterval(this.intervalID)
+				this.sounder.stop()
+				this._state = 'finished'
+
+				// Debugging info
+				console.log(`Player: Playing ${this.playCount} of ${this.playIndex} took ${Math.round(performance.now() - this.startTime)} ms`)
+				const sum = this.playTimes.reduce((acc, cur) => acc + cur)
+				const mean = sum / this.playTimes.length
+				console.log(`Player: Average play func time: ${mean.toFixed(2)} ms`)
+			}
+
+			this.playIndex += this.sampleOneIn > 0 ? this.sampleOneIn : 1  // TODO sl
+			this.playCount += 1
+			this.playTimes.push(performance.now() - thisPlayTimeStart)
 		}
-		if (this._state === 'paused') {
-			this._playOne()
+
+		/**
+		 * Temporarily pause the rendering of the chart.
+		 * This inherently keeps the sound going at the frequency it was at when
+		 * the pause was triggered.
+		 * @todo feature/object to stop/fade the sound after n seconds?
+		 */
+		_pause() {
+			clearInterval(this.intervalID)
+			this._state = 'paused'
+		}
+
+		stepBackward(skip) {
+			const delta = skip || 50
+			this.playIndex -= delta
+			if (this.playIndex < 0) {
+				this.playIndex = 0  // TODO test limiting
+			}
+			if (this._state === 'paused') {
+				this._playOne()
+			}
+		}
+
+		stepForward(skip) {
+			const delta = skip || 50
+			this.playIndex += delta
+			if (this.playIndex > this.seriesMaxIndex) {
+				this.playIndex = this.seriesMaxIndex  // TODO test limiting
+			}
+			if (this._state === 'paused') {
+				this._playOne()
+			}
 		}
 	}
 
@@ -505,34 +516,28 @@ var Player = (function() {
 })()
 
 
-var AudioContextGetter = (function() {
-	/**
-	 * @constructor AudioContextGetter
-	 * @private
-	 */
-	function AudioContextGetter() {}
-
+/**
+ * Ensures that there is only one Web Audio context per page.
+ * Sets up a new AudioContext the first time it's called; then re-uses it.
+ * @private
+ * @returns {AudioContext} page-global Web Audio context
+ */
+var getAudioContext = (function() {
 	let audioContext = null
 
-	const _getAudioContext = function() {
-		if (window.AudioContext !== undefined) {
-			return new window.AudioContext()
-		} else if (window.webkitAudioContext !== undefined) {
-			/* eslint-disable new-cap */
-			return new window.webkitAudioContext()
-			/* eslint-enable new-cap */
-		}
-		return null
+	if (window.AudioContext !== undefined) {
+		audioContext = new window.AudioContext()
+	} else if (window.webkitAudioContext !== undefined) {
+		/* eslint-disable new-cap */
+		audioContext = new window.webkitAudioContext()
+		/* eslint-enable new-cap */
 	}
 
-	/**
-	 * @returns {AudioContext} the page-global Web Audio context
-	 */
-	AudioContextGetter.get = function() {
-		return audioContext !== null ? audioContext : audioContext = _getAudioContext()
+	function _getAudioContext() {
+		return audioContext
 	}
 
-	return AudioContextGetter
+	return _getAudioContext
 })()
 
 
@@ -584,53 +589,55 @@ var KeyboardHandler = (function() {
 	 * @todo mark up the DIV properly
 	 * @todo check what sort of element we get given? no; could be button?
 	 */
-	function KeyboardHandler(container, player) {
-		if (!container) {
-			throw Error('No container given')
+	class KeyboardHandler {
+		constructor(container, player) {
+			if (!container) {
+				throw Error('No container given')
+			}
+			if (!player) {
+				throw Error('No Player given')
+			}
+
+			container.setAttribute('tabindex', '0')
+			container.addEventListener('keydown', this.keypressHandler.bind(this))
+			this.player = player
 		}
-		if (!player) {
-			throw Error('No Player given')
+
+		/**
+		 * Handle keypresses
+		 *
+		 * Note: This is bound to the {@link KeyboardHandler} so that it can call
+		 *       the right handler methods.
+		 *
+		 * @param {KeyboardEvent} event - the KeyboardEvent that occured
+		 * @todo make link work
+		 */
+		keypressHandler(event) {
+			event.preventDefault()  // TODO should this be here or later? check for defaultPrevented?
+
+			if (event.key === 'ArrowRight') {
+				this.handleRight()
+			} else if (event.key === 'ArrowLeft' ) {
+				this.handleLeft()
+			} else if (event.key === ' ') {
+				this.handleSpace()
+			}
 		}
 
-		container.setAttribute('tabindex', '0')
-		container.addEventListener('keydown', this.keypressHandler.bind(this))
-		this.player = player
-	}
-
-	/**
-	 * Handle keypresses
-	 *
-	 * Note: This is bound to the {@link KeyboardHandler} so that it can call
-	 *       the right handler methods.
-	 *
-	 * @param {KeyboardEvent} event - the KeyboardEvent that occured
-	 * @todo make link work
-	 */
-	KeyboardHandler.prototype.keypressHandler = function(event) {
-		event.preventDefault()  // TODO should this be here or later? check for defaultPrevented?
-
-		if (event.key === 'ArrowRight') {
-			this.handleRight()
-		} else if (event.key === 'ArrowLeft' ) {
-			this.handleLeft()
-		} else if (event.key === ' ') {
-			this.handleSpace()
+		/** Handle a left arrow being pressed */
+		handleLeft() {
+			this.player.stepBackward()
 		}
-	}
 
-	/** Handle a left arrow being pressed */
-	KeyboardHandler.prototype.handleLeft = function() {
-		this.player.stepBackward()
-	}
+		/** Handle a right arrow being pressed */
+		handleRight() {
+			this.player.stepForward()
+		}
 
-	/** Handle a right arrow being pressed */
-	KeyboardHandler.prototype.handleRight = function() {
-		this.player.stepForward()
-	}
-
-	/** Handle the space key being pressed */
-	KeyboardHandler.prototype.handleSpace = function() {
-		this.player.playPause()
+		/** Handle the space key being pressed */
+		handleSpace() {
+			this.player.playPause()
+		}
 	}
 
 	return KeyboardHandler
@@ -644,77 +651,79 @@ var _AudioChart = (function() {
 	 * @param {options} options - AudioChart options
 	 * @param {AudioContext} context - the window's AudioContext
 	 */
-	function _AudioChart(options, context) {
-		const result = _AudioChart._assignWrapperCallback(options)
-		const dataWrapper = new result.Wrapper(result.parameter)
-		const callback = result.callback
+	class _AudioChart {
+		constructor(options, context) {
+			const result = _AudioChart._assignWrapperCallback(options)
+			const dataWrapper = new result.Wrapper(result.parameter)
+			const callback = result.callback
 
-		const frequencyPitchMapper = new FrequencyPitchMapper(
-			dataWrapper.seriesMin(0),
-			dataWrapper.seriesMax(0),
-			options.frequencyLow,
-			options.frequencyHigh)
+			const frequencyPitchMapper = new FrequencyPitchMapper(
+				dataWrapper.seriesMin(0),
+				dataWrapper.seriesMax(0),
+				options.frequencyLow,
+				options.frequencyHigh)
 
-		const sounder = new WebAudioSounder(context)
+			const sounder = new WebAudioSounder(context)
 
-		this.player = new Player(
-			options.duration,
-			dataWrapper,
-			frequencyPitchMapper,
-			sounder,
-			callback)
+			this.player = new Player(
+				options.duration,
+				dataWrapper,
+				frequencyPitchMapper,
+				sounder,
+				callback)
 
-		if (options.chartContainer) {
-			new KeyboardHandler(
-				options.chartContainer,
-				this.player)
-		}
-	}
-
-	/**
-	 * Passes through play/pause commands to the Player
-	 */
-	_AudioChart.prototype.playPause = function() {
-		this.player.playPause()
-	}
-
-	// This is being done as a sort of 'class/static method' because
-	// it doesn't need 'this'.
-	// http://stackoverflow.com/a/1635143
-	_AudioChart._assignWrapperCallback = function(options) {
-		const result = {
-			'Wrapper': null,
-			'parameter': null,
-			'callback': null
+			if (options.chartContainer) {
+				new KeyboardHandler(
+					options.chartContainer,
+					this.player)
+			}
 		}
 
-		switch (options.type) {
-			case 'google':
-				result.Wrapper = GoogleDataWrapper
-				result.parameter = options.data
-				if (options.hasOwnProperty('chart')) {
-					result.callback =
-						googleVisualCallbackMaker(options.chart)
-				}
-				break
-			case 'json':
-				result.Wrapper = JSONDataWrapper
-				result.parameter = options.data
-				break
-			case 'htmlTable':
-				result.Wrapper = HTMLTableDataWrapper
-				result.parameter = options.table
-				if (options.hasOwnProperty('highlightClass')) {
-					result.callback = htmlTableVisualCallbackMaker(
-						options.table,
-						options.highlightClass)
-				}
-				break
-			default:
-				throw Error("Invalid data type '" + options.type + "' given.")
+		/**
+		 * Passes through play/pause commands to the Player
+		 */
+		playPause() {
+			this.player.playPause()
 		}
 
-		return result
+		// This is being done as a sort of 'class/static method' because
+		// it doesn't need 'this'.
+		// http://stackoverflow.com/a/1635143
+		static _assignWrapperCallback(options) {
+			const result = {
+				'Wrapper': null,
+				'parameter': null,
+				'callback': null
+			}
+
+			switch (options.type) {
+				case 'google':
+					result.Wrapper = GoogleDataWrapper
+					result.parameter = options.data
+					if (options.hasOwnProperty('chart')) {
+						result.callback =
+							googleVisualCallbackMaker(options.chart)
+					}
+					break
+				case 'json':
+					result.Wrapper = JSONDataWrapper
+					result.parameter = options.data
+					break
+				case 'htmlTable':
+					result.Wrapper = HTMLTableDataWrapper
+					result.parameter = options.table
+					if (options.hasOwnProperty('highlightClass')) {
+						result.callback = htmlTableVisualCallbackMaker(
+							options.table,
+							options.highlightClass)
+					}
+					break
+				default:
+					throw Error("Invalid data type '" + options.type + "' given.")
+			}
+
+			return result
+		}
 	}
 
 	return _AudioChart
@@ -734,7 +743,7 @@ var AudioChart = (function() {
 	function AudioChart(options, context) {
 		const fail = "Sorry, your browser doesn't support the Web Audio API."
 		if (arguments.length < 2) {
-			context = AudioContextGetter.get()
+			context = getAudioContext()
 			if (context === null) {
 				throw Error(fail)
 			}
