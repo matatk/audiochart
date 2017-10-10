@@ -24,7 +24,7 @@
     "pretest": "npm run lint",
     "test": "karma start",
     "test:ci": "npm run test -- --browsers ChromeHeadless --reporters dots",
-    "uglify": "mkdirp lib && uglifyjs src/audiochart.js --mangle --source-map=\"includeSources\" --output lib/audiochart.min.js"
+    "uglify": "mkdirp lib && uglifyjs --warn --mangle --source-map=\"includeSources\" --output lib/audiochart.min.js src/*.js"
   },
   "devDependencies": {
     "docco": "~0.7",
