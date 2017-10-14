@@ -16,7 +16,12 @@ function drawChart() {
 	const data = {
 		columns: [
 			['demo', 293, 329, 261, 130, 196, 196]
-		]
+		],
+		// In order for the visual highlighting of the current datum point to
+		// be possible, [selection.enabled must be set to `true`](http://c3js.org/reference.html#data-selection-enabled).
+		selection: {
+			enabled: true
+		}
 	}
 
 	// Render the C3 chart
@@ -30,8 +35,8 @@ function drawChart() {
 	// Create a new `AudioChart` object
 	const ac = new AudioChart({
 		'type': 'c3',          // (see the docs)
-		'data': data,          // the GoogleDataTable
-		'chart': chart,        // the Google Chart object
+		'data': data,          // the C3-format data object
+		'chart': chart,        // the in-memory C3 chart object
 		'duration': 5000,      // milliseconds
 		'frequencyLow': 200,   // Hz
 		'frequencyHigh': 600,  // Hz

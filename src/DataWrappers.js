@@ -142,6 +142,54 @@ class JSONDataWrapper {
 
 
 /**
+ * Support C3-format data objects
+ *
+ * @todo document format
+ *
+ * @private
+ * @implements {DataWrapper}
+ * @param {Object} data - The C3-format data object
+ */
+class C3DataWrapper {
+	constructor(data) {
+		if (typeof data === 'object') {
+			this.object = data
+		} else {
+			throw Error('Please provide a C3-format data object.')
+		}
+	}
+
+	numSeries() {
+		return this.object.columns.length
+	}
+
+	seriesNames() {
+		const results = []
+		for (let i = 0; i < this.object.columns.length; i++) {
+			results.push(this.object.columns[i][0])
+		}
+		return results
+	}
+
+	seriesMin(series) {
+		return Math.min.apply(this, this.object.columns[series].slice(1))
+	}
+
+	seriesMax(series) {
+		return Math.max.apply(this, this.object.columns[series].slice(1))
+	}
+
+	seriesValue(series, index) {
+		return this.object.columns[series][index + 1]
+	}
+
+	seriesLength(series) {
+		return this.object.columns[series].length - 1
+	}
+}
+
+
+/**
  * Allows an HTML table to be used as a data source.
  *
  * @private
