@@ -59,10 +59,8 @@ Future Work Ideas
 
 Feedback on the following is welcome.
 
- * Play speed/duration.
- * Support [Google Chart Web Component (Polymer)](https://github.com/GoogleWebComponents/google-chart) charts.
- * Support [C3.js](http://c3js.org) charts.
- * Support SVG charts.
+ * Play speed/duration (supported in the code, but not currently changeable easily by the user/keyboard commands; perhaps this could be done via a WebExtension UI?)
+ * Support SVG charts (this would most likely be done by accessing the data behind them as raw JSON, and creating a chart-specific visual callback to highlight the correct data on the chart).
  * Static/Periodic features such as grid/timing beats.
  * Mouse hover "audition" mode (hovering the mouse over a point would sound it).
  * Rendering a visual highlight element for chart APIs that don't provide this (i.eJSON and HTML tables).
