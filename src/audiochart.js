@@ -29,6 +29,7 @@ class AudioChart {
 	 */
 	constructor(options, context) {
 		const fail = "Sorry, your browser doesn't support the Web Audio API."
+
 		if (arguments.length < 2) {
 			context = getAudioContext()
 			if (context === null) {

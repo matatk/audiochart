@@ -1,5 +1,4 @@
-'use strict'
-/* global dataWrappersTestCore HTMLTableDataWrapper */
+'use strict' /* global dataWrappersTestCore HTMLTableDataWrapper */
 
 describe('HTMLTableDataWrapper', function() {
 	jasmine.getFixtures().fixturesPath = 'base/spec/'

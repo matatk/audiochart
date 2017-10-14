@@ -14,6 +14,48 @@ describe('Player sampling rate and interval', () => {
 	})
 })
 
+class BaseFakeDataWrapper {
+	numSeries() {
+		return 1
+	}
+
+	seriesNames() {
+		return ['Test']
+	}
+
+	seriesValue(series, index) {
+		return 42
+	}
+}
+
+
+class ShortFakeDataWrapper extends BaseFakeDataWrapper {
+	seriesLength(series) {
+		return 4
+	}
+}
+
+
+class LongFakeDataWrapper extends BaseFakeDataWrapper {
+	seriesLength(series) {
+		return 100
+	}
+}
+
+
+class FakeMapper {
+	map(datum) {
+		return 21
+	}
+}
+
+
+class FakeSounder {
+	frequency(frequency) {}
+	start() {}
+	stop() {}
+}
+
 
 function expectedFrequencyCalls(seriesLength) {
 	const out = []
@@ -22,77 +64,6 @@ function expectedFrequencyCalls(seriesLength) {
 	}
 	return out
 }
-
-
-const BaseFakeDataWrapper = (function() {
-	function BaseFakeDataWrapper() {}
-
-	BaseFakeDataWrapper.prototype.numSeries = function() {
-		return 1
-	}
-
-	BaseFakeDataWrapper.prototype.seriesNames = function() {
-		return ['Test']
-	}
-
-	BaseFakeDataWrapper.prototype.seriesValue = function(series, index) {
-		return 42
-	}
-
-	return BaseFakeDataWrapper
-})()
-
-
-const ShortFakeDataWrapper = (function() {
-	function ShortFakeDataWrapper() {
-		return BaseFakeDataWrapper.call(this, arguments)
-	}
-
-	ShortFakeDataWrapper.prototype = Object.create(BaseFakeDataWrapper.prototype)
-	ShortFakeDataWrapper.prototype.constructor = ShortFakeDataWrapper
-
-	ShortFakeDataWrapper.prototype.seriesLength = function(series) {
-		return 4
-	}
-
-	return ShortFakeDataWrapper
-})()
-
-
-const LongFakeDataWrapper = (function() {
-	function LongFakeDataWrapper() {
-		return BaseFakeDataWrapper.call(this, arguments)
-	}
-
-	LongFakeDataWrapper.prototype = Object.create(BaseFakeDataWrapper.prototype)
-	LongFakeDataWrapper.prototype.constructor = LongFakeDataWrapper
-
-	LongFakeDataWrapper.prototype.seriesLength = function(series) {
-		return 100
-	}
-
-	return LongFakeDataWrapper
-})()
-
-
-const FakeMapper = (function() {
-	function FakeMapper() {}
-
-	FakeMapper.prototype.map = function(datum) {
-		return 21
-	}
-
-	return FakeMapper
-})()
-
-
-const FakeSounder = (function() {
-	function FakeSounder() {}
-	FakeSounder.prototype.frequency = function(frequency) {}
-	FakeSounder.prototype.start = function() {}
-	FakeSounder.prototype.stop = function() {}
-	return FakeSounder
-})()
 
 
 function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCount, testInterval, useVisualCallback) {

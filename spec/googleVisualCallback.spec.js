@@ -2,11 +2,9 @@
 /* global googleVisualCallbackMaker */
 
 describe('googleVisualCallback', function() {
-	const FakeChart = (function() {
-		function FakeChart() {}
-		FakeChart.prototype.setSelection = function(selection) {}
-		return FakeChart
-	})()
+	class FakeChart {
+		setSelection() {}
+	}
 
 	let fakeChart = null
 	let googleVisualCallback = null

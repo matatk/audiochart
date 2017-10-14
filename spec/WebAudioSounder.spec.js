@@ -2,32 +2,28 @@
 /* global WebAudioSounder */
 
 describe('WebAudioSounder', function() {
-	const FakeOscillator = (function() {
-		function FakeOscillator() {
+	class FakeOscillator {
+		constructor() {
 			this.frequency = {
 				value: 0
 			}
 		}
 
-		FakeOscillator.prototype.connect = function(destination) {}
-		FakeOscillator.prototype.start = function(optOffest) {}
-		FakeOscillator.prototype.stop = function(optOffset) {}
-		return FakeOscillator
-	})()
+		connect(destination) {}
+		start(optOffest) {}
+		stop(optOffset) {}
+	}
 
-	const FakeAudioContext = (function() {
-		function FakeAudioContext() {
+	class FakeAudioContext {
+		constructor() {
 			this.currentTime = 42
+			this.destination = {}
 		}
 
-		FakeAudioContext.prototype.createOscillator = function() {
+		createOscillator() {
 			return new FakeOscillator()
 		}
-
-		FakeAudioContext.prototype.destination = {}
-
-		return FakeAudioContext
-	})()
+	}
 
 
 	let fakeAudioContext = null

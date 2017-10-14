@@ -1,15 +1,13 @@
 'use strict'
 /* global KeyboardHandler */
 
-const FakePlayer = (function() {
-	function FakePlayer() {}
-	FakePlayer.prototype.play = function() {}
-	FakePlayer.prototype.pause = function() {}
-	FakePlayer.prototype.playPause = function() {}
-	FakePlayer.prototype.stop = function() {}
-	FakePlayer.prototype.stepForward = function() {}
-	return FakePlayer
-})()
+class FakePlayer {
+	play() {}
+	pause() {}
+	playPause() {}
+	stop() {}
+	stepForward() {}
+}
 
 
 function createKeydownEvent(keyName, shift) {
