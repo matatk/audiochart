@@ -14,8 +14,8 @@
     "build:core": "npm run uglify && npm run jsdoc:public && npm run jsdoc:internal && npm run docco && npm run replace",
     "clean": "git clean --force -dx --exclude /node_modules",
     "docco": "docco examples/hello/hello-world-tutorial.js --output examples/hello/ --layout classic",
-    "jsdoc:internal": "rimraf doc/internal/ && jsdoc src/audiochart.js --readme README.md --private --destination doc/internal/",
-    "jsdoc:public": "rimraf doc/public/ && jsdoc src/audiochart.js --readme README.md --destination doc/public/",
+    "jsdoc:internal": "rimraf doc/internal/ && jsdoc src/*.js --readme README.md --private --destination doc/internal/",
+    "jsdoc:public": "rimraf doc/public/ && jsdoc src/*.js --readme README.md --destination doc/public/",
     "lint": "eslint .",
     "replace": "npm run replace:1 && npm run replace:2 && npm run replace:3",
     "replace:1": "replace-in-file /f5f5ff/ig ffd examples/hello/docco.css --isRegex",
@@ -24,11 +24,11 @@
     "pretest": "npm run lint",
     "test": "karma start",
     "test:ci": "npm run test -- --browsers ChromeHeadless --reporters dots",
-    "uglify": "mkdirp lib && uglifyjs src/audiochart.js --mangle --source-map=\"includeSources\" --output lib/audiochart.min.js"
+    "uglify": "mkdirp lib && uglifyjs --warn --mangle --source-map=\"includeSources\" --output lib/audiochart.min.js src/*.js"
   },
   "devDependencies": {
     "docco": "~0.7",
-    "eslint": "~4.7",
+    "eslint": "~4.8",
     "husky": "~0.14",
     "jasmine-core": "~2.8",
     "jsdoc": "~3.5",

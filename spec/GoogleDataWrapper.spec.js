@@ -1,31 +1,31 @@
 'use strict'
-/* global dataWrappersTestCore */
+/* global dataWrappersTestCore GoogleDataWrapper */
 
 const testOne = [[0, 2], [1, 3], [2, 3], [3, 4]]
 const testNeg = [[0, 20], [1, -10], [2, 0], [3, 8], [4, -90]]
 
-const FakeGoogleDataTable = (function() {
-	function FakeGoogleDataTable(table) {
+class FakeGoogleDataTable {
+	constructor(table) {
 		this.table = table
 	}
 
-	FakeGoogleDataTable.prototype.getValue = function(rowIndex, columnIndex) {
+	getValue(rowIndex, columnIndex) {
 		return this.table[rowIndex][columnIndex]
 	}
 
-	FakeGoogleDataTable.prototype.getNumberOfColumns = function() {
+	getNumberOfColumns() {
 		return 2
 	}
 
-	FakeGoogleDataTable.prototype.getNumberOfRows = function() {
+	getNumberOfRows() {
 		return this.table.length
 	}
 
-	FakeGoogleDataTable.prototype.getColumnLabel = function(columnIndex) {
+	getColumnLabel(columnIndex) {
 		return 'Test'
 	}
 
-	FakeGoogleDataTable.prototype.getColumnRange = function(columnIndex) {
+	getColumnRange(columnIndex) {
 		if (columnIndex === 0) {
 			return {
 				min: 0,
@@ -51,11 +51,9 @@ const FakeGoogleDataTable = (function() {
 			max: max
 		}
 	}
-
-	return FakeGoogleDataTable
-})()
+}
 
 dataWrappersTestCore(
 	'GoogleDataWrapper',
-	new window.GoogleDataWrapper(new FakeGoogleDataTable(testOne)),
-	new window.GoogleDataWrapper(new FakeGoogleDataTable(testNeg)))
+	new GoogleDataWrapper(new FakeGoogleDataTable(testOne)),
+	new GoogleDataWrapper(new FakeGoogleDataTable(testNeg)))

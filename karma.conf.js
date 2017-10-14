@@ -4,12 +4,12 @@ module.exports = function(config) {
 		basePath: '',
 		frameworks: ['jasmine-jquery', 'jasmine'],
 		files: [
-			'src/audiochart.js',
+			'src/*.js',
 			'spec/*.html',
 			'spec/*.js'
 		],
 		preprocessors: {
-			'src/audiochart.js': ['coverage']
+			'src/*.js': ['coverage']
 		},
 		reporters: ['spec', 'coverage'],
 		colors: true,

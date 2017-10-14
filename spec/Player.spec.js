@@ -1,17 +1,60 @@
 'use strict'
+/* global Player */
 
 describe('Player sampling rate and interval', () => {
 	it('calculates the correct sampling rates and intervals', () => {
-		expect(window.Player.samplingInfo(1000,  50)).toEqual(
+		expect(Player.samplingInfo(1000,  50)).toEqual(
 			{ sample: 1, in: 1, interval: 20 })
-		expect(window.Player.samplingInfo(1000, 100)).toEqual(
+		expect(Player.samplingInfo(1000, 100)).toEqual(
 			{ sample: 1, in: 1, interval: 10 })
-		expect(window.Player.samplingInfo(1000, 629)).toEqual(
+		expect(Player.samplingInfo(1000, 629)).toEqual(
 			{ sample: 1, in: 6, interval: 10 })
-		expect(window.Player.samplingInfo(1000, 250)).toEqual(
+		expect(Player.samplingInfo(1000, 250)).toEqual(
 			{ sample: 1, in: 3, interval: 10 })
 	})
 })
+
+class BaseFakeDataWrapper {
+	numSeries() {
+		return 1
+	}
+
+	seriesNames() {
+		return ['Test']
+	}
+
+	seriesValue(series, index) {
+		return 42
+	}
+}
+
+
+class ShortFakeDataWrapper extends BaseFakeDataWrapper {
+	seriesLength(series) {
+		return 4
+	}
+}
+
+
+class LongFakeDataWrapper extends BaseFakeDataWrapper {
+	seriesLength(series) {
+		return 100
+	}
+}
+
+
+class FakeMapper {
+	map(datum) {
+		return 21
+	}
+}
+
+
+class FakeSounder {
+	frequency(frequency) {}
+	start() {}
+	stop() {}
+}
 
 
 function expectedFrequencyCalls(seriesLength) {
@@ -21,77 +64,6 @@ function expectedFrequencyCalls(seriesLength) {
 	}
 	return out
 }
-
-
-const BaseFakeDataWrapper = (function() {
-	function BaseFakeDataWrapper() {}
-
-	BaseFakeDataWrapper.prototype.numSeries = function() {
-		return 1
-	}
-
-	BaseFakeDataWrapper.prototype.seriesNames = function() {
-		return ['Test']
-	}
-
-	BaseFakeDataWrapper.prototype.seriesValue = function(series, index) {
-		return 42
-	}
-
-	return BaseFakeDataWrapper
-})()
-
-
-const ShortFakeDataWrapper = (function() {
-	function ShortFakeDataWrapper() {
-		return BaseFakeDataWrapper.call(this, arguments)
-	}
-
-	ShortFakeDataWrapper.prototype = Object.create(BaseFakeDataWrapper.prototype)
-	ShortFakeDataWrapper.prototype.constructor = ShortFakeDataWrapper
-
-	ShortFakeDataWrapper.prototype.seriesLength = function(series) {
-		return 4
-	}
-
-	return ShortFakeDataWrapper
-})()
-
-
-const LongFakeDataWrapper = (function() {
-	function LongFakeDataWrapper() {
-		return BaseFakeDataWrapper.call(this, arguments)
-	}
-
-	LongFakeDataWrapper.prototype = Object.create(BaseFakeDataWrapper.prototype)
-	LongFakeDataWrapper.prototype.constructor = LongFakeDataWrapper
-
-	LongFakeDataWrapper.prototype.seriesLength = function(series) {
-		return 100
-	}
-
-	return LongFakeDataWrapper
-})()
-
-
-const FakeMapper = (function() {
-	function FakeMapper() {}
-
-	FakeMapper.prototype.map = function(datum) {
-		return 21
-	}
-
-	return FakeMapper
-})()
-
-
-const FakeSounder = (function() {
-	function FakeSounder() {}
-	FakeSounder.prototype.frequency = function(frequency) {}
-	FakeSounder.prototype.start = function() {}
-	FakeSounder.prototype.stop = function() {}
-	return FakeSounder
-})()
 
 
 function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCount, testInterval, useVisualCallback) {
@@ -108,9 +80,9 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 			fakeSounder = new FakeSounder()
 			if (useVisualCallback) {
 				fakeVisualCallback = jasmine.createSpy('fakeVisualCallback')
-				player = new window.Player(testDuration, fakeData, fakeMapper, fakeSounder, fakeVisualCallback)
+				player = new Player(testDuration, fakeData, fakeMapper, fakeSounder, fakeVisualCallback)
 			} else {
-				player = new window.Player(testDuration, fakeData, fakeMapper, fakeSounder)
+				player = new Player(testDuration, fakeData, fakeMapper, fakeSounder)
 			}
 
 			jasmine.clock().install()
@@ -185,7 +157,7 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 
 		it('[TODO] clears its interval timer when paused', function() {
 			// TODO this seems to trigger a Jasmine bug
-			// spyOn(window, 'clearInterval').and.callThrough()
+			// spyOn( 'clearInterval').and.callThrough()
 			player.playPause()
 			jasmine.clock().tick(testDuration / 2)
 			expect(player.intervalID).toBeDefined()

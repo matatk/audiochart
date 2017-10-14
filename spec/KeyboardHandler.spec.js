@@ -1,14 +1,13 @@
 'use strict'
+/* global KeyboardHandler */
 
-const FakePlayer = (function() {
-	function FakePlayer() {}
-	FakePlayer.prototype.play = function() {}
-	FakePlayer.prototype.pause = function() {}
-	FakePlayer.prototype.playPause = function() {}
-	FakePlayer.prototype.stop = function() {}
-	FakePlayer.prototype.stepForward = function() {}
-	return FakePlayer
-})()
+class FakePlayer {
+	play() {}
+	pause() {}
+	playPause() {}
+	stop() {}
+	stepForward() {}
+}
 
 
 function createKeydownEvent(keyName, shift) {
@@ -40,25 +39,25 @@ describe('KeyboardHandler', function() {
 
 	it('throws when a non-existant container is given', function() {
 		expect(function() {
-			new window.KeyboardHandler(nonExistantDiv, fakePlayer)
+			new KeyboardHandler(nonExistantDiv, fakePlayer)
 		}).toThrow()
 	})
 
 	it('throws when a non-existant player is given', function() {
 		expect(function() {
-			new window.KeyboardHandler(keyTargetDiv)
+			new KeyboardHandler(keyTargetDiv)
 		}).toThrow()
 	})
 
 	it('sets the tabindex of the target container to 0', function() {
 		expect(keyTargetDiv.tabIndex).toBe(-1)
-		new window.KeyboardHandler(keyTargetDiv, fakePlayer)
+		new KeyboardHandler(keyTargetDiv, fakePlayer)
 		expect(keyTargetDiv.tabIndex).toBe(0)
 	})
 
 	// TODO DRY
 	it('stops the event default handler being called', function(done) {
-		new window.KeyboardHandler(keyTargetDiv, fakePlayer)
+		new KeyboardHandler(keyTargetDiv, fakePlayer)
 		const evt = createKeydownEvent('Meta', false)
 		spyOn(evt, 'preventDefault')
 		keyTargetDiv.dispatchEvent(evt)
@@ -71,7 +70,7 @@ describe('KeyboardHandler', function() {
 
 	// TODO DRY
 	it('knows when the right arrow key has been pressed', function(done) {
-		const keyboardHandler = new window.KeyboardHandler(keyTargetDiv, fakePlayer)
+		const keyboardHandler = new KeyboardHandler(keyTargetDiv, fakePlayer)
 		spyOn(keyboardHandler, 'handleRight').and.callThrough()
 		createAndDispatchKeydownEvent('ArrowRight', false, keyTargetDiv)
 		// TODO how to not need the timeout?
@@ -83,7 +82,7 @@ describe('KeyboardHandler', function() {
 
 	// TODO DRY
 	it('steps its player when the right arrow key is pressed', function(done) {
-		new window.KeyboardHandler(keyTargetDiv, fakePlayer)
+		new KeyboardHandler(keyTargetDiv, fakePlayer)
 		spyOn(fakePlayer, 'stepForward')
 		createAndDispatchKeydownEvent('ArrowRight', false, keyTargetDiv)
 		// TODO how to not need the timeout?
@@ -95,7 +94,7 @@ describe('KeyboardHandler', function() {
 
 	// TODO DRY
 	it('knows when the space key has been pressed', function(done) {
-		const keyboardHandler = new window.KeyboardHandler(keyTargetDiv, fakePlayer)
+		const keyboardHandler = new KeyboardHandler(keyTargetDiv, fakePlayer)
 		spyOn(keyboardHandler, 'handleSpace').and.callThrough()
 		createAndDispatchKeydownEvent(' ', false, keyTargetDiv)
 		// TODO how to not need the timeout?
@@ -107,7 +106,7 @@ describe('KeyboardHandler', function() {
 
 	// TODO DRY
 	it('pauses its player when space is pressed', function(done) {
-		new window.KeyboardHandler(keyTargetDiv, fakePlayer)
+		new KeyboardHandler(keyTargetDiv, fakePlayer)
 		spyOn(fakePlayer, 'playPause')
 		createAndDispatchKeydownEvent(' ', false, keyTargetDiv)
 		// TODO how to not need the timeout?

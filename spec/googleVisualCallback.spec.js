@@ -1,18 +1,17 @@
 'use strict'
+/* global googleVisualCallbackMaker */
 
 describe('googleVisualCallback', function() {
-	const FakeChart = (function() {
-		function FakeChart() {}
-		FakeChart.prototype.setSelection = function(selection) {}
-		return FakeChart
-	})()
+	class FakeChart {
+		setSelection() {}
+	}
 
 	let fakeChart = null
 	let googleVisualCallback = null
 
 	beforeEach(function() {
 		fakeChart = new FakeChart()
-		googleVisualCallback = window.googleVisualCallbackMaker(fakeChart)
+		googleVisualCallback = googleVisualCallbackMaker(fakeChart)
 		spyOn(fakeChart, 'setSelection')
 	})
 

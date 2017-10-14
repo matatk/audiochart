@@ -1,4 +1,5 @@
 'use strict'
+/* global htmlTableVisualCallbackMaker */
 
 describe('htmlTableVisualCallback', function() {
 	jasmine.getFixtures().fixturesPath = 'base/spec/'
@@ -10,7 +11,7 @@ describe('htmlTableVisualCallback', function() {
 	beforeEach(function() {
 		loadFixtures('HTMLTableDataWrapper.fixtures.html')
 		table = document.getElementById('testOne')
-		htmlTableVisualCallback = window.htmlTableVisualCallbackMaker(table, 'audiochart-playing')
+		htmlTableVisualCallback = htmlTableVisualCallbackMaker(table, 'audiochart-playing')
 	})
 
 	it('does not add a class before it is called', function() {
