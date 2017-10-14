@@ -5,59 +5,31 @@
 // Note that you can also use AudioChart with Google Chart Tools, HTML tables and raw JSON data (there are [examples](http://matatk.agrip.org.uk/audiochart/examples/gallery/) to demonstrate this).
 //
 // More details on working with C3 Charts can be found on the [C3 site](http://c3js.org/).
+/* global c3 */
 'use strict'
-google.load('visualization', '1.0', {'packages':['corechart']})
-google.setOnLoadCallback(drawChart)
 
 function drawChart() {
-	// ## Google Charts Bits
+	// ## C3 Bits
 
-	// Create a new data table
-	const data = new google.visualization.DataTable()
-
-	// Populate the table
-	data.addColumn('string', 'Top Secret Evil Project')
-	data.addColumn('number', 'Watermelons')
-	data.addRows([
-		['Alpha',    293],
-		['Beta',     329],
-		['Gamma',    261],
-		['Delta',    130],
-		['Epsilon',  196],
-		['Zeta',     196],
-	])
-
-	// Google Chart options
-	const chartOptions = {
-		'title': 'Evil Project Efficacy',
-		'curveType': 'function'
+	// We define the data behind the chart using a separate variable, so that
+	// AudioChart can make use of it too
+	const data = {
+		columns: [
+			['demo', 293, 329, 261, 130, 196, 196]
+		]
 	}
 
-	// Initialise (but do not yet actually draw) the chart
-	const chart = new google.visualization.LineChart(
-		document.getElementById('chart'))
-
-	// Trigger an initial draw
-	resizeChart()
-
-	// Handle resizing when the viewport size changes ([thanks asgallant of StackOverflow](http://stackoverflow.com/a/23594901))
-	function resizeChart() {
-		chart.draw(data, chartOptions)
-	}
-
-	if (document.addEventListener) {
-		window.addEventListener('resize', resizeChart)
-	} else if (document.attachEvent) {
-		window.attachEvent('onresize', resizeChart)
-	} else {
-		window.resize = resizeChart
-	}
+	// Render the C3 chart
+	const chart = c3.generate({
+		bindto: '#chart',
+		data: data
+	})
 
 	// ## AudioChart Stuff
 
 	// Create a new `AudioChart` object
 	const ac = new AudioChart({
-		'type': 'google',      // (see the docs)
+		'type': 'c3',          // (see the docs)
 		'data': data,          // the GoogleDataTable
 		'chart': chart,        // the Google Chart object
 		'duration': 5000,      // milliseconds
@@ -72,3 +44,5 @@ function drawChart() {
 		ac.playPause()
 	}
 }
+
+drawChart()
