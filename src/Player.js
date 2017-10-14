@@ -10,8 +10,6 @@
  */
 class Player {
 	constructor(duration, data, pitchMapper, sounder, visualCallback) {
-		const minInterval = 10  // ms between soundings of successive datum points
-
 		this.data = data
 		this.pitchMapper = pitchMapper
 		this.sounder = sounder

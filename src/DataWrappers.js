@@ -1,16 +1,15 @@
 'use strict'
 /**
- * The common interface that the other DataWrappers use.
+ * @interface DataWrapper
  *
- * The common DataWrapper 'interface' is validated via the tests.
+ * The common interface that the other DataWrappers use.  This is validated
+ * by the unit tests.
  *
  * Note: it is not done as a superclass (as {@link PitchMapper} is) because
  *       there's really nothing in common implementation-wise; only the
  *       interface is shared.
  *
- * @interface DataWrapper
  * @private
- * @todo fix the link in this comment
  */
 /**
  * Returns the number of series in the underlying data
@@ -51,6 +50,8 @@
 
 
 /**
+ * This interfaces to Google's {@link https://developers.google.com/chart/interactive/docs/reference#DataTable|DataTable} class.
+ *
  * @private
  * @implements {DataWrapper}
  * @param {GoogleDataTable} data - The in-memory GoogleDataTable
@@ -91,6 +92,10 @@ class GoogleDataWrapper {
 
 
 /**
+ * This allows a JSON fragment to be used as a data source.
+ *
+ * @todo document format
+ *
  * @private
  * @implements {DataWrapper}
  * @param {JSON} json - The JSON data, as a string or object
@@ -137,6 +142,8 @@ class JSONDataWrapper {
 
 
 /**
+ * Allows an HTML table to be used as a data source.
+ *
  * @private
  * @implements {DataWrapper}
  * @param {HTMLTableElement} table - The in-DOM table element

@@ -1,5 +1,6 @@
 'use strict'
 /**
+ * Outputs sound using the Web Audio API
  * @private
  * @param {AudioContext} context - the Web Audio API context
  */

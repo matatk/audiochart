@@ -1,13 +1,12 @@
 'use strict'
 /**
  * Base Pitch Mapper
- * (do not use directly)
  * @private
+ * @abstract
  */
 class PitchMapper {
 	/**
 	 * Create a base Pitch Mapper
-	 * (do not use directly)
 	 * @param {number} minimumDatum - the minimum value in this data series
 	 * @param {number} maximumDatum - the maximum value in this data series
 	 */
@@ -21,8 +20,8 @@ class PitchMapper {
 
 	/**
 	 * Map a datum to an output value
-	 * @abstract
 	 * @param {number} datum - the datum to be mapped
+	 * @abstract
 	 */
 	map(datum) {
 		throw new Error('Base map() must be overriden.')
@@ -31,7 +30,7 @@ class PitchMapper {
 
 
 /**
- * Frequency Pitch Mapper
+ * Maps each datum to a corresponding frequency.
  * @private
  * @extends {PitchMapper}
  */

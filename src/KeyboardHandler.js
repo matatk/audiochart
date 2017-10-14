@@ -1,7 +1,9 @@
 'use strict'
 /**
+ * Set up a keyboard event listener to detect chart navigation keypresses.
  * @private
- * @param {HTMLDivElement} container - The DIV containing the chart
+ * @param {HTMLElement} container
+ *	- The element (usually a <code>&lt;div&gt;</code>) containing the chart
  * @param {Player} player - AudioChart Player object
  * @todo mark up the DIV properly
  * @todo check what sort of element we get given? no; could be button?

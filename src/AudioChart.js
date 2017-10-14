@@ -18,10 +18,25 @@
  * @param {index} row - The row of the cell to highlight
  */
 
+/**
+ * @typedef {Object} AudioChartOptions
+ * @todo move the documentation here? (Downside is that the branching/groups
+ *       of different options required for different chart types would be less *       clear.)
+ */
 
-/** Main object for API consumers. */
+/**
+ * @typedef {Object} WrapperAndCallbackResults
+ * @property {Function} Wrapper - the data wrapper function
+ * @property {Object|HTMLTableElement} parameter
+ *	the rendered chart, or HTML table
+ * @property {VisualCallback} callback
+ *	if requested by the user, a callback is created and returned
+ */
+
+/** Main object for API consumers */
 class AudioChart {
 	/**
+	 * Create an AudioChart object.
 	 * This first checks to see if the Web Audio API is available, and
 	 * throws an {Error} if not.
 	 * @param {options} options - AudioChart options
@@ -38,7 +53,7 @@ class AudioChart {
 		}
 
 		const result = AudioChart._assignWrapperCallback(options)
-		const dataWrapper = new result.Wrapper(result.parameter)
+		const dataWrapper = new result.Wrapper(result.parameter)  // TODO would this be neater if it created and returned by the wrapper assignment function?
 		const callback = result.callback
 
 		const frequencyPitchMapper = new FrequencyPitchMapper(
@@ -70,6 +85,14 @@ class AudioChart {
 		this.player.playPause()
 	}
 
+	/**
+	 * Works out which data source wrapper and visual callback (if requested)
+	 * should be used with this chart.
+	 * @param {AudioChartOptions} options - given by the user
+	 * @returns {WrapperAndCallbackResults}
+	 *	- data wrapper, data wrapper parameter and callback (if applicable)
+	 *	  for this chart
+	 */
 	static _assignWrapperCallback(options) {
 		const result = {
 			'Wrapper': null,

@@ -18,7 +18,7 @@ var googleVisualCallbackMaker = function(chart) {
 
 
 /**
- * Generate a callback that can be used to highlight table cells
+ * Generate a function that can be used to highlight table cells
  * @private
  * @param {HTMLTableElement} table - The in-DOM table element
  * @param {string} className - Name of the CSS highlight class
