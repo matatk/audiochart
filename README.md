@@ -24,10 +24,13 @@ What sort of charts/data does it work with?
 
 The [examples gallery](http://matatk.agrip.org.uk/audiochart/examples/gallery/) covers using AudioChart with Google Charts, JSON and HTML tables.
 
-Tutorial and Documentation
+Examples and Documentation
 ---------------------------
 
- * The ["Hello, World" AudioChart and Google Charts tutorial](http://matatk.agrip.org.uk/audiochart/examples/hello/) demonstrates how to get started.
+ * These "getting started" examples contain commented code samples.
+   - ["Hello, World" AudioChart&mdash;Google Chart Tools tutorial](http://matatk.agrip.org.uk/audiochart/examples/hello-google/)
+   - ["Hello, World" AudioChart&mdash;C3 tutorial](http://matatk.agrip.org.uk/audiochart/examples/hello-c3/)
+ * The [examples gallery](http://matatk.agrip.org.uk/audiochart/examples/gallery/) demonstrates using AudioChart with Google Chart Tools, C3, HTML Table and raw JSON data.
  * [AudioChart options reference](https://github.com/matatk/audiochart/blob/master/REFERENCE.md)
  * [Public API documentation](http://matatk.agrip.org.uk/audiochart/doc/public/)
 
