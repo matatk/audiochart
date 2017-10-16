@@ -2,6 +2,12 @@
  * Examples Gallery
  */
 
+nav ul li {
+	display: inline;
+	list-style-type: none;
+	padding-right: 1em;
+}
+
 table {
 	border-collapse: collapse;
 	margin-bottom: 0.5em;
