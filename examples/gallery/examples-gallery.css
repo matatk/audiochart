@@ -2,10 +2,23 @@
  * Examples Gallery
  */
 
+nav ul {
+	margin: 0;
+	padding: 0;
+}
+
 nav ul li {
 	display: inline;
 	list-style-type: none;
 	padding-right: 1em;
+}
+
+nav ul li:not(:first-child) {
+	padding-left: 1em;
+}
+
+nav ul li:not(:last-child) {
+	border-right: 4px solid black;
 }
 
 table {
@@ -23,7 +36,7 @@ th, td {
 	padding: 0.5em;
 }
 
-div.google-chart {
+div.visual-chart {
 	width: 75vw;
 	height: 40vw;
 }

@@ -1,10 +1,10 @@
 'use strict'
 google.load('visualization', '1.0', {'packages':['corechart']})
-google.setOnLoadCallback(init)
+google.setOnLoadCallback(init)  // TODO use standard DOM loaded event?
 
 
 //
-// Utility Functions
+// Options UI Handling
 //
 
 /* Check for errors */
@@ -59,55 +59,64 @@ function makeAudiochartOptions() {
 	}
 }
 
-/* Draw all the charts after the library has been loaded */
-function init() {
-	// Cheeky: wire up onchange events for the options controls here too
-	function changeHandler(id) {
-		document.getElementById(id).addEventListener('change', errorCheck)
-	}
-	changeHandler('opt-freq-low')
-	changeHandler('opt-freq-high')
 
-	// Google Charts
-	drawLine()
-	drawGradient()
-	drawSine()
-	drawSalesLine()
-	drawSalesAnnotated()
+//
+// Generating Data for the Charts
+//
 
-	// JSON
-	// TODO DRY
-	document.getElementById('btn-json1').onclick = function() {
-		const jsonOptions = makeAudiochartOptions()
-		jsonOptions['type'] = 'json'
-		jsonOptions['data'] = document.getElementById('json1').textContent
-		const jsonAC = new AudioChart(jsonOptions)
-		jsonAC.playPause()
+function dataHorizontalLine() {
+	const MIN = 0
+	const MAX = 1
+	const DELTA = 0.1
+	const results = []
+	let index = 0
+	for( let i = MIN; i <= MAX; i = i + DELTA ) {
+		results[index] = [i, 42]
+		index++
 	}
-
-	// HTML Table
-	// TODO DRY
-	document.getElementById('btn-table1').onclick = function() {
-		const htmlOptions = makeAudiochartOptions()
-		htmlOptions['type'] = 'htmlTable'
-		htmlOptions['table'] = document.getElementById('table1')
-		htmlOptions['highlightClass'] = 'current-datum'
-		const htmlAC = new AudioChart(htmlOptions)
-		htmlAC.playPause()
-	}
+	return results
 }
 
-/* Library functions for drawing Google charts and handling events */
-
-function _drawLineChartCore(data, id, btn) {
-	_drawCore(google.visualization.LineChart, data, id, btn)
+function dataGradient() {
+	const MIN = 0
+	const MAX = 1
+	const DELTA = 0.01
+	const results = []
+	let index = 0
+	for( let i = MIN; i <= MAX; i += DELTA ) {
+		results[index] = [i, i]
+		index++
+	}
+	return results
 }
 
-function _drawBarChartCore(data, id, btn) {
-	_drawCore(google.visualization.BarChart, data, id, btn)
+function dataSine() {
+	const MIN = -Math.PI
+	const MAX = Math.PI
+	const DELTA = 0.01
+	const results = []
+	let index = 0
+	for( let i = MIN; i <= MAX; i = i + DELTA ) {
+		results[index] = [i, Math.sin(i)]
+		index++
+	}
+	return results
 }
 
-function _drawCore(Klass, data, chartId, btn) {
+
+//
+// Core Google Charts Drawing Code
+//
+
+function googleLineCore(data, id, btn) {
+	googleCore(google.visualization.LineChart, data, id, btn)
+}
+
+function googleBarCore(data, id, btn) {
+	googleCore(google.visualization.BarChart, data, id, btn)
+}
+
+function googleCore(Klass, data, chartId, btn) {
 	// Instantiate and draw our chart, passing in some options
 	const googleOptions = {
 		'title': 'Example',
@@ -123,7 +132,7 @@ function _drawCore(Klass, data, chartId, btn) {
 	}
 	if (document.addEventListener) {
 		window.addEventListener('resize', resizeChart)
-	} else if (document.attachEvent) {
+	} else if (document.attachEvent) {  // TODO can be removed now?
 		window.attachEvent('onresize', resizeChart)
 	} else {
 		window.resize = resizeChart
@@ -143,73 +152,35 @@ function _drawCore(Klass, data, chartId, btn) {
 
 
 //
-// Individual Charts
+// Individual Chart Drwaing functions
 //
 
-function drawLine() {
-	// Create the data table.
+function drawHorizontalLine() {
 	const data = new google.visualization.DataTable()
-
-	const MIN = 0
-	const MAX = 1
-	const DELTA = 0.1
-	const results = []
-	let index = 0
-	for( let i = MIN; i <= MAX; i = i + DELTA ) {
-		results[index] = [i, 42]
-		index++
-	}
-
 	data.addColumn('number', 'blah')
 	data.addColumn('number', 'blah')
-	data.addRows(results)
-
-	_drawLineChartCore(data, 'chart-line', 'btn-line')
+	data.addRows(dataHorizontalLine())
+	googleLineCore(data, 'chart-google-horizontal-line', 'btn-google-horizontal-line')
 }
 
 function drawGradient() {
-	// Create the data table.
 	const data = new google.visualization.DataTable()
-
-	const MIN = 0
-	const MAX = 1
-	const DELTA = 0.01
-	const results = []
-	let index = 0
-	for( let i = MIN; i <= MAX; i += DELTA ) {
-		results[index] = [i, i]
-		index++
-	}
-
 	data.addColumn('number', 'blah')
 	data.addColumn('number', 'blah')
-	data.addRows(results)
-
-	_drawLineChartCore(data, 'chart-gradient', 'btn-gradient')
+	data.addRows(dataGradient())
+	googleLineCore(data, 'chart-google-gradient', 'btn-google-gradient')
 }
 
 function drawSine() {
 	// Create the data table.
 	const data = new google.visualization.DataTable()
-
-	const MIN = -Math.PI
-	const MAX = Math.PI
-	const DELTA = 0.01
-	const results = []
-	let index = 0
-	for( let i = MIN; i <= MAX; i = i + DELTA ) {
-		results[index] = [i, Math.sin(i)]
-		index++
-	}
-
 	data.addColumn('number', 'Radians')
 	data.addColumn('number', 'Sine')
-	data.addRows(results)
-
-	_drawLineChartCore(data, 'chart-sine', 'btn-sine')
+	data.addRows(dataSine())
+	googleLineCore(data, 'chart-google-sine', 'btn-google-sine')
 }
 
-function drawSalesLine() {
+function drawSalesLineAndBar() {
 	// Create the data table.
 	const data = new google.visualization.DataTable()
 	data.addColumn('string', 'Month') // Implicit domain label col.
@@ -221,8 +192,8 @@ function drawSalesLine() {
 		['July', 1030]
 	])
 
-	_drawLineChartCore(data, 'chart-sales-line', 'btn-sales-line')
-	_drawBarChartCore(data, 'chart-sales-bar', 'btn-sales-bar')
+	googleLineCore(data, 'chart-google-sales-line', 'btn-google-sales-line')
+	googleBarCore(data, 'chart-google-sales-bar', 'btn-google-sales-bar')
 }
 
 function drawSalesAnnotated() {
@@ -230,15 +201,15 @@ function drawSalesAnnotated() {
 	const data = new google.visualization.DataTable()
 	data.addColumn('string', 'Month') // Implicit domain label col.
 	data.addColumn('number', 'Sales') // Implicit series 1 data col.
-	data.addColumn({type:'number', role:'interval'})
+	data.addColumn({type: 'number', role: 'interval'})
 	// interval role col.
-	data.addColumn({type:'number', role:'interval'})
+	data.addColumn({type: 'number', role: 'interval'})
 	// interval role col.
-	data.addColumn({type:'string', role:'annotation'})
+	data.addColumn({type: 'string', role: 'annotation'})
 	// annotation role col.
-	data.addColumn({type:'string', role:'annotationText'})
+	data.addColumn({type: 'string', role: 'annotationText'})
 	// annotationText col.
-	data.addColumn({type:'boolean',role:'certainty'})
+	data.addColumn({type: 'boolean',role: 'certainty'})
 	// certainty col.
 	data.addRows([
 		['April',1000,  900, 1100,  'A','Stolen data', true],
@@ -247,5 +218,61 @@ function drawSalesAnnotated() {
 		['July', 1030, null, null, null, null, false]
 	])
 
-	_drawLineChartCore(data, 'chart-sales-annotated', 'btn-sales-annotated')
+	googleLineCore(data, 'chart-google-sales-annotated', 'btn-google-sales-annotated')
+}
+
+
+//
+// JSON Example
+//
+
+function initJSON() {  // TODO DRY re HTML
+	document.getElementById('btn-json1').onclick = function() {
+		const jsonOptions = makeAudiochartOptions()
+		jsonOptions['type'] = 'json'
+		jsonOptions['data'] = document.getElementById('json1').textContent
+		const jsonAC = new AudioChart(jsonOptions)
+		jsonAC.playPause()
+	}
+}
+
+
+//
+// HTML Example
+//
+
+function initHTML() {  // TODO DRY re JSON
+	document.getElementById('btn-table1').onclick = function() {
+		const htmlOptions = makeAudiochartOptions()
+		htmlOptions['type'] = 'htmlTable'
+		htmlOptions['table'] = document.getElementById('table1')
+		htmlOptions['highlightClass'] = 'current-datum'
+		const htmlAC = new AudioChart(htmlOptions)
+		htmlAC.playPause()
+	}
+}
+
+
+//
+// Main
+//
+
+function init() {
+	// Wire up error checking
+	function changeHandler(id) {
+		document.getElementById(id).addEventListener('change', errorCheck)
+	}
+
+	changeHandler('opt-freq-low')
+	changeHandler('opt-freq-high')
+
+	// Google Charts
+	drawHorizontalLine()
+	drawGradient()
+	drawSine()
+	drawSalesLineAndBar()
+	drawSalesAnnotated()
+
+	initJSON()
+	initHTML()
 }
