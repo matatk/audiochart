@@ -19,7 +19,8 @@ What does it let your users do?
 What sort of charts/data does it work with?
 
  * Google Charts line and bar charts.
- * JSON (the format is detailed in the examples gallery).
+ * C3 line charts.
+ * Raw JSON data.
  * HTML tables.
 
 The [examples gallery](http://matatk.agrip.org.uk/audiochart/examples/gallery/) covers using AudioChart with Google Charts, JSON and HTML tables.
@@ -28,8 +29,8 @@ Examples and Documentation
 ---------------------------
 
  * These "getting started" examples contain commented code samples.
-   - ["Hello, World" AudioChart&mdash;Google Chart Tools tutorial](http://matatk.agrip.org.uk/audiochart/examples/hello-google/)
-   - ["Hello, World" AudioChart&mdash;C3 tutorial](http://matatk.agrip.org.uk/audiochart/examples/hello-c3/)
+   - ["Hello, World" AudioChart&mdash;Google Chart Tools example](http://matatk.agrip.org.uk/audiochart/examples/hello-google/)
+   - ["Hello, World" AudioChart&mdash;C3 example](http://matatk.agrip.org.uk/audiochart/examples/hello-c3/)
  * The [examples gallery](http://matatk.agrip.org.uk/audiochart/examples/gallery/) demonstrates using AudioChart with Google Chart Tools, C3, HTML Table and raw JSON data.
  * [AudioChart options reference](https://github.com/matatk/audiochart/blob/master/REFERENCE.md)
  * [Public API documentation](http://matatk.agrip.org.uk/audiochart/doc/public/)
@@ -37,9 +38,9 @@ Examples and Documentation
 Development
 ------------
 
-Development is carried out in a [test-driven](http://en.wikipedia.org/wiki/Test-driven_development) manner.  A Gruntfile is provided to run the tests and automate things like linting and minification.  The `pre-commit` hook can be used to ensure only code that passes tests is committed (it does this by running Grunt).  You can make a symlink from the `.git/hooks/` directory to it and thus it (and the tests) will be run before you are asked for a commit message.
+Current and planned work is documented and discussed in the [AudioChart issue tracker](https://github.com/matatk/audiochart/issues) on GitHub.
 
-When building the software locally, unit tests are automatically run in Chrome and Firefox.  The [unit tests are also run on Travis](https://travis-ci.org/matatk/audiochart/) (as part of a build).  You can view the [test coverage details](http://matatk.agrip.org.uk/audiochart/coverage/).  In addition, [internal API documentation](http://matatk.agrip.org.uk/audiochart/doc/internal/) is available.
+Development is carried out in a [test-driven](http://en.wikipedia.org/wiki/Test-driven_development) manner.  When building the software locally, unit tests are run in Chrome and Firefox via the npm scripts ([Husky](https://github.com/typicode/husky) ensures they are run before a commit).  The [unit tests are also run on Travis](https://travis-ci.org/matatk/audiochart/) (where Headless Chrome is used).  You can view the [test coverage details](http://matatk.agrip.org.uk/audiochart/coverage/).  In addition, [internal API documentation](http://matatk.agrip.org.uk/audiochart/doc/internal/) is available.
 
 **Warning:** AudioChart is still fairly early in development, so the APIs are changing quite fast.
 
@@ -52,21 +53,4 @@ The build process uses npm and therefore also Node.  You can get set up for deve
  3. Locally install AudioChart's dependencies by running `npm install` in the newly-cloned/extracted `audiochart/` directory (the packages will be stored inside `node_modules/`).
  4. Issuing `npm run build` will lint the code, run the tests and make a minified production version.
 
-**Windows users:** this has not yet been extensively tested on Windows, but it doesn't use anything platform-specific, so should work fine. Please file a bug if you encounter any problems.
-
-Future Work Ideas
-------------------
-
-Feedback on the following is welcome.
-
- * Play speed/duration (supported in the code, but not currently changeable easily by the user/keyboard commands; perhaps this could be done via a WebExtension UI?)
- * Support SVG charts (this would most likely be done by accessing the data behind them as raw JSON, and creating a chart-specific visual callback to highlight the correct data on the chart).
- * Static/Periodic features such as grid/timing beats.
- * Mouse hover "audition" mode (hovering the mouse over a point would sound it).
- * Rendering a visual highlight element for chart APIs that don't provide this (i.eJSON and HTML tables).
- * Multiple plots/data series per chart.
- * Instruments as different sound types.
- * Officially support development on Windows.
- * Create a browser extension to enable AudioChart on charts/tables for sites that don't provide it themselves.
- * Allow modular builds to be created, with only support for data sources relevant to your site/application.
- * Make AudioChart a bower package and explain how it can be easily added to any page that way.
+**Windows users:** this has not yet been extensively tested on Windows, but it doesn't use anything platform-specific, so should work fine.  Please file a bug if you encounter any problems.
