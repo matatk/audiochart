@@ -24,10 +24,13 @@ What sort of charts/data does it work with?
 
 The [examples gallery](http://matatk.agrip.org.uk/audiochart/examples/gallery/) covers using AudioChart with Google Charts, JSON and HTML tables.
 
-Tutorial and Documentation
+Examples and Documentation
 ---------------------------
 
- * The ["Hello, World" AudioChart and Google Charts tutorial](http://matatk.agrip.org.uk/audiochart/examples/hello/) demonstrates how to get started.
+ * These "getting started" examples contain commented code samples.
+   - ["Hello, World" AudioChart&mdash;Google Chart Tools tutorial](http://matatk.agrip.org.uk/audiochart/examples/hello-google/)
+   - ["Hello, World" AudioChart&mdash;C3 tutorial](http://matatk.agrip.org.uk/audiochart/examples/hello-c3/)
+ * The [examples gallery](http://matatk.agrip.org.uk/audiochart/examples/gallery/) demonstrates using AudioChart with Google Chart Tools, C3, HTML Table and raw JSON data.
  * [AudioChart options reference](https://github.com/matatk/audiochart/blob/master/REFERENCE.md)
  * [Public API documentation](http://matatk.agrip.org.uk/audiochart/doc/public/)
 
@@ -56,10 +59,8 @@ Future Work Ideas
 
 Feedback on the following is welcome.
 
- * Play speed/duration.
- * Support [Google Chart Web Component (Polymer)](https://github.com/GoogleWebComponents/google-chart) charts.
- * Support [C3.js](http://c3js.org) charts.
- * Support SVG charts.
+ * Play speed/duration (supported in the code, but not currently changeable easily by the user/keyboard commands; perhaps this could be done via a WebExtension UI?)
+ * Support SVG charts (this would most likely be done by accessing the data behind them as raw JSON, and creating a chart-specific visual callback to highlight the correct data on the chart).
  * Static/Periodic features such as grid/timing beats.
  * Mouse hover "audition" mode (hovering the mouse over a point would sound it).
  * Rendering a visual highlight element for chart APIs that don't provide this (i.eJSON and HTML tables).

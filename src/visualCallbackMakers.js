@@ -36,3 +36,17 @@ var htmlTableVisualCallbackMaker = function(table, className) {
 		cell.classList.add(className)
 	}
 }
+
+
+/**
+ * Generates a function that moves the cursor on a C3 Chart
+ * @private
+ * @param {Object} chart - the in-memory C3 chart object
+ * @returns {VisualCallback} the callback
+ * @todo define C3 chart type?
+ */
+var c3VisualCallbackMaker = function(chart) {
+	return function(series, row) {
+		chart.select(null, [row], true)
+	}
+}

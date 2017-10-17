@@ -1,7 +1,7 @@
 'use strict'
 /** @module */
 /* exported AudioChart */
-/* global getAudioContext FrequencyPitchMapper WebAudioSounder Player KeyboardHandler GoogleDataWrapper googleVisualCallbackMaker JSONDataWrapper HTMLTableDataWrapper htmlTableVisualCallbackMaker */
+/* global getAudioContext FrequencyPitchMapper WebAudioSounder Player KeyboardHandler GoogleDataWrapper googleVisualCallbackMaker JSONDataWrapper HTMLTableDataWrapper htmlTableVisualCallbackMaker C3DataWrapper c3VisualCallbackMaker */
 
 /**
  * Array index number (starts at zero).
@@ -120,6 +120,14 @@ class AudioChart {
 					result.callback = htmlTableVisualCallbackMaker(
 						options.table,
 						options.highlightClass)
+				}
+				break
+			case 'c3':
+				result.Wrapper = C3DataWrapper
+				result.parameter = options.data
+				if (options.hasOwnProperty('chart')) {
+					result.callback =
+						c3VisualCallbackMaker(options.chart)
 				}
 				break
 			default:
