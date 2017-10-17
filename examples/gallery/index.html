@@ -6,7 +6,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="../style.css">
 		<link rel="stylesheet" href="examples-gallery.css">
+		<link rel="stylesheet" href="../../lib/c3.min.css">
 		<script src="https://www.google.com/jsapi"></script>
+		<script src="../../lib/d3.min.js"></script>
+		<script src="../../lib/c3.min.js"></script>
 		<script src="../../lib/audiochart.min.js"></script>
 	</head>
 	<body>
@@ -26,8 +29,12 @@
 				<li><a href='#google-sine'>Sine</a></li>
 				<li><a href='#google-sales'>Sales&mdash;Line Chart</a></li>
 				<li><a href='#google-sales-bar'>Sales&mdash;Bar Chart</a></li>
-				<li><a href='#google-sales-annotated'>Sales&mdash;Line Chart with Annotations</a>
-				</li>
+				<li><a href='#google-sales-annotated'>Sales&mdash;Line Chart with Annotations</a></li>
+			</ul>
+			<h3>C3 Charts</h3>
+			<ul>
+				<li><a href='#c3-gradient'>Gradient</a></li>
+				<li><a href='#c3-sine'>Sine</a></li>
 			</ul>
 			<h3>JSON</h3>
 			<ul>
@@ -77,31 +84,44 @@
 			<h3 id='google-gradient'>Gradient</h3>
 			<p>This one has many data points.</p>
 			<div class="visual-chart" id="chart-google-gradient"></div>
-			<button id="btn-google-gradient">Play or pause google-gradient (Google line chart)</button>
+			<button id="btn-google-gradient">Play or pause gradient (Google line chart)</button>
 			<hr>
 
 			<h3 id='google-sine'>Sine</h3>
 			<p>This one has many data points.</p>
 			<div class="visual-chart" id="chart-google-sine"></div>
-			<button id="btn-google-sine">Play or pause google-sine wave (Google line chart)</button>
+			<button id="btn-google-sine">Play or pause sine wave (Google line chart)</button>
 			<hr>
 
 			<h3 id='google-sales'>Sales&mdash;Line Chart</h3>
 			<p>This one has few data points.</p>
 			<div class="visual-chart" id="chart-google-sales-line"></div>
-			<button id="btn-google-sales-line">Play or pause google-sales (Google line chart)</button>
+			<button id="btn-google-sales-line">Play or pause sales (Google line chart)</button>
 			<hr>
 
 			<h3 id='google-sales-bar'>Sales&mdash;Bar Chart</h3>
 			<p>This one has few data points.</p>
 			<div class="visual-chart" id="chart-google-sales-bar"></div>
-			<button id="btn-google-sales-bar">Play or pause google-sales (Google bar chart)</button>
+			<button id="btn-google-sales-bar">Play or pause sales (Google bar chart)</button>
 			<hr>
 
 			<h3 id='google-sales-annotated'>Sales&mdash;Line Chart with Annotations</h3>
 			<p>This one has few data points.</p>
 			<div class="visual-chart" id="chart-google-sales-annotated"></div>
-			<button id="btn-google-sales-annotated">Play or pause google-sales (annotated Google line chart)</button>
+			<button id="btn-google-sales-annotated">Play or pause sales (annotated Google line chart)</button>
+			<hr>
+
+			<h2>C3 Charts</h2>
+			<h3 id='c3-gradient'>Gradient</h3>
+			<p>This one has many data points.</p>
+			<div class="visual-chart" id="chart-c3-gradient"></div>
+			<button id="btn-c3-gradient">Play or pause gradient (C3 line chart)</button>
+			<hr>
+
+			<h3 id='c3-sine'>Sine</h3>
+			<p>This one has many data points.</p>
+			<div class="visual-chart" id="chart-c3-sine"></div>
+			<button id="btn-c3-sine">Play or pause sine wave (C3 line chart)</button>
 			<hr>
 
 			<h2>JSON</h2>

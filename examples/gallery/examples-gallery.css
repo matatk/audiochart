@@ -10,15 +10,7 @@ nav ul {
 nav ul li {
 	display: inline;
 	list-style-type: none;
-	padding-right: 1em;
-}
-
-nav ul li:not(:first-child) {
-	padding-left: 1em;
-}
-
-nav ul li:not(:last-child) {
-	border-right: 4px solid black;
+	padding-right: 1.5em;
 }
 
 table {

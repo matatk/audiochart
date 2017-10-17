@@ -5,7 +5,6 @@
 // Note that you can also use AudioChart with Google Chart Tools, HTML tables and raw JSON data (there are [examples](http://matatk.agrip.org.uk/audiochart/examples/gallery/) to demonstrate this).
 //
 // More details on working with C3 Charts can be found on the [C3 site](http://c3js.org/).
-/* global c3 */
 'use strict'
 
 function drawChart() {

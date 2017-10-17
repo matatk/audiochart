@@ -3,7 +3,9 @@
     "browser": true
   },
   "globals": {
-    "google": false,
-    "AudioChart": false
+    "AudioChart": false,
+    "c3": false,
+    "d3": false,
+    "google": false
   }
 }

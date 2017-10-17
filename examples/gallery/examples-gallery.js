@@ -4,7 +4,7 @@ google.setOnLoadCallback(init)  // TODO use standard DOM loaded event?
 
 
 //
-// Options UI Handling
+// Options UI handling
 //
 
 /* Check for errors */
@@ -61,7 +61,7 @@ function makeAudiochartOptions() {
 
 
 //
-// Generating Data for the Charts
+// Generating data for the charts
 //
 
 function dataHorizontalLine() {
@@ -105,18 +105,18 @@ function dataSine() {
 
 
 //
-// Core Google Charts Drawing Code
+// Core Google Charts drawing code
 //
 
-function googleLineCore(data, id, btn) {
-	googleCore(google.visualization.LineChart, data, id, btn)
+function googleLineCore(data, id, buttonId) {
+	googleCore(google.visualization.LineChart, data, id, buttonId)
 }
 
-function googleBarCore(data, id, btn) {
-	googleCore(google.visualization.BarChart, data, id, btn)
+function googleBarCore(data, id, buttonId) {
+	googleCore(google.visualization.BarChart, data, id, buttonId)
 }
 
-function googleCore(Klass, data, chartId, btn) {
+function googleCore(Klass, data, chartId, buttonId) {
 	// Instantiate and draw our chart, passing in some options
 	const googleOptions = {
 		'title': 'Example',
@@ -139,7 +139,8 @@ function googleCore(Klass, data, chartId, btn) {
 	}
 
 	// Wire up to AudioChart
-	document.getElementById(btn).onclick = function() {
+	// TODO DRY
+	document.getElementById(buttonId).onclick = function() {
 		const audiochartOptions = makeAudiochartOptions()
 		audiochartOptions['type'] = 'google'
 		audiochartOptions['data'] = data
@@ -152,7 +153,68 @@ function googleCore(Klass, data, chartId, btn) {
 
 
 //
-// Individual Chart Drwaing functions
+// Core C3 drawing code
+//
+
+function makeC3Data(func, seriesName) {
+	const rawData = func()
+	const x = rawData.map((pair) => pair[0])
+	const values = rawData.map((pair) => pair[1])
+
+	return {
+		x: 'x',
+		columns: [
+			[seriesName].concat(values),
+			['x'].concat(x)
+		],
+		selection: {
+			enabled: true
+		}
+	}
+}
+
+function c3Core(data, chartId, buttonId, extraChartOptions) {
+	const chartOptions = {
+		bindto: '#' + chartId,
+		data: data,
+		// Provide some default formatting for the grids and labels.
+		// These may be overidden if extraChartOptions are specifed.
+		grid: {
+			x: {
+				show: true
+			}
+		},
+		axis: {
+			x: {
+				tick: {
+					format: d3.format('.2f')
+				}
+			}
+		}
+	}
+
+	if (extraChartOptions) {
+		Object.assign(chartOptions, extraChartOptions)
+	}
+
+	const chart = c3.generate(chartOptions)
+
+	// Wire up to AudioChart
+	// TODO DRY
+	document.getElementById(buttonId).onclick = function() {
+		const audiochartOptions = makeAudiochartOptions()
+		audiochartOptions['type'] = 'c3'
+		audiochartOptions['data'] = data
+		audiochartOptions['chart'] = chart
+		audiochartOptions['chartContainer'] = document.getElementById(chartId)
+		const ac = new AudioChart(audiochartOptions)
+		ac.playPause()
+	}
+}
+
+
+//
+// Graphical chart demo set-up
 //
 
 function drawHorizontalLine() {
@@ -169,19 +231,44 @@ function drawGradient() {
 	data.addColumn('number', 'blah')
 	data.addRows(dataGradient())
 	googleLineCore(data, 'chart-google-gradient', 'btn-google-gradient')
+
+	c3Core(makeC3Data(dataGradient, 'Gradient'), 'chart-c3-gradient', 'btn-c3-gradient')
 }
 
 function drawSine() {
-	// Create the data table.
 	const data = new google.visualization.DataTable()
 	data.addColumn('number', 'Radians')
 	data.addColumn('number', 'Sine')
 	data.addRows(dataSine())
 	googleLineCore(data, 'chart-google-sine', 'btn-google-sine')
+
+	c3Core(makeC3Data(dataSine, 'Sine'), 'chart-c3-sine', 'btn-c3-sine', {
+		axis: {
+			x: {
+				tick: {
+					count: 20,
+					format: d3.format('.2f')
+				}
+			}
+		},
+		grid: {
+			x: {
+				show: true,
+				lines: [
+					{ value: 0 }
+				]
+			},
+			y: {
+				show: true,
+				lines: [
+					{ value: 0 }
+				]
+			}
+		}
+	})
 }
 
 function drawSalesLineAndBar() {
-	// Create the data table.
 	const data = new google.visualization.DataTable()
 	data.addColumn('string', 'Month') // Implicit domain label col.
 	data.addColumn('number', 'Sales') // Implicit series 1 data col.
@@ -191,33 +278,25 @@ function drawSalesLineAndBar() {
 		['June',  660],
 		['July', 1030]
 	])
-
 	googleLineCore(data, 'chart-google-sales-line', 'btn-google-sales-line')
 	googleBarCore(data, 'chart-google-sales-bar', 'btn-google-sales-bar')
 }
 
 function drawSalesAnnotated() {
-	// Create the data table.
 	const data = new google.visualization.DataTable()
 	data.addColumn('string', 'Month') // Implicit domain label col.
 	data.addColumn('number', 'Sales') // Implicit series 1 data col.
 	data.addColumn({type: 'number', role: 'interval'})
-	// interval role col.
 	data.addColumn({type: 'number', role: 'interval'})
-	// interval role col.
 	data.addColumn({type: 'string', role: 'annotation'})
-	// annotation role col.
 	data.addColumn({type: 'string', role: 'annotationText'})
-	// annotationText col.
 	data.addColumn({type: 'boolean',role: 'certainty'})
-	// certainty col.
 	data.addRows([
 		['April',1000,  900, 1100,  'A','Stolen data', true],
 		['May',  1170, 1000, 1200,  'B','Coffee spill', true],
 		['June',  660,  550,  800,  'C','Wumpus attack', true],
 		['July', 1030, null, null, null, null, false]
 	])
-
 	googleLineCore(data, 'chart-google-sales-annotated', 'btn-google-sales-annotated')
 }
 
@@ -266,7 +345,7 @@ function init() {
 	changeHandler('opt-freq-low')
 	changeHandler('opt-freq-high')
 
-	// Google Charts
+	// Graphical charts
 	drawHorizontalLine()
 	drawGradient()
 	drawSine()
