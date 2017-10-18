@@ -9,12 +9,13 @@ AudioChart uses the Web Audio API, which is [supported by modern browsers, inclu
 
 Thanks to [The Sonification Handbook](http://sonification.de/handbook/) for the research behind it and to [The Paciello Group](http://paciellogroup.com) for allowing me to share this with you.
 
-Use Cases and Examples
------------------------
+Use Cases
+----------
 
 What does it let your users do?
 
- * Play an auditory version of the data represented by a Google Chart, JSON fragment or HTML table.
+ * Play an auditory version of the data represented by a chart.
+ * Use the keyboard to pause the playback and move around the chart.
 
 What sort of charts/data does it work with?
 
