@@ -1,16 +1,16 @@
 'use strict'
 google.load('visualization', '1.0', {'packages':['corechart']})
-google.setOnLoadCallback(init)
+google.setOnLoadCallback(init)  // TODO use standard DOM loaded event?
 
 
 //
-// Utility Functions
+// Options UI handling
 //
 
 /* Check for errors */
 function errorCheck() {
-	var freqLowInput = document.getElementById('opt-freq-low')
-	var freqHighInput = document.getElementById('opt-freq-high')
+	const freqLowInput = document.getElementById('opt-freq-low')
+	const freqHighInput = document.getElementById('opt-freq-high')
 	if (freqLowInput.valueAsNumber >= freqHighInput.valueAsNumber) {
 		errorCheckToggle('on')
 	} else {
@@ -26,19 +26,19 @@ function errorCheckToggle(toState) {
 
 /* Toggle error message visibility */
 function errorCheckToggleMessages(toState) {
-	var classNames = ['hidden-error-message', 'error-message']
-	var currentClass = (toState === 'on') ? classNames[0] : classNames[1]
-	var desiredClass = (toState === 'on') ? classNames[1] : classNames[0]
-	var errorParas = document.querySelectorAll('p.' + currentClass)
-	for (var i = 0; i < errorParas.length; i++ ) {
+	const classNames = ['hidden-error-message', 'error-message']
+	const currentClass = (toState === 'on') ? classNames[0] : classNames[1]
+	const desiredClass = (toState === 'on') ? classNames[1] : classNames[0]
+	const errorParas = document.querySelectorAll('p.' + currentClass)
+	for (let i = 0; i < errorParas.length; i++ ) {
 		errorParas[i].className = desiredClass
 	}
 }
 
 /* Toggle aria-invalid on controls */
 function errorCheckToggleInvalid(toState) {
-	var numberInputs = document.querySelectorAll('input[type=number]')
-	for (var i = 0; i < numberInputs.length; i++ ) {
+	const numberInputs = document.querySelectorAll('input[type=number]')
+	for (let i = 0; i < numberInputs.length; i++ ) {
 		numberInputs[i].setAttribute('aria-invalid',
 			(toState === 'on') ? 'true' : 'false')
 	}
@@ -59,61 +59,70 @@ function makeAudiochartOptions() {
 	}
 }
 
-/* Draw all the charts after the library has been loaded */
-function init() {
-	// Cheeky: wire up onchange events for the options controls here too
-	function changeHandler(id) {
-		document.getElementById(id).addEventListener('change', errorCheck)
-	}
-	changeHandler('opt-freq-low')
-	changeHandler('opt-freq-high')
 
-	// Google Charts
-	drawLine()
-	drawGradient()
-	drawSine()
-	drawSalesLine()
-	drawSalesAnnotated()
+//
+// Generating data for the charts
+//
 
-	// JSON
-	// TODO DRY
-	var jsonOptions = makeAudiochartOptions()
-	jsonOptions['type'] = 'json'
-	jsonOptions['data'] = document.getElementById('json1').textContent
-	var jsonAC = new AudioChart(jsonOptions)
-	document.getElementById('btn-json1').onclick = function() {
-		jsonAC.playPause()
+function dataHorizontalLine() {
+	const MIN = 0
+	const MAX = 1
+	const DELTA = 0.1
+	const results = []
+	let index = 0
+	for( let i = MIN; i <= MAX; i = i + DELTA ) {
+		results[index] = [i, 42]
+		index++
 	}
-
-	// HTML Table
-	// TODO DRY
-	var htmlOptions = makeAudiochartOptions()
-	htmlOptions['type'] = 'htmlTable'
-	htmlOptions['table'] = document.getElementById('table1')
-	htmlOptions['highlightClass'] = 'current-datum'
-	var htmlAC = new AudioChart(htmlOptions)
-	document.getElementById('btn-table1').onclick = function() {
-		htmlAC.playPause()
-	}
+	return results
 }
 
-/* Library functions for drawing Google charts and handling events */
-
-function _drawLineChartCore(data, id, btn) {
-	_drawCore(google.visualization.LineChart, data, id, btn)
+function dataGradient() {
+	const MIN = 0
+	const MAX = 1
+	const DELTA = 0.01
+	const results = []
+	let index = 0
+	for( let i = MIN; i <= MAX; i += DELTA ) {
+		results[index] = [i, i]
+		index++
+	}
+	return results
 }
 
-function _drawBarChartCore(data, id, btn) {
-	_drawCore(google.visualization.BarChart, data, id, btn)
+function dataSine() {
+	const MIN = -Math.PI
+	const MAX = Math.PI
+	const DELTA = 0.01
+	const results = []
+	let index = 0
+	for( let i = MIN; i <= MAX; i = i + DELTA ) {
+		results[index] = [i, Math.sin(i)]
+		index++
+	}
+	return results
 }
 
-function _drawCore(Klass, data, chartId, btn) {
+
+//
+// Core Google Charts drawing code
+//
+
+function googleLineCore(data, id, buttonId) {
+	googleCore(google.visualization.LineChart, data, id, buttonId)
+}
+
+function googleBarCore(data, id, buttonId) {
+	googleCore(google.visualization.BarChart, data, id, buttonId)
+}
+
+function googleCore(Klass, data, chartId, buttonId) {
 	// Instantiate and draw our chart, passing in some options
-	var googleOptions = {
+	const googleOptions = {
 		'title': 'Example',
 		'curveType': 'function'
 	}
-	var chart = new Klass(document.getElementById(chartId))
+	const chart = new Klass(document.getElementById(chartId))
 
 	resizeChart()  // initial draw
 
@@ -123,96 +132,144 @@ function _drawCore(Klass, data, chartId, btn) {
 	}
 	if (document.addEventListener) {
 		window.addEventListener('resize', resizeChart)
-	} else if (document.attachEvent) {
+	} else if (document.attachEvent) {  // TODO can be removed now?
 		window.attachEvent('onresize', resizeChart)
 	} else {
 		window.resize = resizeChart
 	}
 
 	// Wire up to AudioChart
-	var audiochartOptions = makeAudiochartOptions()
-	audiochartOptions['type'] = 'google'
-	audiochartOptions['data'] = data
-	audiochartOptions['chart'] = chart
-	audiochartOptions['chartContainer'] = document.getElementById(chartId)
-	var ac = new AudioChart(audiochartOptions)
-
-	document.getElementById(btn).onclick = function() {
+	// TODO DRY
+	document.getElementById(buttonId).onclick = function() {
+		const audiochartOptions = makeAudiochartOptions()
+		audiochartOptions['type'] = 'google'
+		audiochartOptions['data'] = data
+		audiochartOptions['chart'] = chart
+		audiochartOptions['chartContainer'] = document.getElementById(chartId)
+		const ac = new AudioChart(audiochartOptions)
 		ac.playPause()
 	}
 }
 
 
 //
-// Individual Charts
+// Core C3 drawing code
 //
 
-function drawLine() {
-	// Create the data table.
-	var data = new google.visualization.DataTable()
+function makeC3Data(func, seriesName) {
+	const rawData = func()
+	const x = rawData.map((pair) => pair[0])
+	const values = rawData.map((pair) => pair[1])
 
-	var MIN = 0
-	var MAX = 1
-	var DELTA = 0.1
-	var results = []
-	var index = 0
-	for( var i = MIN; i <= MAX; i = i + DELTA ) {
-		results[index] = [i, 42]
-		index++
+	return {
+		x: 'x',
+		columns: [
+			[seriesName].concat(values),
+			['x'].concat(x)
+		],
+		selection: {
+			enabled: true
+		}
+	}
+}
+
+function c3Core(data, chartId, buttonId, extraChartOptions) {
+	const chartOptions = {
+		bindto: '#' + chartId,
+		data: data,
+		// Provide some default formatting for the grids and labels.
+		// These may be overidden if extraChartOptions are specifed.
+		grid: {
+			x: {
+				show: true
+			}
+		},
+		axis: {
+			x: {
+				tick: {
+					format: d3.format('.2f')
+				}
+			}
+		}
 	}
 
-	data.addColumn('number', 'blah')
-	data.addColumn('number', 'blah')
-	data.addRows(results)
+	if (extraChartOptions) {
+		Object.assign(chartOptions, extraChartOptions)
+	}
 
-	_drawLineChartCore(data, 'chart-line', 'btn-line')
+	const chart = c3.generate(chartOptions)
+
+	// Wire up to AudioChart
+	// TODO DRY
+	document.getElementById(buttonId).onclick = function() {
+		const audiochartOptions = makeAudiochartOptions()
+		audiochartOptions['type'] = 'c3'
+		audiochartOptions['data'] = data
+		audiochartOptions['chart'] = chart
+		audiochartOptions['chartContainer'] = document.getElementById(chartId)
+		const ac = new AudioChart(audiochartOptions)
+		ac.playPause()
+	}
+}
+
+
+//
+// Graphical chart demo set-up
+//
+
+function drawHorizontalLine() {
+	const data = new google.visualization.DataTable()
+	data.addColumn('number', 'blah')
+	data.addColumn('number', 'blah')
+	data.addRows(dataHorizontalLine())
+	googleLineCore(data, 'chart-google-horizontal-line', 'btn-google-horizontal-line')
 }
 
 function drawGradient() {
-	// Create the data table.
-	var data = new google.visualization.DataTable()
-
-	var MIN = 0
-	var MAX = 1
-	var DELTA = 0.01
-	var results = []
-	var index = 0
-	for( var i = MIN; i <= MAX; i += DELTA ) {
-		results[index] = [i, i]
-		index++
-	}
-
+	const data = new google.visualization.DataTable()
 	data.addColumn('number', 'blah')
 	data.addColumn('number', 'blah')
-	data.addRows(results)
+	data.addRows(dataGradient())
+	googleLineCore(data, 'chart-google-gradient', 'btn-google-gradient')
 
-	_drawLineChartCore(data, 'chart-gradient', 'btn-gradient')
+	c3Core(makeC3Data(dataGradient, 'Gradient'), 'chart-c3-gradient', 'btn-c3-gradient')
 }
 
 function drawSine() {
-	// Create the data table.
-	var data = new google.visualization.DataTable()
-
-	var MIN = -Math.PI
-	var MAX = Math.PI
-	var DELTA = 0.01
-	var results = []
-	var index = 0
-	for( var i = MIN; i <= MAX; i = i + DELTA ) {
-		results[index] = [i, Math.sin(i)]
-		index++
-	}
-
+	const data = new google.visualization.DataTable()
 	data.addColumn('number', 'Radians')
 	data.addColumn('number', 'Sine')
-	data.addRows(results)
+	data.addRows(dataSine())
+	googleLineCore(data, 'chart-google-sine', 'btn-google-sine')
 
-	_drawLineChartCore(data, 'chart-sine', 'btn-sine')
+	c3Core(makeC3Data(dataSine, 'Sine'), 'chart-c3-sine', 'btn-c3-sine', {
+		axis: {
+			x: {
+				tick: {
+					count: 20,
+					format: d3.format('.2f')
+				}
+			}
+		},
+		grid: {
+			x: {
+				show: true,
+				lines: [
+					{ value: 0 }
+				]
+			},
+			y: {
+				show: true,
+				lines: [
+					{ value: 0 }
+				]
+			}
+		}
+	})
 }
 
-function drawSalesLine() {
-	// Create the data table.
-	var data = new google.visualization.DataTable()
+function drawSalesLineAndBar() {
+	const data = new google.visualization.DataTable()
 	data.addColumn('string', 'Month') // Implicit domain label col.
 	data.addColumn('number', 'Sales') // Implicit series 1 data col.
 	data.addRows([
@@ -221,32 +278,80 @@ function drawSalesLine() {
 		['June',  660],
 		['July', 1030]
 	])
-
-	_drawLineChartCore(data, 'chart-sales-line', 'btn-sales-line')
-	_drawBarChartCore(data, 'chart-sales-bar', 'btn-sales-bar')
+	googleLineCore(data, 'chart-google-sales-line', 'btn-google-sales-line')
+	googleBarCore(data, 'chart-google-sales-bar', 'btn-google-sales-bar')
 }
 
 function drawSalesAnnotated() {
-	// Create the data table.
-	var data = new google.visualization.DataTable()
+	const data = new google.visualization.DataTable()
 	data.addColumn('string', 'Month') // Implicit domain label col.
 	data.addColumn('number', 'Sales') // Implicit series 1 data col.
-	data.addColumn({type:'number', role:'interval'})
-	// interval role col.
-	data.addColumn({type:'number', role:'interval'})
-	// interval role col.
-	data.addColumn({type:'string', role:'annotation'})
-	// annotation role col.
-	data.addColumn({type:'string', role:'annotationText'})
-	// annotationText col.
-	data.addColumn({type:'boolean',role:'certainty'})
-	// certainty col.
+	data.addColumn({type: 'number', role: 'interval'})
+	data.addColumn({type: 'number', role: 'interval'})
+	data.addColumn({type: 'string', role: 'annotation'})
+	data.addColumn({type: 'string', role: 'annotationText'})
+	data.addColumn({type: 'boolean',role: 'certainty'})
 	data.addRows([
 		['April',1000,  900, 1100,  'A','Stolen data', true],
 		['May',  1170, 1000, 1200,  'B','Coffee spill', true],
 		['June',  660,  550,  800,  'C','Wumpus attack', true],
 		['July', 1030, null, null, null, null, false]
 	])
+	googleLineCore(data, 'chart-google-sales-annotated', 'btn-google-sales-annotated')
+}
 
-	_drawLineChartCore(data, 'chart-sales-annotated', 'btn-sales-annotated')
+
+//
+// JSON Example
+//
+
+function initJSON() {  // TODO DRY re HTML
+	document.getElementById('btn-json1').onclick = function() {
+		const jsonOptions = makeAudiochartOptions()
+		jsonOptions['type'] = 'json'
+		jsonOptions['data'] = document.getElementById('json1').textContent
+		const jsonAC = new AudioChart(jsonOptions)
+		jsonAC.playPause()
+	}
+}
+
+
+//
+// HTML Example
+//
+
+function initHTML() {  // TODO DRY re JSON
+	document.getElementById('btn-table1').onclick = function() {
+		const htmlOptions = makeAudiochartOptions()
+		htmlOptions['type'] = 'htmlTable'
+		htmlOptions['table'] = document.getElementById('table1')
+		htmlOptions['highlightClass'] = 'current-datum'
+		const htmlAC = new AudioChart(htmlOptions)
+		htmlAC.playPause()
+	}
+}
+
+
+//
+// Main
+//
+
+function init() {
+	// Wire up error checking
+	function changeHandler(id) {
+		document.getElementById(id).addEventListener('change', errorCheck)
+	}
+
+	changeHandler('opt-freq-low')
+	changeHandler('opt-freq-high')
+
+	// Graphical charts
+	drawHorizontalLine()
+	drawGradient()
+	drawSine()
+	drawSalesLineAndBar()
+	drawSalesAnnotated()
+
+	initJSON()
+	initHTML()
 }

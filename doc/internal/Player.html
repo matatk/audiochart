@@ -28,8 +28,9 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature">(private) </span></span>
-            <span class="ancestors"><a href="module-audiochart.html">audiochart</a>~</span>Player<span class="signature">(duration, data, pitchMapper, sounder, visualCallback)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature">(private) </span></span>Player<span class="signature">(duration, data, pitchMapper, sounder, visualCallback)</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description">Orchestrates the audible (and visual cursor) rendering of the chart</div>
         
     
 </header>
@@ -40,6 +41,8 @@
         
 
     
+    <h2>Constructor</h2>
+    
 
     
     <h4 class="name" id="Player"><span class="type-signature">(private) </span>new Player<span class="signature">(duration, data, pitchMapper, sounder, visualCallback)</span><span class="type-signature"></span></h4>
@@ -48,10 +51,6 @@
     
 
 
-
-<div class="description">
-    Orchestrates the audible (and visual cursor) rendering of the chart
-</div>
 
 
 
@@ -138,7 +137,7 @@
             <td class="type">
             
                 
-<span class="param-type">PitchMapper</span>
+<span class="param-type"><a href="PitchMapper.html">PitchMapper</a></span>
 
 
             
@@ -161,7 +160,7 @@
             <td class="type">
             
                 
-<span class="param-type">WebAudioSounder</span>
+<span class="param-type"><a href="WebAudioSounder.html">WebAudioSounder</a></span>
 
 
             
@@ -235,7 +234,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line329">line 329</a>
+        <a href="Player.js.html">Player.js</a>, <a href="Player.js.html#line11">line 11</a>
     </li></ul></dd>
     
 
@@ -343,7 +342,7 @@ the pause was triggered.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line465">line 465</a>
+        <a href="Player.js.html">Player.js</a>, <a href="Player.js.html#line151">line 151</a>
     </li></ul></dd>
     
 
@@ -438,7 +437,7 @@ number of data.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line383">line 383</a>
+        <a href="Player.js.html">Player.js</a>, <a href="Player.js.html#line90">line 90</a>
     </li></ul></dd>
     
 
@@ -525,7 +524,7 @@ number of data.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line397">line 397</a>
+        <a href="Player.js.html">Player.js</a>, <a href="Player.js.html#line106">line 106</a>
     </li></ul></dd>
     
 
@@ -613,96 +612,7 @@ datum as the playback occurs.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line436">line 436</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="_playOneWrapper"><span class="type-signature"></span>_playOneWrapper<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Firefox and Chrome both seem to handle running `_playOne()` with an
-interval of ~5ms fine, but Safari really lags when doing so, so here is
-an unfortunately hacky workaround untill I'm better able to understand
-what's going on.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line418">line 418</a>
+        <a href="Player.js.html">Player.js</a>, <a href="Player.js.html#line117">line 117</a>
     </li></ul></dd>
     
 
@@ -788,7 +698,7 @@ what's going on.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line359">line 359</a>
+        <a href="Player.js.html">Player.js</a>, <a href="Player.js.html#line66">line 66</a>
     </li></ul></dd>
     
 
@@ -832,13 +742,13 @@ what's going on.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-audiochart.html">audiochart</a></li></ul><h3>Classes</h3><ul><li><a href="module-audiochart-_AudioChart.html">_AudioChart</a></li><li><a href="module-audiochart-AudioChart.html">AudioChart</a></li><li><a href="module-audiochart-AudioContextGetter.html">AudioContextGetter</a></li><li><a href="module-audiochart-FrequencyPitchMapper.html">FrequencyPitchMapper</a></li><li><a href="module-audiochart-GoogleDataWrapper.html">GoogleDataWrapper</a></li><li><a href="module-audiochart-HTMLTableDataWrapper.html">HTMLTableDataWrapper</a></li><li><a href="module-audiochart-JSONDataWrapper.html">JSONDataWrapper</a></li><li><a href="module-audiochart-KeyboardHandler.html">KeyboardHandler</a></li><li><a href="module-audiochart-PitchMapper.html">PitchMapper</a></li><li><a href="module-audiochart-Player.html">Player</a></li><li><a href="module-audiochart-WebAudioSounder.html">WebAudioSounder</a></li></ul><h3>Interfaces</h3><ul><li><a href="module-audiochart-DataWrapper.html">DataWrapper</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-AudioChart.html">AudioChart</a></li></ul><h3>Classes</h3><ul><li><a href="C3DataWrapper.html">C3DataWrapper</a></li><li><a href="FrequencyPitchMapper.html">FrequencyPitchMapper</a></li><li><a href="GoogleDataWrapper.html">GoogleDataWrapper</a></li><li><a href="HTMLTableDataWrapper.html">HTMLTableDataWrapper</a></li><li><a href="JSONDataWrapper.html">JSONDataWrapper</a></li><li><a href="KeyboardHandler.html">KeyboardHandler</a></li><li><a href="module-AudioChart-AudioChart.html">AudioChart</a></li><li><a href="PitchMapper.html">PitchMapper</a></li><li><a href="Player.html">Player</a></li><li><a href="WebAudioSounder.html">WebAudioSounder</a></li></ul><h3>Interfaces</h3><ul><li><a href="DataWrapper.html">DataWrapper</a></li></ul><h3>Global</h3><ul><li><a href="global.html#c3VisualCallbackMaker">c3VisualCallbackMaker</a></li><li><a href="global.html#getAudioContext">getAudioContext</a></li><li><a href="global.html#googleVisualCallbackMaker">googleVisualCallbackMaker</a></li><li><a href="global.html#htmlTableVisualCallbackMaker">htmlTableVisualCallbackMaker</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Sep 22 2017 21:34:13 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Oct 18 2017 09:35:15 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -28,8 +28,9 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature">(private) </span></span>
-            <span class="ancestors"><a href="module-audiochart.html">audiochart</a>~</span>KeyboardHandler<span class="signature">(container, player)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature">(private) </span></span>KeyboardHandler<span class="signature">(container, player)</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description">Set up a keyboard event listener to detect chart navigation keypresses.</div>
         
     
 </header>
@@ -39,6 +40,8 @@
     
         
 
+    
+    <h2>Constructor</h2>
     
 
     
@@ -88,7 +91,7 @@
             <td class="type">
             
                 
-<span class="param-type">HTMLDivElement</span>
+<span class="param-type">HTMLElement</span>
 
 
             
@@ -98,7 +101,7 @@
 
             
 
-            <td class="description last">The DIV containing the chart</td>
+            <td class="description last">- The element (usually a <code>&lt;div&gt;</code>) containing the chart</td>
         </tr>
 
     
@@ -111,7 +114,7 @@
             <td class="type">
             
                 
-<span class="param-type">Player</span>
+<span class="param-type"><a href="Player.html">Player</a></span>
 
 
             
@@ -162,7 +165,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line568">line 568</a>
+        <a href="KeyboardHandler.js.html">KeyboardHandler.js</a>, <a href="KeyboardHandler.js.html#line11">line 11</a>
     </li></ul></dd>
     
 
@@ -277,7 +280,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line625">line 625</a>
+        <a href="KeyboardHandler.js.html">KeyboardHandler.js</a>, <a href="KeyboardHandler.js.html#line47">line 47</a>
     </li></ul></dd>
     
 
@@ -363,7 +366,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line630">line 630</a>
+        <a href="KeyboardHandler.js.html">KeyboardHandler.js</a>, <a href="KeyboardHandler.js.html#line52">line 52</a>
     </li></ul></dd>
     
 
@@ -449,7 +452,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line635">line 635</a>
+        <a href="KeyboardHandler.js.html">KeyboardHandler.js</a>, <a href="KeyboardHandler.js.html#line57">line 57</a>
     </li></ul></dd>
     
 
@@ -483,7 +486,7 @@
     
 
     
-    <h4 class="name" id="keypressHandler"><span class="type-signature"></span>keypressHandler<span class="signature">(evt)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="keypressHandler"><span class="type-signature"></span>keypressHandler<span class="signature">(event)</span><span class="type-signature"></span></h4>
     
 
     
@@ -493,7 +496,7 @@
 <div class="description">
     Handle keypresses
 
-Note: This is bound to the KeyboardHandler so that it can call
+Note: This is bound to the <a href="KeyboardHandler.html">KeyboardHandler</a> so that it can call
       the right handler methods.
 </div>
 
@@ -530,7 +533,7 @@ Note: This is bound to the KeyboardHandler so that it can call
 
         <tr>
             
-                <td class="name"><code>evt</code></td>
+                <td class="name"><code>event</code></td>
             
 
             <td class="type">
@@ -587,7 +590,7 @@ Note: This is bound to the KeyboardHandler so that it can call
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line612">line 612</a>
+        <a href="KeyboardHandler.js.html">KeyboardHandler.js</a>, <a href="KeyboardHandler.js.html#line34">line 34</a>
     </li></ul></dd>
     
 
@@ -638,13 +641,13 @@ Note: This is bound to the KeyboardHandler so that it can call
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-audiochart.html">audiochart</a></li></ul><h3>Classes</h3><ul><li><a href="module-audiochart-_AudioChart.html">_AudioChart</a></li><li><a href="module-audiochart-AudioChart.html">AudioChart</a></li><li><a href="module-audiochart-AudioContextGetter.html">AudioContextGetter</a></li><li><a href="module-audiochart-FrequencyPitchMapper.html">FrequencyPitchMapper</a></li><li><a href="module-audiochart-GoogleDataWrapper.html">GoogleDataWrapper</a></li><li><a href="module-audiochart-HTMLTableDataWrapper.html">HTMLTableDataWrapper</a></li><li><a href="module-audiochart-JSONDataWrapper.html">JSONDataWrapper</a></li><li><a href="module-audiochart-KeyboardHandler.html">KeyboardHandler</a></li><li><a href="module-audiochart-PitchMapper.html">PitchMapper</a></li><li><a href="module-audiochart-Player.html">Player</a></li><li><a href="module-audiochart-WebAudioSounder.html">WebAudioSounder</a></li></ul><h3>Interfaces</h3><ul><li><a href="module-audiochart-DataWrapper.html">DataWrapper</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-AudioChart.html">AudioChart</a></li></ul><h3>Classes</h3><ul><li><a href="C3DataWrapper.html">C3DataWrapper</a></li><li><a href="FrequencyPitchMapper.html">FrequencyPitchMapper</a></li><li><a href="GoogleDataWrapper.html">GoogleDataWrapper</a></li><li><a href="HTMLTableDataWrapper.html">HTMLTableDataWrapper</a></li><li><a href="JSONDataWrapper.html">JSONDataWrapper</a></li><li><a href="KeyboardHandler.html">KeyboardHandler</a></li><li><a href="module-AudioChart-AudioChart.html">AudioChart</a></li><li><a href="PitchMapper.html">PitchMapper</a></li><li><a href="Player.html">Player</a></li><li><a href="WebAudioSounder.html">WebAudioSounder</a></li></ul><h3>Interfaces</h3><ul><li><a href="DataWrapper.html">DataWrapper</a></li></ul><h3>Global</h3><ul><li><a href="global.html#c3VisualCallbackMaker">c3VisualCallbackMaker</a></li><li><a href="global.html#getAudioContext">getAudioContext</a></li><li><a href="global.html#googleVisualCallbackMaker">googleVisualCallbackMaker</a></li><li><a href="global.html#htmlTableVisualCallbackMaker">htmlTableVisualCallbackMaker</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Sep 22 2017 21:34:13 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Oct 18 2017 09:35:15 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

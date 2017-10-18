@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>hello-world-tutorial.js</title>
+  <title>hello-world-google.js</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <link rel="stylesheet" media="all" href="docco.css" />
@@ -15,7 +15,7 @@
         
           <li id="title">
               <div class="annotation">
-                  <h1>hello-world-tutorial.js</h1>
+                  <h1>hello-world-google.js</h1>
               </div>
           </li>
         
@@ -27,9 +27,9 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <p>This uses the Google Charts API along with AudioChart.</p>
-<p>You can check out the finished <a href="http://matatk.agrip.org.uk/audiochart/examples/hello/">“hello, world” HTML file</a> to experience the actual chart (this is just the code that makes it tick).</p>
-<p>Note that you can also use AudioChart with JSON and HTML tables (there are <a href="http://matatk.agrip.org.uk/audiochart/examples/gallery/">examples</a> to demonstrate this).</p>
+              <p>This uses the Google Chart Tools API along with AudioChart.</p>
+<p>You can check out the finished <a href="http://matatk.agrip.org.uk/audiochart/examples/hello-google/">“hello, world” HTML file</a> to experience the actual chart (this is just the code that makes it tick).</p>
+<p>Note that you can also use AudioChart with C3 charts, HTML tables and raw JSON data (there are <a href="http://matatk.agrip.org.uk/audiochart/examples/gallery/">examples</a> to demonstrate this).</p>
 <p>More details on working with Google Charts can be found in the <a href="https://developers.google.com/chart/">Google Charts documentation</a>.</p>
 
             </div>
@@ -66,7 +66,7 @@ google.setOnLoadCallback(drawChart)
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">var</span> data = <span class="hljs-keyword">new</span> google.visualization.DataTable()</pre></div></div>
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">const</span> data = <span class="hljs-keyword">new</span> google.visualization.DataTable()</pre></div></div>
             
         </li>
         
@@ -105,7 +105,7 @@ google.setOnLoadCallback(drawChart)
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">var</span> chartOptions = {
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">const</span> chartOptions = {
 		<span class="hljs-string">'title'</span>: <span class="hljs-string">'Evil Project Efficacy'</span>,
 		<span class="hljs-string">'curveType'</span>: <span class="hljs-string">'function'</span>
 	}</pre></div></div>
@@ -123,7 +123,7 @@ google.setOnLoadCallback(drawChart)
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">var</span> chart = <span class="hljs-keyword">new</span> google.visualization.LineChart(
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">const</span> chart = <span class="hljs-keyword">new</span> google.visualization.LineChart(
 		<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'chart'</span>))</pre></div></div>
             
         </li>
@@ -192,7 +192,7 @@ google.setOnLoadCallback(drawChart)
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">var</span> ac = <span class="hljs-keyword">new</span> AudioChart({
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">const</span> ac = <span class="hljs-keyword">new</span> AudioChart({
 		<span class="hljs-string">'type'</span>: <span class="hljs-string">'google'</span>,      <span class="hljs-comment">// (see the docs)</span>
 		<span class="hljs-string">'data'</span>: data,          <span class="hljs-comment">// the GoogleDataTable</span>
 		<span class="hljs-string">'chart'</span>: chart,        <span class="hljs-comment">// the Google Chart object</span>

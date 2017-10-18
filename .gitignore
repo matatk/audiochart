@@ -1,4 +1,6 @@
 .DS_Store
 *.swp
+examples/.eslintrc.json
+examples/hello-*/public/
 _site
 node_modules

@@ -4,7 +4,6 @@ AC='audiochart.master'
 LIB='lib'
 COVERAGE='coverage'
 EXAMPLES='examples'
-EXAMPLES_DOCCO_FONTS='examples/hello/public'
 ESLINTRC='.eslintrc.json'
 DOC_ROOT='doc'
 
@@ -35,10 +34,6 @@ if [ $PROG == 'grab.sh' ]; then
 		"$AC/$EXAMPLES" \
 		"$AC/$DOC_ROOT" \
 		. || exit 42
-	echo
-	echo "Removing some development/unused files..."
-	rm -fv "$EXAMPLES/$ESLINTRC" || exit 42
-	rm -rfv "$EXAMPLES_DOCCO_FONTS" || exit 42
 	echo
 	echo Updating index.md from README.md in master branch...
 	git checkout master README.md || exit 42
