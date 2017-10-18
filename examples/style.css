@@ -19,8 +19,8 @@ button, input, select {
 	font-size: inherit;
 }
 
-a:focus, button:focus, input:focus, select:focus, .google-chart:focus,
-a:hover, button:hover, input:hover, select:hover, .google-chart:hover {
+a:focus, button:focus, input:focus, select:focus, .visual-chart:focus,
+a:hover, button:hover, input:hover, select:hover, .visual-chart:hover {
 	outline: 4px solid black;
 }
 

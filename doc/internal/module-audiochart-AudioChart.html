@@ -29,7 +29,9 @@
 <header>
     
         <h2><span class="attribs"><span class="type-signature"></span></span>
-            <span class="ancestors"><a href="module-audiochart.html">audiochart</a>~</span>AudioChart<span class="signature">(options, context)</span><span class="type-signature"> &rarr; {_AudioChart}</span></h2>
+            <span class="ancestors"><a href="module-AudioChart.html">AudioChart</a>~</span>AudioChart<span class="signature">(options, context)</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description">Main object for API consumers</div>
         
     
 </header>
@@ -40,9 +42,11 @@
         
 
     
+    <h2>Constructor</h2>
+    
 
     
-    <h4 class="name" id="AudioChart"><span class="type-signature"></span>new AudioChart<span class="signature">(options, context)</span><span class="type-signature"> &rarr; {_AudioChart}</span></h4>
+    <h4 class="name" id="AudioChart"><span class="type-signature"></span>new AudioChart<span class="signature">(options, context)</span><span class="type-signature"></span></h4>
     
 
     
@@ -50,7 +54,7 @@
 
 
 <div class="description">
-    Main entry point for API consumers.
+    Create an AudioChart object.
 This first checks to see if the Web Audio API is available, and
 throws an {Error} if not.
 </div>
@@ -168,7 +172,163 @@ throws an {Error} if not.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="audiochart.js.html">audiochart.js</a>, <a href="audiochart.js.html#line728">line 728</a>
+        <a href="AudioChart.js.html">AudioChart.js</a>, <a href="AudioChart.js.html#line37">line 37</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="._assignWrapperCallback"><span class="type-signature">(static) </span>_assignWrapperCallback<span class="signature">(options)</span><span class="type-signature"> &rarr; {WrapperAndCallbackResults}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Works out which data source wrapper and visual callback (if requested)
+should be used with this chart.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">AudioChartOptions</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">given by the user</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="AudioChart.js.html">AudioChart.js</a>, <a href="AudioChart.js.html#line96">line 96</a>
     </li></ul></dd>
     
 
@@ -195,7 +355,8 @@ throws an {Error} if not.
 
         
 <div class="param-desc">
-    the real AudioChart object
+    - data wrapper, data wrapper parameter and callback (if applicable)
+	  for this chart
 </div>
 
 
@@ -206,7 +367,7 @@ throws an {Error} if not.
     </dt>
     <dd>
         
-<span class="param-type">_AudioChart</span>
+<span class="param-type">WrapperAndCallbackResults</span>
 
 
     </dd>
@@ -218,8 +379,36 @@ throws an {Error} if not.
 
 
 
+        
+            
+
     
-    </div>
+
+    
+    <h4 class="name" id="playPause"><span class="type-signature"></span>playPause<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Passes through play/pause commands to the Player
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
 
     
 
@@ -235,6 +424,48 @@ throws an {Error} if not.
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="AudioChart.js.html">AudioChart.js</a>, <a href="AudioChart.js.html#line84">line 84</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 
     
@@ -250,13 +481,13 @@ throws an {Error} if not.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-audiochart.html">audiochart</a></li></ul><h3>Classes</h3><ul><li><a href="module-audiochart-_AudioChart.html">_AudioChart</a></li><li><a href="module-audiochart-AudioChart.html">AudioChart</a></li><li><a href="module-audiochart-AudioContextGetter.html">AudioContextGetter</a></li><li><a href="module-audiochart-FrequencyPitchMapper.html">FrequencyPitchMapper</a></li><li><a href="module-audiochart-GoogleDataWrapper.html">GoogleDataWrapper</a></li><li><a href="module-audiochart-HTMLTableDataWrapper.html">HTMLTableDataWrapper</a></li><li><a href="module-audiochart-JSONDataWrapper.html">JSONDataWrapper</a></li><li><a href="module-audiochart-KeyboardHandler.html">KeyboardHandler</a></li><li><a href="module-audiochart-PitchMapper.html">PitchMapper</a></li><li><a href="module-audiochart-Player.html">Player</a></li><li><a href="module-audiochart-WebAudioSounder.html">WebAudioSounder</a></li></ul><h3>Interfaces</h3><ul><li><a href="module-audiochart-DataWrapper.html">DataWrapper</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-AudioChart.html">AudioChart</a></li></ul><h3>Classes</h3><ul><li><a href="C3DataWrapper.html">C3DataWrapper</a></li><li><a href="FrequencyPitchMapper.html">FrequencyPitchMapper</a></li><li><a href="GoogleDataWrapper.html">GoogleDataWrapper</a></li><li><a href="HTMLTableDataWrapper.html">HTMLTableDataWrapper</a></li><li><a href="JSONDataWrapper.html">JSONDataWrapper</a></li><li><a href="KeyboardHandler.html">KeyboardHandler</a></li><li><a href="module-AudioChart-AudioChart.html">AudioChart</a></li><li><a href="PitchMapper.html">PitchMapper</a></li><li><a href="Player.html">Player</a></li><li><a href="WebAudioSounder.html">WebAudioSounder</a></li></ul><h3>Interfaces</h3><ul><li><a href="DataWrapper.html">DataWrapper</a></li></ul><h3>Global</h3><ul><li><a href="global.html#c3VisualCallbackMaker">c3VisualCallbackMaker</a></li><li><a href="global.html#getAudioContext">getAudioContext</a></li><li><a href="global.html#googleVisualCallbackMaker">googleVisualCallbackMaker</a></li><li><a href="global.html#htmlTableVisualCallbackMaker">htmlTableVisualCallbackMaker</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Sep 22 2017 21:34:13 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Oct 18 2017 09:35:15 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

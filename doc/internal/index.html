@@ -47,24 +47,31 @@
 <p>Allows the user to explore charts on web pages using sound and the keyboard rather than, or in conjunction with, visually and with the mouse.  The code can easily be added to any page containing charts.</p>
 <p>AudioChart uses the Web Audio API, which is <a href="http://caniuse.com/audio-api">supported by modern browsers, including Microsoft Edge</a> (but not Internet Explorer).</p>
 <p>Thanks to <a href="http://sonification.de/handbook/">The Sonification Handbook</a> for the research behind it and to <a href="http://paciellogroup.com">The Paciello Group</a> for allowing me to share this with you.</p>
-<h2>Use Cases and Examples</h2><p>What does it let your users do?</p>
+<h2>Use Cases</h2><p>What does it let your users do?</p>
 <ul>
-<li>Play an auditory version of the data represented by a Google Chart, JSON fragment or HTML table.</li>
+<li>Play an auditory version of the data represented by a chart.</li>
+<li>Use the keyboard to pause the playback and move around the chart.</li>
 </ul>
 <p>What sort of charts/data does it work with?</p>
 <ul>
 <li>Google Charts line and bar charts.</li>
-<li>JSON (the format is detailed in the examples gallery).</li>
+<li>C3 line charts.</li>
+<li>Raw JSON data.</li>
 <li>HTML tables.</li>
 </ul>
 <p>The <a href="http://matatk.agrip.org.uk/audiochart/examples/gallery/">examples gallery</a> covers using AudioChart with Google Charts, JSON and HTML tables.</p>
-<h2>Tutorial and Documentation</h2><ul>
-<li>The <a href="http://matatk.agrip.org.uk/audiochart/examples/hello/">&quot;Hello, World&quot; AudioChart and Google Charts tutorial</a> demonstrates how to get started.</li>
+<h2>Examples and Documentation</h2><ul>
+<li>These &quot;getting started&quot; examples contain commented code samples.<ul>
+<li><a href="http://matatk.agrip.org.uk/audiochart/examples/hello-google/">&quot;Hello, World&quot; AudioChart&mdash;Google Chart Tools example</a></li>
+<li><a href="http://matatk.agrip.org.uk/audiochart/examples/hello-c3/">&quot;Hello, World&quot; AudioChart&mdash;C3 example</a></li>
+</ul>
+</li>
+<li>The <a href="http://matatk.agrip.org.uk/audiochart/examples/gallery/">examples gallery</a> demonstrates using AudioChart with Google Chart Tools, C3, HTML Table and raw JSON data.</li>
 <li><a href="https://github.com/matatk/audiochart/blob/master/REFERENCE.md">AudioChart options reference</a></li>
 <li><a href="http://matatk.agrip.org.uk/audiochart/doc/public/">Public API documentation</a></li>
 </ul>
-<h2>Development</h2><p>Development is carried out in a <a href="http://en.wikipedia.org/wiki/Test-driven_development">test-driven</a> manner.  A Gruntfile is provided to run the tests and automate things like linting and minification.  The <code>pre-commit</code> hook can be used to ensure only code that passes tests is committed (it does this by running Grunt).  You can make a symlink from the <code>.git/hooks/</code> directory to it and thus it (and the tests) will be run before you are asked for a commit message.</p>
-<p>When building the software locally, unit tests are automatically run in Chrome and Firefox.  The <a href="https://travis-ci.org/matatk/audiochart/">unit tests are also run on Travis</a> (as part of a build).  You can view the <a href="http://matatk.agrip.org.uk/audiochart/coverage/">test coverage details</a>.  In addition, <a href="http://matatk.agrip.org.uk/audiochart/doc/internal/">internal API documentation</a> is available.</p>
+<h2>Development</h2><p>Current and planned work is documented and discussed in the <a href="https://github.com/matatk/audiochart/issues">AudioChart issue tracker</a> on GitHub.</p>
+<p>Development is carried out in a <a href="http://en.wikipedia.org/wiki/Test-driven_development">test-driven</a> manner.  When building the software locally, unit tests are run in Chrome and Firefox via the npm scripts (<a href="https://github.com/typicode/husky">Husky</a> ensures they are run before a commit).  The <a href="https://travis-ci.org/matatk/audiochart/">unit tests are also run on Travis</a> (where Headless Chrome is used).  You can view the <a href="http://matatk.agrip.org.uk/audiochart/coverage/">test coverage details</a>.  In addition, <a href="http://matatk.agrip.org.uk/audiochart/doc/internal/">internal API documentation</a> is available.</p>
 <p><strong>Warning:</strong> AudioChart is still fairly early in development, so the APIs are changing quite fast.</p>
 <h3>Setting up for development</h3><p>The build process uses npm and therefore also Node.  You can get set up for development as follows (most of these instructions require the use of a command line).</p>
 <ol>
@@ -73,23 +80,7 @@
 <li>Locally install AudioChart's dependencies by running <code>npm install</code> in the newly-cloned/extracted <code>audiochart/</code> directory (the packages will be stored inside <code>node_modules/</code>).</li>
 <li>Issuing <code>npm run build</code> will lint the code, run the tests and make a minified production version.</li>
 </ol>
-<p><strong>Windows users:</strong> this has not yet been extensively tested on Windows, but it doesn't use anything platform-specific, so should work fine. Please file a bug if you encounter any problems.</p>
-<h2>Future Work Ideas</h2><p>Feedback on the following is welcome.</p>
-<ul>
-<li>Play speed/duration.</li>
-<li>Support <a href="https://github.com/GoogleWebComponents/google-chart">Google Chart Web Component (Polymer)</a> charts.</li>
-<li>Support <a href="http://c3js.org">C3.js</a> charts.</li>
-<li>Support SVG charts.</li>
-<li>Static/Periodic features such as grid/timing beats.</li>
-<li>Mouse hover &quot;audition&quot; mode (hovering the mouse over a point would sound it).</li>
-<li>Rendering a visual highlight element for chart APIs that don't provide this (i.eJSON and HTML tables).</li>
-<li>Multiple plots/data series per chart.</li>
-<li>Instruments as different sound types.</li>
-<li>Officially support development on Windows.</li>
-<li>Create a browser extension to enable AudioChart on charts/tables for sites that don't provide it themselves.</li>
-<li>Allow modular builds to be created, with only support for data sources relevant to your site/application.</li>
-<li>Make AudioChart a bower package and explain how it can be easily added to any page that way.</li>
-</ul></article>
+<p><strong>Windows users:</strong> this has not yet been extensively tested on Windows, but it doesn't use anything platform-specific, so should work fine.  Please file a bug if you encounter any problems.</p></article>
     </section>
 
 
@@ -100,13 +91,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-audiochart.html">audiochart</a></li></ul><h3>Classes</h3><ul><li><a href="module-audiochart-_AudioChart.html">_AudioChart</a></li><li><a href="module-audiochart-AudioChart.html">AudioChart</a></li><li><a href="module-audiochart-AudioContextGetter.html">AudioContextGetter</a></li><li><a href="module-audiochart-FrequencyPitchMapper.html">FrequencyPitchMapper</a></li><li><a href="module-audiochart-GoogleDataWrapper.html">GoogleDataWrapper</a></li><li><a href="module-audiochart-HTMLTableDataWrapper.html">HTMLTableDataWrapper</a></li><li><a href="module-audiochart-JSONDataWrapper.html">JSONDataWrapper</a></li><li><a href="module-audiochart-KeyboardHandler.html">KeyboardHandler</a></li><li><a href="module-audiochart-PitchMapper.html">PitchMapper</a></li><li><a href="module-audiochart-Player.html">Player</a></li><li><a href="module-audiochart-WebAudioSounder.html">WebAudioSounder</a></li></ul><h3>Interfaces</h3><ul><li><a href="module-audiochart-DataWrapper.html">DataWrapper</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-AudioChart.html">AudioChart</a></li></ul><h3>Classes</h3><ul><li><a href="C3DataWrapper.html">C3DataWrapper</a></li><li><a href="FrequencyPitchMapper.html">FrequencyPitchMapper</a></li><li><a href="GoogleDataWrapper.html">GoogleDataWrapper</a></li><li><a href="HTMLTableDataWrapper.html">HTMLTableDataWrapper</a></li><li><a href="JSONDataWrapper.html">JSONDataWrapper</a></li><li><a href="KeyboardHandler.html">KeyboardHandler</a></li><li><a href="module-AudioChart-AudioChart.html">AudioChart</a></li><li><a href="PitchMapper.html">PitchMapper</a></li><li><a href="Player.html">Player</a></li><li><a href="WebAudioSounder.html">WebAudioSounder</a></li></ul><h3>Interfaces</h3><ul><li><a href="DataWrapper.html">DataWrapper</a></li></ul><h3>Global</h3><ul><li><a href="global.html#c3VisualCallbackMaker">c3VisualCallbackMaker</a></li><li><a href="global.html#getAudioContext">getAudioContext</a></li><li><a href="global.html#googleVisualCallbackMaker">googleVisualCallbackMaker</a></li><li><a href="global.html#htmlTableVisualCallbackMaker">htmlTableVisualCallbackMaker</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Sep 22 2017 21:34:13 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Oct 18 2017 09:35:15 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

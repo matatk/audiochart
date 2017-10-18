@@ -1,8 +1,8 @@
-// This uses the Google Charts API along with AudioChart.
+// This uses the Google Chart Tools API along with AudioChart.
 //
-// You can check out the finished ["hello, world" HTML file](http://matatk.agrip.org.uk/audiochart/examples/hello/) to experience the actual chart (this is just the code that makes it tick).
+// You can check out the finished ["hello, world" HTML file](http://matatk.agrip.org.uk/audiochart/examples/hello-google/) to experience the actual chart (this is just the code that makes it tick).
 //
-// Note that you can also use AudioChart with JSON and HTML tables (there are [examples](http://matatk.agrip.org.uk/audiochart/examples/gallery/) to demonstrate this).
+// Note that you can also use AudioChart with C3 charts, HTML tables and raw JSON data (there are [examples](http://matatk.agrip.org.uk/audiochart/examples/gallery/) to demonstrate this).
 //
 // More details on working with Google Charts can be found in the [Google Charts documentation](https://developers.google.com/chart/).
 'use strict'
@@ -13,7 +13,7 @@ function drawChart() {
 	// ## Google Charts Bits
 
 	// Create a new data table
-	var data = new google.visualization.DataTable()
+	const data = new google.visualization.DataTable()
 
 	// Populate the table
 	data.addColumn('string', 'Top Secret Evil Project')
@@ -28,13 +28,13 @@ function drawChart() {
 	])
 
 	// Google Chart options
-	var chartOptions = {
+	const chartOptions = {
 		'title': 'Evil Project Efficacy',
 		'curveType': 'function'
 	}
 
 	// Initialise (but do not yet actually draw) the chart
-	var chart = new google.visualization.LineChart(
+	const chart = new google.visualization.LineChart(
 		document.getElementById('chart'))
 
 	// Trigger an initial draw
@@ -56,7 +56,7 @@ function drawChart() {
 	// ## AudioChart Stuff
 
 	// Create a new `AudioChart` object
-	var ac = new AudioChart({
+	const ac = new AudioChart({
 		'type': 'google',      // (see the docs)
 		'data': data,          // the GoogleDataTable
 		'chart': chart,        // the Google Chart object

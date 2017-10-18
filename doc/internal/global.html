@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: AudioChart</title>
+    <title>JSDoc: Global</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: AudioChart</h1>
+    <h1 class="page-title">Global</h1>
 
     
 
@@ -28,6 +28,7 @@
 
 <header>
     
+        <h2></h2>
         
     
 </header>
@@ -38,6 +39,45 @@
         
 
         
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
     
     </div>
 
@@ -46,13 +86,6 @@
     
 
     
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="module-AudioChart-AudioChart.html">AudioChart</a></dt>
-            <dd></dd>
-        </dl>
-    
 
     
 
@@ -61,112 +94,22 @@
     
 
     
-
-    
-
-    
-        <h3 class="subsection-title">Type Definitions</h3>
+        <h3 class="subsection-title">Members</h3>
 
         
-                
-<h4 class="name" id="~AudioChartOptions">AudioChartOptions</h4>
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
             
-<span class="param-type">Object</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="AudioChart.js.html">AudioChart.js</a>, <a href="AudioChart.js.html#line21">line 21</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-    <dt class="tag-todo">To Do:</dt>
-    <dd class="tag-todo">
-        <ul>
-            <li>move the documentation here? (Downside is that the branching/groups
-      of different options required for different chart types would be less *       clear.)</li>
-        </ul>
-    </dd>
-    
-</dl>
-
-
-
-
-
-
-            
-                
-<h4 class="name" id="~index">index</h4>
+<h4 class="name" id="getAudioContext"><span class="type-signature">(private) </span>getAudioContext<span class="type-signature"></span></h4>
 
 
 
 
 <div class="description">
-    Array index number (starts at zero).
-Used to specify series and row in visual callbacks.
+    Ensures that there is only one Web Audio context per page.
+Sets up a new AudioContext the first time it's called; then re-uses it.
 </div>
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">integer</span>
-
-
-        </li>
-    </ul>
-
 
 
 
@@ -200,7 +143,7 @@ Used to specify series and row in visual callbacks.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="AudioChart.js.html">AudioChart.js</a>, <a href="AudioChart.js.html#line6">line 6</a>
+        <a href="getAudioContext.js.html">getAudioContext.js</a>, <a href="getAudioContext.js.html#line8">line 8</a>
     </li></ul></dd>
     
 
@@ -216,13 +159,19 @@ Used to specify series and row in visual callbacks.
 
 
 
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
             
-                
 
     
 
     
-    <h4 class="name" id="~VisualCallback"><span class="type-signature"></span>VisualCallback<span class="signature">(series, row)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="c3VisualCallbackMaker"><span class="type-signature">(private) </span>c3VisualCallbackMaker<span class="signature">(chart)</span><span class="type-signature"> &rarr; {VisualCallback}</span></h4>
     
 
     
@@ -230,8 +179,7 @@ Used to specify series and row in visual callbacks.
 
 
 <div class="description">
-    A function that highlights the current datum visually.
-Different callbacks must be created for different types of chart.
+    Generates a function that moves the cursor on a C3 Chart
 </div>
 
 
@@ -267,13 +215,13 @@ Different callbacks must be created for different types of chart.
 
         <tr>
             
-                <td class="name"><code>series</code></td>
+                <td class="name"><code>chart</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">index</span>
+<span class="param-type">Object</span>
 
 
             
@@ -283,30 +231,7 @@ Different callbacks must be created for different types of chart.
 
             
 
-            <td class="description last">The column of the cell to highlight</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>row</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">index</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The row of the cell to highlight</td>
+            <td class="description last">the in-memory C3 chart object</td>
         </tr>
 
     
@@ -347,7 +272,7 @@ Different callbacks must be created for different types of chart.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="AudioChart.js.html">AudioChart.js</a>, <a href="AudioChart.js.html#line13">line 13</a>
+        <a href="visualCallbackMakers.js.html">visualCallbackMakers.js</a>, <a href="visualCallbackMakers.js.html#line48">line 48</a>
     </li></ul></dd>
     
 
@@ -355,6 +280,13 @@ Different callbacks must be created for different types of chart.
 
     
 
+    
+    <dt class="tag-todo">To Do:</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li>define C3 chart type?</li>
+        </ul>
+    </dd>
     
 </dl>
 
@@ -370,39 +302,62 @@ Different callbacks must be created for different types of chart.
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the callback
+</div>
 
 
 
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">VisualCallback</span>
 
 
-            
-                
-<h4 class="name" id="~WrapperAndCallbackResults">WrapperAndCallbackResults</h4>
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">Object</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-    <h5 class="subsection-title">Properties:</h5>
+    </dd>
+</dl>
 
     
 
-<table class="props">
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="googleVisualCallbackMaker"><span class="type-signature">(private) </span>googleVisualCallbackMaker<span class="signature">(chart)</span><span class="type-signature"> &rarr; {VisualCallback}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Generates a function that moves the cursor on a Google Chart
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
     <thead>
     <tr>
         
@@ -424,13 +379,13 @@ Different callbacks must be created for different types of chart.
 
         <tr>
             
-                <td class="name"><code>Wrapper</code></td>
+                <td class="name"><code>chart</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">function</span>
+<span class="param-type">GoogleChart</span>
 
 
             
@@ -440,61 +395,14 @@ Different callbacks must be created for different types of chart.
 
             
 
-            <td class="description last">the data wrapper function</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>parameter</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-|
-
-<span class="param-type">HTMLTableElement</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the rendered chart, or HTML table</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>callback</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">VisualCallback</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">if requested by the user, a callback is created and returned</td>
+            <td class="description last">the in-memory GoogleChart object</td>
         </tr>
 
     
     </tbody>
 </table>
+
+
 
 
 
@@ -528,7 +436,7 @@ Different callbacks must be created for different types of chart.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="AudioChart.js.html">AudioChart.js</a>, <a href="AudioChart.js.html#line27">line 27</a>
+        <a href="visualCallbackMakers.js.html">visualCallbackMakers.js</a>, <a href="visualCallbackMakers.js.html#line8">line 8</a>
     </li></ul></dd>
     
 
@@ -544,7 +452,223 @@ Different callbacks must be created for different types of chart.
 
 
 
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the callback
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">VisualCallback</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
             
+
+    
+
+    
+    <h4 class="name" id="htmlTableVisualCallbackMaker"><span class="type-signature">(private) </span>htmlTableVisualCallbackMaker<span class="signature">(table, className)</span><span class="type-signature"> &rarr; {VisualCallback}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Generate a function that can be used to highlight table cells
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>table</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLTableElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The in-DOM table element</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>className</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Name of the CSS highlight class</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="visualCallbackMakers.js.html">visualCallbackMakers.js</a>, <a href="visualCallbackMakers.js.html#line27">line 27</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The highlighting function
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">VisualCallback</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+    
+
     
 
     

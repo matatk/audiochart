@@ -2,6 +2,17 @@
  * Examples Gallery
  */
 
+nav ul {
+	margin: 0;
+	padding: 0;
+}
+
+nav ul li {
+	display: inline;
+	list-style-type: none;
+	padding-right: 1.5em;
+}
+
 table {
 	border-collapse: collapse;
 	margin-bottom: 0.5em;
@@ -17,7 +28,7 @@ th, td {
 	padding: 0.5em;
 }
 
-div.google-chart {
+div.visual-chart {
 	width: 75vw;
 	height: 40vw;
 }
