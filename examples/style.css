@@ -1,0 +1,77 @@
+/*
+ * General
+ */
+
+@viewport, @-ms-viewport {
+	zoom: 1.0;
+	width: extend-to-zoom;
+}
+
+body {
+	font-family: Verdana, sans-serif;
+	line-height: 1.5em;
+	margin: 0;
+	padding: 0;
+}
+
+/* Needed for font-size and so Safari applies the :focus and :hover styles */
+button, input, select {
+	font-size: inherit;
+}
+
+a:focus, button:focus, input:focus, select:focus, .visual-chart:focus,
+a:hover, button:hover, input:hover, select:hover, .visual-chart:hover {
+	outline: 4px solid black;
+}
+
+header {
+	width: auto;
+	padding: 2em;
+	margin: 0;
+	background-color: yellow;
+	text-align: center;
+}
+
+/* In order to have seamless background fills, all content is wrapped */
+.wrapper {
+	margin: 0;
+	padding: 0.5em;
+}
+
+/* Now restore some sensible spacing around the content */
+.wrapper {
+	padding: 1em;
+}
+
+/* The abstract, if present, should be highlighted */
+.abstract {
+	background-color: #FFA;
+}
+
+button {
+	margin-top: 0.5em;
+}
+
+
+/*
+ * Enhancements
+ */
+
+/* Bit more padding, likely for big phones/tablets */
+@media screen and (min-width: 45em) {
+	body {
+		font-size: 1.2em;
+	}
+
+	.wrapper {
+		padding: 1em;
+	}
+}
+
+/* Wide margins for larger displays */
+@media screen and (min-width: 75em) {
+	.wrapper {
+		padding-left: 10vw;
+		padding-right: 10vw;
+	}
+}
