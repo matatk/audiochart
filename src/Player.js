@@ -1,4 +1,3 @@
-'use strict'
 /**
  * Orchestrates the audible (and visual cursor) rendering of the chart
  * @private

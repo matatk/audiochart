@@ -1,6 +1,8 @@
 {
   "env": {
-    "browser": true
+    "browser": true,
+    "es6": true,
+    "node": false
   },
   "globals": {
     "AudioChart": false,

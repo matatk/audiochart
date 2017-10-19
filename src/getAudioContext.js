@@ -1,4 +1,3 @@
-'use strict'
 /**
  * Ensures that there is only one Web Audio context per page.
  * Sets up a new AudioContext the first time it's called; then re-uses it.
