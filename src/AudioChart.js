@@ -36,19 +36,28 @@
 class AudioChart {
 	/**
 	 * Create an AudioChart object.
-	 * This first checks to see if the Web Audio API is available, and
-	 * throws an {Error} if not.
+	 * This first checks to see if the Web Audio API is available, and throws
+	 * an {Error} if not. Then check the options given by the user.
 	 * @param {options} options - AudioChart options
 	 * @param {AudioContext} context - the window's AudioContext
 	 */
-	constructor(options, context) {
-		const fail = "Sorry, your browser doesn't support the Web Audio API."
+	constructor(options) {
+		const context = getAudioContext()
 
-		if (arguments.length < 2) {
-			context = getAudioContext()
-			if (context === null) {
-				throw Error(fail)
-			}
+		if (context === null) {
+			throw Error("Sorry, your browser doesn't support the Web Audio API.")
+		}
+
+		if (!options.hasOwnProperty('duration')) {
+			throw Error('No duration given')
+		}
+
+		if (!options.hasOwnProperty('frequencyLow')) {
+			throw Error('No minimum frequency given')
+		}
+
+		if (!options.hasOwnProperty('frequencyHigh')) {
+			throw Error('No maximum frequency given')
 		}
 
 		const result = AudioChart._assignWrapperCallback(options)
