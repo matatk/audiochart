@@ -1,4 +1,3 @@
-'use strict'
 /**
  * Set up a keyboard event listener to detect chart navigation keypresses.
  * @private

@@ -1,4 +1,3 @@
-'use strict'
 /** @module */
 /* exported AudioChart */
 /* global getAudioContext FrequencyPitchMapper WebAudioSounder Player KeyboardHandler GoogleDataWrapper googleVisualCallbackMaker JSONDataWrapper HTMLTableDataWrapper htmlTableVisualCallbackMaker C3DataWrapper c3VisualCallbackMaker */
@@ -92,6 +91,7 @@ class AudioChart {
 	 * @returns {WrapperAndCallbackResults}
 	 *	- data wrapper, data wrapper parameter and callback (if applicable)
 	 *	  for this chart
+	 * @private
 	 */
 	static _assignWrapperCallback(options) {
 		const result = {

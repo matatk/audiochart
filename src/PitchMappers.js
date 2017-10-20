@@ -1,4 +1,3 @@
-'use strict'
 /**
  * Base Pitch Mapper
  * @private

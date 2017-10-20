@@ -1,4 +1,3 @@
-'use strict'
 /**
  * Generates a function that moves the cursor on a Google Chart
  * @private

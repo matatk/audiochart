@@ -1,4 +1,3 @@
-'use strict'
 /**
  * Outputs sound using the Web Audio API
  * @private
