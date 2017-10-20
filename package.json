@@ -26,7 +26,7 @@
     "test": "karma start",
     "test:ci": "npm run test -- --browsers ChromeHeadless --reporters dots",
     "preuglify": "mkdirp lib && node scripts/src-cat",
-    "uglify": "uglifyjs --verbose --warn --compress --mangle --source-map=\"includeSources,url='audiochart.min.js.map'\" --output lib/audiochart.min.js src/audiochart-all.js"
+    "uglify": "uglifyjs --verbose --warn --compress --mangle --source-map=\"includeSources,url='audiochart.min.js.map'\" --output lib/audiochart.min.js src/audiochart-all.js && rimraf src/audiochart-all.js"
   },
   "devDependencies": {
     "c3": "~0.4",
