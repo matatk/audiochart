@@ -8,7 +8,7 @@ exclude:
   - Gemfile.lock
   - LICENCE
   - node_modules
-  - audiochart
+  - audiochart.master
   - grab.sh
   - clean.sh
   - index.head.md
