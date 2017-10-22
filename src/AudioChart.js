@@ -60,6 +60,13 @@ class AudioChart {
 			throw Error('No maximum frequency given')
 		}
 
+		switch (options.type) {
+			case 'google':
+			case 'c3':
+			case 'json':
+				throw Error('Options must include a data key')
+		}
+
 		const result = AudioChart._assignWrapperCallback(options)
 		const dataWrapper = new result.Wrapper(result.parameter)  // TODO would this be neater if it created and returned by the wrapper assignment function?
 		const callback = result.callback
