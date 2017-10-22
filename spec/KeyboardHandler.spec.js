@@ -23,12 +23,12 @@ function createAndDispatchKeydownEvent(keyName, shift, target) {
 }
 
 
-describe('KeyboardHandler', function() {
+describe('KeyboardHandler', () => {
 	let nonExistantDiv
 	let keyTargetDiv
 	let fakePlayer
 
-	beforeEach(function() {
+	beforeEach(() => {
 		jasmine.getFixtures().fixturesPath = 'base/spec/'
 		loadFixtures('KeyboardHandler.fixtures.html')
 
@@ -37,19 +37,19 @@ describe('KeyboardHandler', function() {
 		fakePlayer = new FakePlayer()
 	})
 
-	it('throws when a non-existant container is given', function() {
-		expect(function() {
+	it('throws when a non-existant container is given', () => {
+		expect(() => {
 			new KeyboardHandler(nonExistantDiv, fakePlayer)
 		}).toThrow()
 	})
 
-	it('throws when a non-existant player is given', function() {
-		expect(function() {
+	it('throws when a non-existant player is given', () => {
+		expect(() => {
 			new KeyboardHandler(keyTargetDiv)
 		}).toThrow()
 	})
 
-	it('sets the tabindex of the target container to 0', function() {
+	it('sets the tabindex of the target container to 0', () => {
 		expect(keyTargetDiv.tabIndex).toBe(-1)
 		new KeyboardHandler(keyTargetDiv, fakePlayer)
 		expect(keyTargetDiv.tabIndex).toBe(0)
@@ -62,7 +62,7 @@ describe('KeyboardHandler', function() {
 		spyOn(evt, 'preventDefault')
 		keyTargetDiv.dispatchEvent(evt)
 		// TODO how to not need the timeout?
-		setTimeout(function() {
+		setTimeout(() => {
 			expect(evt.preventDefault).toHaveBeenCalled()
 			done()
 		}, 100)
@@ -74,7 +74,7 @@ describe('KeyboardHandler', function() {
 		spyOn(keyboardHandler, 'handleRight').and.callThrough()
 		createAndDispatchKeydownEvent('ArrowRight', false, keyTargetDiv)
 		// TODO how to not need the timeout?
-		setTimeout(function() {
+		setTimeout(() => {
 			expect(keyboardHandler.handleRight).toHaveBeenCalled()
 			done()
 		}, 100)
@@ -86,7 +86,7 @@ describe('KeyboardHandler', function() {
 		spyOn(fakePlayer, 'stepForward')
 		createAndDispatchKeydownEvent('ArrowRight', false, keyTargetDiv)
 		// TODO how to not need the timeout?
-		setTimeout(function() {
+		setTimeout(() => {
 			expect(fakePlayer.stepForward).toHaveBeenCalled()
 			done()
 		}, 100)
@@ -98,7 +98,7 @@ describe('KeyboardHandler', function() {
 		spyOn(keyboardHandler, 'handleSpace').and.callThrough()
 		createAndDispatchKeydownEvent(' ', false, keyTargetDiv)
 		// TODO how to not need the timeout?
-		setTimeout(function() {
+		setTimeout(() => {
 			expect(keyboardHandler.handleSpace).toHaveBeenCalled()
 			done()
 		}, 100)
@@ -110,7 +110,7 @@ describe('KeyboardHandler', function() {
 		spyOn(fakePlayer, 'playPause')
 		createAndDispatchKeydownEvent(' ', false, keyTargetDiv)
 		// TODO how to not need the timeout?
-		setTimeout(function() {
+		setTimeout(() => {
 			expect(fakePlayer.playPause).toHaveBeenCalled()
 			done()
 		}, 100)

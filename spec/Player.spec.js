@@ -67,14 +67,14 @@ function expectedFrequencyCalls(seriesLength) {
 
 
 function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCount, testInterval, useVisualCallback) {
-	describe(message, function() {
+	describe(message, () => {
 		let fakeData = null
 		let fakeMapper = null
 		let fakeSounder = null
 		let player = null
 		let fakeVisualCallback = null  // may not be used
 
-		beforeEach(function() {
+		beforeEach(() => {
 			fakeData = new TestDataClass()
 			fakeMapper = new FakeMapper()
 			fakeSounder = new FakeSounder()
@@ -88,43 +88,43 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 			jasmine.clock().install()
 		})
 
-		afterEach(function() {
+		afterEach(() => {
 			jasmine.clock().uninstall()
 		})
 
-		it('works out for how long to sound each datum', function() {
+		it('works out for how long to sound each datum', () => {
 			expect(player.interval).toBe(testInterval)
 		})
 
-		it('starts the sounder', function() {
+		it('starts the sounder', () => {
 			spyOn(fakeSounder, 'start')
 			player.playPause()
 			jasmine.clock().tick(testDuration)
 			expect(fakeSounder.start.calls.count()).toBe(1)
 		})
 
-		it('stops the sounder', function() {
+		it('stops the sounder', () => {
 			spyOn(fakeSounder, 'stop')
 			player.playPause()
 			jasmine.clock().tick(testDuration)
 			expect(fakeSounder.stop.calls.count()).toBe(1)
 		})
 
-		it('makes the correct number of map calls', function() {
+		it('makes the correct number of map calls', () => {
 			spyOn(fakeMapper, 'map')
 			player.playPause()
 			jasmine.clock().tick(testDuration)
 			expect(fakeMapper.map.calls.count()).toBe(testCallCount)
 		})
 
-		it('makes the right number of calls to the sounder', function() {
+		it('makes the right number of calls to the sounder', () => {
 			spyOn(fakeSounder, 'frequency')
 			player.playPause()
 			jasmine.clock().tick(testDuration)
 			expect(fakeSounder.frequency.calls.count()).toBe(testCallCount)
 		})
 
-		it('calls the sounder with the correct arguments each time', function() {
+		it('calls the sounder with the correct arguments each time', () => {
 			spyOn(fakeSounder, 'frequency')
 			player.playPause()
 			jasmine.clock().tick(testDuration)
@@ -132,30 +132,30 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 		})
 
 		if (useVisualCallback) {
-			it('makes the correct number of visual callback calls', function() {
+			it('makes the correct number of visual callback calls', () => {
 				player.playPause()
 				jasmine.clock().tick(testDuration)
 				expect(fakeVisualCallback.calls.count()).toBe(testCallCount)
 			})
 		}
 
-		it('knows it has never played', function() {
+		it('knows it has never played', () => {
 			expect(player._state).toBe('ready')
 		})
 
-		it('knows when it is playing', function() {
+		it('knows when it is playing', () => {
 			player.playPause()
 			jasmine.clock().tick(testDuration / 2)
 			expect(player._state).toBe('playing')
 		})
 
-		it('knows when it has finished playing', function() {
+		it('knows when it has finished playing', () => {
 			player.playPause()
 			jasmine.clock().tick(testDuration)
 			expect(player._state).toBe('finished')
 		})
 
-		it('[TODO] clears its interval timer when paused', function() {
+		it('[TODO] clears its interval timer when paused', () => {
 			// TODO this seems to trigger a Jasmine bug
 			// spyOn( 'clearInterval').and.callThrough()
 			player.playPause()
@@ -166,14 +166,14 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 			// expect(clearInterval).toHaveBeenCalled()
 		})
 
-		it('knows when it is paused', function() {
+		it('knows when it is paused', () => {
 			player.playPause()
 			jasmine.clock().tick(testDuration / 2)
 			player.playPause()
 			expect(player._state).toBe('paused')
 		})
 
-		it('continues playing after a pause', function() {
+		it('continues playing after a pause', () => {
 			spyOn(player, '_play').and.callThrough()
 			spyOn(player, '_playLoop').and.callThrough()
 			spyOn(player, '_pause').and.callThrough()
@@ -187,14 +187,14 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 			expect(player._pause).toHaveBeenCalledTimes(1)
 		})
 
-		it('complains if the state is invalid', function() {
+		it('complains if the state is invalid', () => {
 			player._state = 'moo'
-			expect(function() {
+			expect(() => {
 				player.playPause()
 			}).toThrow()
 		})
 
-		it('steps backward when requested', function() {
+		it('steps backward when requested', () => {
 			player.playPause()
 			jasmine.clock().tick(testDuration * 0.9)
 			const index1 = player.playIndex
@@ -203,7 +203,7 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 			expect(index2).toBe(index1 - 2)
 		})
 
-		it('updates the sound (and visual cursor) when stepped backward whilst paused', function() {
+		it('updates the sound (and visual cursor) when stepped backward whilst paused', () => {
 			spyOn(player, '_playOne').and.callThrough()
 			player.playPause()
 			jasmine.clock().tick(testDuration / 10)
@@ -215,7 +215,7 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 				numberOfTimesPlayCoreCalled + 1)
 		})
 
-		it('steps forward when requested', function() {
+		it('steps forward when requested', () => {
 			player.playPause()
 			const index1 = player.playIndex
 			player.stepForward(2)
@@ -223,7 +223,7 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 			expect(index2).toBe(index1 + 2)
 		})
 
-		it('updates the sound (and visual cursor) when stepped forward whilst paused', function() {
+		it('updates the sound (and visual cursor) when stepped forward whilst paused', () => {
 			spyOn(player, '_playOne').and.callThrough()
 			player.playPause()
 			jasmine.clock().tick(testDuration / 10)
@@ -239,14 +239,14 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 
 
 function mixinDataWrapper(message, TestDataClass, testDuration, testCallCount, testInterval) {
-	describe(message, function() {
+	describe(message, () => {
 		mixinDataWrapperCore('when not having a callback', TestDataClass, testDuration, testCallCount, testInterval, false)
 		mixinDataWrapperCore('when having a callback', TestDataClass, testDuration, testCallCount, testInterval, true)
 	})
 }
 
 
-describe('Player', function() {
+describe('Player', () => {
 	// With 'long' intervals
 	mixinDataWrapper('instantiated with short fake data source for 5000ms', ShortFakeDataWrapper, 5000, 4, 1250)
 	mixinDataWrapper('instantiated with short fake data source for 3000ms', ShortFakeDataWrapper, 3000, 4, 750)
