@@ -22,7 +22,7 @@ describe('AudioChart', () => {
 			}
 
 			expect(() => {
-				new AudioChart(options)
+				AudioChart._checkOptions(options)
 			}).toThrow(Error("Invalid data type 'moo' given."))
 		})
 
@@ -32,7 +32,7 @@ describe('AudioChart', () => {
 			}
 
 			expect(() => {
-				new AudioChart(options)
+				AudioChart._checkOptions(options)
 			}).toThrow(Error('No duration given'))
 		})
 
@@ -43,7 +43,7 @@ describe('AudioChart', () => {
 			}
 
 			expect(() => {
-				new AudioChart(options)
+				AudioChart._checkOptions(options)
 			}).toThrow(Error('No minimum frequency given'))
 		})
 
@@ -55,7 +55,7 @@ describe('AudioChart', () => {
 			}
 
 			expect(() => {
-				new AudioChart(options)
+				AudioChart._checkOptions(options)
 			}).toThrow(Error('No maximum frequency given'))
 		})
 
@@ -68,8 +68,8 @@ describe('AudioChart', () => {
 			}
 
 			expect(() => {
-				new AudioChart(options)
-			}).toThrow(Error('Options must include a data key'))
+				AudioChart._checkOptions(options)
+			}).toThrow(Error("Options must include a 'data' key"))
 		})
 
 		it('requires `data` to be specified with C3 charts', () => {
@@ -81,8 +81,8 @@ describe('AudioChart', () => {
 			}
 
 			expect(() => {
-				new AudioChart(options)
-			}).toThrow(Error('Options must include a data key'))
+				AudioChart._checkOptions(options)
+			}).toThrow(Error("Options must include a 'data' key"))
 		})
 
 		it('requires `data` to be specified with JSON data', () => {
@@ -94,13 +94,39 @@ describe('AudioChart', () => {
 			}
 
 			expect(() => {
-				new AudioChart(options)
-			}).toThrow(Error('Options must include a data key'))
+				AudioChart._checkOptions(options)
+			}).toThrow(Error("Options must include a 'data' key"))
+		})
+
+		it('accepts when `data` is specified', () => {
+			const options = {
+				type: 'google',
+				data: {},
+				duration: 42,
+				frequencyLow: 0,
+				frequencyHigh: 0
+			}
+
+			expect(() => {
+				AudioChart._checkOptions(options)
+			}).not.toThrow()
+		})
+
+		it('requires `table` to be specified for HTML tables', () => {
+			const options = {
+				type: 'htmlTable',
+				duration: 42,
+				frequencyLow: 0,
+				frequencyHigh: 0
+			}
+
+			expect(() => {
+				AudioChart._checkOptions(options)
+			}).toThrow(Error("Options must include a 'table' key"))
 		})
 	})
 
-	// TODO sort these tests out (or not do them?)
-	describe("Tests that I don't like because they expose gubbins", () => {
+	describe('data wrapper and callback creation', () => {
 		it('assigns a JSON data wrapper, parameter and no callback', () => {
 			const options = {
 				'type': 'json',
@@ -182,6 +208,60 @@ describe('AudioChart', () => {
 
 			expect(htmlTableVisualCallbackMaker)
 				.toHaveBeenCalledWith(42, 'moo')
+		})
+	})
+
+	describe('options updating', () => {
+		const jsonDummyData = {
+			data: [
+				{
+					series: 'test',
+					values: [0, 1, 2]
+				}
+			]
+		}
+
+		it('throws when no new options are given', () => {
+			const ac = new AudioChart({
+				type: 'json',
+				data: jsonDummyData,
+				duration: 42,
+				frequencyLow: 0,
+				frequencyHigh: 1
+			})
+
+			expect(() => {
+				ac.updateOptions()
+			}).toThrow(Error('No new options given'))
+
+			expect(() => {
+				ac.updateOptions({})
+			}).toThrow(Error('No new options given'))
+		})
+
+		// FIXME this doesn't check that the options were updated though!
+		it('allows options to be updated', () => {
+			const initialOptions = {
+				type: 'json',
+				data: jsonDummyData,
+				duration: 42,
+				frequencyLow: 0,
+				frequencyHigh: 0
+			}
+
+			const ac = new AudioChart(initialOptions)
+
+			const newOptions = {
+				type: 'json',
+				data: {},
+				duration: 72,
+				frequencyLow: 42,
+				frequencyHigh: 420
+			}
+
+			expect(() => {
+				ac.updateOptions(newOptions)
+			}).not.toThrow()
 		})
 	})
 })

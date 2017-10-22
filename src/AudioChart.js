@@ -20,7 +20,8 @@
 /**
  * @typedef {Object} AudioChartOptions
  * @todo move the documentation here? (Downside is that the branching/groups
- *       of different options required for different chart types would be less *       clear.)
+ *       of different options required for different chart types would be less
+ *       clear.)
  */
 
 /**
@@ -38,8 +39,7 @@ class AudioChart {
 	 * Create an AudioChart object.
 	 * This first checks to see if the Web Audio API is available, and throws
 	 * an {Error} if not. Then check the options given by the user.
-	 * @param {options} options - AudioChart options
-	 * @param {AudioContext} context - the window's AudioContext
+	 * @param {AudioChartOptions} options - AudioChart options
 	 */
 	constructor(options) {
 		const context = getAudioContext()
@@ -48,27 +48,31 @@ class AudioChart {
 			throw Error("Sorry, your browser doesn't support the Web Audio API.")
 		}
 
-		if (!options.hasOwnProperty('duration')) {
-			throw Error('No duration given')
-		}
+		// The testing for this next bit is a bit of a fudge as curerntly I've
+		// not come up with a beter way than having the testing done on static
+		// functions and checking their return values, or if they throw an
+		// exception.
+		//
+		// The thing blocking this is that I don't know how to stub out
+		// globally-declared ES6 classes *or* to run each test via Karma in an
+		// isolated environment where I can mock those global classes.
+		//
+		// TODO, as per https://github.com/matatk/audiochart/issues/37
 
-		if (!options.hasOwnProperty('frequencyLow')) {
-			throw Error('No minimum frequency given')
-		}
+		// Check the passed-in options object for the right keys (not their
+		// values—that is checked by each object respectively).
+		AudioChart._checkOptions(options)
 
-		if (!options.hasOwnProperty('frequencyHigh')) {
-			throw Error('No maximum frequency given')
-		}
-
-		switch (options.type) {
-			case 'google':
-			case 'c3':
-			case 'json':
-				throw Error('Options must include a data key')
-		}
-
+		// Make a data wrapper of the appropriate class, instantiated with the
+		// appropriate data paramater (from options.data) and, optionally, make
+		// a visual callback (which may use options.chart, or other options if
+		// it's an HTML table visual callback).
 		const result = AudioChart._assignWrapperCallback(options)
-		const dataWrapper = new result.Wrapper(result.parameter)  // TODO would this be neater if it created and returned by the wrapper assignment function?
+
+		// Now everything has been checked, we can set it all up...
+
+		const dataWrapper = new result.Wrapper(result.parameter)
+
 		const callback = result.callback
 
 		const frequencyPitchMapper = new FrequencyPitchMapper(
@@ -98,6 +102,56 @@ class AudioChart {
 	 */
 	playPause() {
 		this.player.playPause()
+	}
+
+	/**
+	 * Updates an AudioChart object to reflect new options. Can accept a subset
+	 * of the standard options, so if only duration changes, then you need only
+	 * specify the new duration and not the type and other paramaters.
+	 * @param {AudioChartOptions} newOptions - Partial/full AudioChart options
+	 */
+	updateOptions(newOptions) {
+		if (newOptions === undefined || Object.keys(newOptions).length === 0) {
+			throw Error('No new options given')
+		}
+	}
+
+	/**
+	 * Checks the passed-in options opbject for validity. This does not perform
+	 * detailed checks that are covered in the various components' constructors;
+	 * they run such checks themselves.
+	 * @param {AudioChartOptions} options - AudioChart options
+	 * @private
+	 */
+	static _checkOptions(options) {
+		if (!options.hasOwnProperty('duration')) {
+			throw Error('No duration given')
+		}
+
+		if (!options.hasOwnProperty('frequencyLow')) {
+			throw Error('No minimum frequency given')
+		}
+
+		if (!options.hasOwnProperty('frequencyHigh')) {
+			throw Error('No maximum frequency given')
+		}
+
+		switch (options.type) {
+			case 'google':
+			case 'c3':
+			case 'json':
+				if (!options.hasOwnProperty('data')) {
+					throw Error("Options must include a 'data' key")
+				}
+				break
+			case 'htmlTable':
+				if (!options.hasOwnProperty('table')) {
+					throw Error("Options must include a 'table' key")
+				}
+				break
+			default:
+				throw Error(`Invalid data type '${options.type}' given.`)
+		}
 	}
 
 	/**
@@ -146,8 +200,6 @@ class AudioChart {
 						c3VisualCallbackMaker(options.chart)
 				}
 				break
-			default:
-				throw Error("Invalid data type '" + options.type + "' given.")
 		}
 
 		return result
