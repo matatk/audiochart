@@ -170,18 +170,29 @@ class AudioChart {
 			'callback': null
 		}
 
+		const chartTypeToWrapperClass = {
+			google: GoogleDataWrapper,
+			json: JSONDataWrapper,
+			htmlTable: HTMLTableDataWrapper,
+			c3: C3DataWrapper
+		}
+
+		const chartTypeToVisualCallbackMaker = {
+			google: googleVisualCallbackMaker,
+			c3: c3VisualCallbackMaker
+		}
+
 		switch (options.type) {
 			case 'google':
-				result.Wrapper = GoogleDataWrapper
+			case 'json':
+			case 'c3':
+				result.Wrapper = chartTypeToWrapperClass[options.type]
 				result.parameter = options.data
 				if (options.hasOwnProperty('chart')) {
 					result.callback =
-						googleVisualCallbackMaker(options.chart)
+						chartTypeToVisualCallbackMaker[options.type](
+							options.chart)
 				}
-				break
-			case 'json':
-				result.Wrapper = JSONDataWrapper
-				result.parameter = options.data
 				break
 			case 'htmlTable':
 				result.Wrapper = HTMLTableDataWrapper
@@ -190,14 +201,6 @@ class AudioChart {
 					result.callback = htmlTableVisualCallbackMaker(
 						options.table,
 						options.highlightClass)
-				}
-				break
-			case 'c3':
-				result.Wrapper = C3DataWrapper
-				result.parameter = options.data
-				if (options.hasOwnProperty('chart')) {
-					result.callback =
-						c3VisualCallbackMaker(options.chart)
 				}
 				break
 		}
