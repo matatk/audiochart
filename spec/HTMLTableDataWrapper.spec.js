@@ -1,6 +1,6 @@
 'use strict' /* global dataWrappersTestCore HTMLTableDataWrapper */
 
-describe('HTMLTableDataWrapper', function() {
+describe('HTMLTableDataWrapper', () => {
 	jasmine.getFixtures().fixturesPath = 'base/spec/'
 	loadFixtures('HTMLTableDataWrapper.fixtures.html')
 
@@ -12,14 +12,14 @@ describe('HTMLTableDataWrapper', function() {
 		new HTMLTableDataWrapper(document.getElementById('testOne')),
 		new HTMLTableDataWrapper(document.getElementById('testNeg')))
 
-	it('Throws when a null table is given', function() {
-		expect(function() {
+	it('Throws when a null table is given', () => {
+		expect(() => {
 			new HTMLTableDataWrapper(nonExistantTable)
 		}).toThrow()
 	})
 
-	it("doesn't throw when an actual table is given", function() {
-		expect(function() {
+	it("doesn't throw when an actual table is given", () => {
+		expect(() => {
 			new HTMLTableDataWrapper(actualTable)
 		}).not.toThrow()
 	})

@@ -2,6 +2,8 @@
 google.load('visualization', '1.0', {'packages':['corechart']})
 google.setOnLoadCallback(init)  // TODO use standard DOM loaded event?
 
+const optionsUpdateObjects = []
+
 
 //
 // Options UI handling
@@ -15,6 +17,10 @@ function errorCheck() {
 		errorCheckToggle('on')
 	} else {
 		errorCheckToggle('off')
+		updateFrequencyOptions(
+			freqLowInput.valueAsNumber,
+			freqHighInput.valueAsNumber
+		)
 	}
 }
 
@@ -45,7 +51,7 @@ function errorCheckToggleInvalid(toState) {
 }
 
 /* Create a default options structure */
-function makeAudiochartOptions() {
+function makePartialOptions() {
 	return {
 		// Fill in 'type'
 		// Fill in 'data' and 'chart'
@@ -56,6 +62,27 @@ function makeAudiochartOptions() {
 		document.getElementById('opt-freq-low').valueAsNumber,
 		'frequencyHigh':
 		document.getElementById('opt-freq-high').valueAsNumber
+	}
+}
+
+/* Update all active AudioChart objects' frequency options */
+function updateFrequencyOptions(lowFreq, highFreq) {
+	const newSettings = {
+		frequencyLow: lowFreq,
+		frequencyHigh: highFreq
+	}
+
+	for (const ac of optionsUpdateObjects) {
+		ac.updateOptions(newSettings)
+	}
+}
+
+/* Update all active AudioChart objects' duration option */
+function updateDurationOption(newDuration) {
+	for (const ac of optionsUpdateObjects) {
+		ac.updateOptions({
+			duration: newDuration * 1000
+		})
 	}
 }
 
@@ -140,13 +167,16 @@ function googleCore(Klass, data, chartId, buttonId) {
 
 	// Wire up to AudioChart
 	// TODO DRY
+	const audiochartOptions = makePartialOptions()
+	audiochartOptions['type'] = 'google'
+	audiochartOptions['data'] = data
+	audiochartOptions['chart'] = chart
+	audiochartOptions['chartContainer'] = document.getElementById(chartId)
+	const ac = new AudioChart(audiochartOptions)
+
+	optionsUpdateObjects.push(ac)  // register for options updates
+
 	document.getElementById(buttonId).onclick = function() {
-		const audiochartOptions = makeAudiochartOptions()
-		audiochartOptions['type'] = 'google'
-		audiochartOptions['data'] = data
-		audiochartOptions['chart'] = chart
-		audiochartOptions['chartContainer'] = document.getElementById(chartId)
-		const ac = new AudioChart(audiochartOptions)
 		ac.playPause()
 	}
 }
@@ -201,13 +231,16 @@ function c3Core(data, chartId, buttonId, extraChartOptions) {
 
 	// Wire up to AudioChart
 	// TODO DRY
+	const audiochartOptions = makePartialOptions()
+	audiochartOptions['type'] = 'c3'
+	audiochartOptions['data'] = data
+	audiochartOptions['chart'] = chart
+	audiochartOptions['chartContainer'] = document.getElementById(chartId)
+	const ac = new AudioChart(audiochartOptions)
+
+	optionsUpdateObjects.push(ac)  // register for options updates
+
 	document.getElementById(buttonId).onclick = function() {
-		const audiochartOptions = makeAudiochartOptions()
-		audiochartOptions['type'] = 'c3'
-		audiochartOptions['data'] = data
-		audiochartOptions['chart'] = chart
-		audiochartOptions['chartContainer'] = document.getElementById(chartId)
-		const ac = new AudioChart(audiochartOptions)
 		ac.playPause()
 	}
 }
@@ -306,11 +339,14 @@ function drawSalesAnnotated() {
 //
 
 function initJSON() {  // TODO DRY re HTML
+	const jsonOptions = makePartialOptions()
+	jsonOptions['type'] = 'json'
+	jsonOptions['data'] = document.getElementById('json1').textContent
+	const jsonAC = new AudioChart(jsonOptions)
+
+	optionsUpdateObjects.push(jsonAC)  // register for options updates
+
 	document.getElementById('btn-json1').onclick = function() {
-		const jsonOptions = makeAudiochartOptions()
-		jsonOptions['type'] = 'json'
-		jsonOptions['data'] = document.getElementById('json1').textContent
-		const jsonAC = new AudioChart(jsonOptions)
 		jsonAC.playPause()
 	}
 }
@@ -321,12 +357,15 @@ function initJSON() {  // TODO DRY re HTML
 //
 
 function initHTML() {  // TODO DRY re JSON
+	const htmlOptions = makePartialOptions()
+	htmlOptions['type'] = 'htmlTable'
+	htmlOptions['table'] = document.getElementById('table1')
+	htmlOptions['highlightClass'] = 'current-datum'
+	const htmlAC = new AudioChart(htmlOptions)
+
+	optionsUpdateObjects.push(htmlAC)  // register for options updates
+
 	document.getElementById('btn-table1').onclick = function() {
-		const htmlOptions = makeAudiochartOptions()
-		htmlOptions['type'] = 'htmlTable'
-		htmlOptions['table'] = document.getElementById('table1')
-		htmlOptions['highlightClass'] = 'current-datum'
-		const htmlAC = new AudioChart(htmlOptions)
 		htmlAC.playPause()
 	}
 }
@@ -338,12 +377,17 @@ function initHTML() {  // TODO DRY re JSON
 
 function init() {
 	// Wire up error checking
-	function changeHandler(id) {
+	function frequencyChangeHandler(id) {
 		document.getElementById(id).addEventListener('change', errorCheck)
 	}
 
-	changeHandler('opt-freq-low')
-	changeHandler('opt-freq-high')
+	frequencyChangeHandler('opt-freq-low')
+	frequencyChangeHandler('opt-freq-high')
+
+	document.getElementById('opt-duration').addEventListener('change',
+		function() {
+			updateDurationOption(this.value)
+		})
 
 	// Graphical charts
 	drawHorizontalLine()

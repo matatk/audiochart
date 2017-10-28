@@ -1,7 +1,7 @@
 'use strict'
 /* global c3VisualCallbackMaker */
 
-describe('c3VisualCallback', function() {
+describe('c3VisualCallback', () => {
 	class FakeChart {
 		select(ids, indices, resetOthers) {}
 	}
@@ -9,7 +9,7 @@ describe('c3VisualCallback', function() {
 	let fakeChart = null
 	let c3VisualCallback = null
 
-	beforeEach(function() {
+	beforeEach(() => {
 		fakeChart = new FakeChart()
 		c3VisualCallback = c3VisualCallbackMaker(fakeChart)
 		spyOn(fakeChart, 'select')

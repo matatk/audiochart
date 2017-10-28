@@ -1,7 +1,7 @@
 'use strict'
 /* global googleVisualCallbackMaker */
 
-describe('googleVisualCallback', function() {
+describe('googleVisualCallback', () => {
 	class FakeChart {
 		setSelection() {}
 	}
@@ -9,13 +9,13 @@ describe('googleVisualCallback', function() {
 	let fakeChart = null
 	let googleVisualCallback = null
 
-	beforeEach(function() {
+	beforeEach(() => {
 		fakeChart = new FakeChart()
 		googleVisualCallback = googleVisualCallbackMaker(fakeChart)
 		spyOn(fakeChart, 'setSelection')
 	})
 
-	it('correctly munges its parameters (1a)', function() {
+	it('correctly munges its parameters (1a)', () => {
 		googleVisualCallback(0, 0)
 		expect(fakeChart.setSelection).toHaveBeenCalledWith([
 			{
@@ -25,7 +25,7 @@ describe('googleVisualCallback', function() {
 		])
 	})
 
-	it('correctly munges its parameters (1b)', function() {
+	it('correctly munges its parameters (1b)', () => {
 		googleVisualCallback(0, 1)
 		expect(fakeChart.setSelection).toHaveBeenCalledWith([
 			{
@@ -35,7 +35,7 @@ describe('googleVisualCallback', function() {
 		])
 	})
 
-	it('correctly munges its parameters (1c)', function() {
+	it('correctly munges its parameters (1c)', () => {
 		googleVisualCallback(0, 2)
 		expect(fakeChart.setSelection).toHaveBeenCalledWith([
 			{
@@ -45,7 +45,7 @@ describe('googleVisualCallback', function() {
 		])
 	})
 
-	it('correctly munges its parameters (2)', function() {
+	it('correctly munges its parameters (2)', () => {
 		googleVisualCallback(1, 0)
 		expect(fakeChart.setSelection).toHaveBeenCalledWith([
 			{

@@ -1,8 +1,8 @@
 'use strict'
 /* global getAudioContext */
 
-describe('getAudioContext', function() {
-	it('returns the same audio context when called again', function() {
+describe('getAudioContext', () => {
+	it('returns the same audio context when called again', () => {
 		const context1 = getAudioContext()
 		const context2 = getAudioContext()
 		const context3 = getAudioContext()

@@ -1,112 +1,345 @@
 'use strict'
-/* global AudioChart JSONDataWrapper GoogleDataWrapper HTMLTableDataWrapper htmlTableVisualCallbackMaker */
+/* global AudioChart JSONDataWrapper GoogleDataWrapper HTMLTableDataWrapper googleVisualCallbackMaker htmlTableVisualCallbackMaker */
 
-describe('AudioChart', function() {
-	let fakeOptions = null
-
-	beforeEach(function() {
-		fakeOptions = { type: 'test' }
-	})
-
-	it('throws with a message if Web Audio API is unsupported', function() {
+describe('AudioChart', () => {
+	it('throws with a message if Web Audio API is unsupported', () => {
 		spyOn(window, 'getAudioContext').and.returnValue(null)
-		expect(function() {
-			new AudioChart(fakeOptions)
+
+		expect(() => {
+			new AudioChart({})
 		}).toThrow(
 			Error("Sorry, your browser doesn't support the Web Audio API.")
 		)
 	})
 
-	it('throws when an errant `options.type` is supplied', function() {
-		const options = {
-			'type': 'moo'
-		}
+	describe('options checking', () => {
+		it('throws when an errant `options.type` is supplied', () => {
+			const options = {
+				type: 'moo',
+				duration: 42,
+				frequencyLow: 0,
+				frequencyHigh: 0
+			}
 
-		expect(function() {
-			new AudioChart(options, null)
-		}).toThrow(Error("Invalid data type 'moo' given."))
+			expect(() => {
+				AudioChart._checkOptions(options)
+			}).toThrow(Error("Invalid data type 'moo' given."))
+		})
+
+		it('throws when a duration is not given', () => {
+			const options = {
+				type: 'moo'
+			}
+
+			expect(() => {
+				AudioChart._checkOptions(options)
+			}).toThrow(Error('No duration given'))
+		})
+
+		it('throws when a minimum frequency is not given', () => {
+			const options = {
+				type: 'moo',
+				duration: 42
+			}
+
+			expect(() => {
+				AudioChart._checkOptions(options)
+			}).toThrow(Error('No minimum frequency given'))
+		})
+
+		it('throws when a maximum frequency is not given', () => {
+			const options = {
+				type: 'moo',
+				duration: 42,
+				frequencyLow: 0
+			}
+
+			expect(() => {
+				AudioChart._checkOptions(options)
+			}).toThrow(Error('No maximum frequency given'))
+		})
+
+		it('requires `data` to be specified with Google charts', () => {
+			const options = {
+				type: 'google',
+				duration: 42,
+				frequencyLow: 0,
+				frequencyHigh: 0
+			}
+
+			expect(() => {
+				AudioChart._checkOptions(options)
+			}).toThrow(Error("Options must include a 'data' key"))
+		})
+
+		it('requires `data` to be specified with C3 charts', () => {
+			const options = {
+				type: 'c3',
+				duration: 42,
+				frequencyLow: 0,
+				frequencyHigh: 0
+			}
+
+			expect(() => {
+				AudioChart._checkOptions(options)
+			}).toThrow(Error("Options must include a 'data' key"))
+		})
+
+		it('requires `data` to be specified with JSON data', () => {
+			const options = {
+				type: 'json',
+				duration: 42,
+				frequencyLow: 0,
+				frequencyHigh: 0
+			}
+
+			expect(() => {
+				AudioChart._checkOptions(options)
+			}).toThrow(Error("Options must include a 'data' key"))
+		})
+
+		it('accepts when `data` is specified', () => {
+			const options = {
+				type: 'google',
+				data: {},
+				duration: 42,
+				frequencyLow: 0,
+				frequencyHigh: 0
+			}
+
+			expect(() => {
+				AudioChart._checkOptions(options)
+			}).not.toThrow()
+		})
+
+		it('requires `table` to be specified for HTML tables', () => {
+			const options = {
+				type: 'htmlTable',
+				duration: 42,
+				frequencyLow: 0,
+				frequencyHigh: 0
+			}
+
+			expect(() => {
+				AudioChart._checkOptions(options)
+			}).toThrow(Error("Options must include a 'table' key"))
+		})
 	})
 
-	it('assigns a JSON data wrapper, parameter and no callback', function() {
-		const options = {
-			'type': 'json',
-			'data': 42
-		}
+	describe('data wrapper and callback creation', () => {
+		it('assigns a JSON data wrapper, parameter and no callback', () => {
+			const options = {
+				'type': 'json',
+				'data': 42
+			}
 
-		expect(AudioChart._assignWrapperCallback(options))
-			.toEqual({
-				'Wrapper': JSONDataWrapper,
-				'parameter': 42,
-				'callback': null
-			})
+			expect(AudioChart._assignWrapperCallback(options))
+				.toEqual({
+					'Wrapper': JSONDataWrapper,
+					'parameter': 42,
+					'callback': null
+				})
+		})
+
+		it('assigns a Google wrapper and parameter without a chart', () => {
+			const options = {
+				'type': 'google',
+				'data': 42
+			}
+
+			expect(AudioChart._assignWrapperCallback(options))
+				.toEqual({
+					'Wrapper': GoogleDataWrapper,
+					'parameter': 42,
+					'callback': null
+				})
+		})
+
+		it('assigns a Google wrapper, parameter and chart callback', () => {
+			const fakeChart = {}
+
+			const options = {
+				'type': 'google',
+				'data': 42,
+				'chart': fakeChart
+			}
+
+			spyOn(window, 'googleVisualCallbackMaker').and.returnValue(42)
+
+			expect(AudioChart._assignWrapperCallback(options))
+				.toEqual({
+					'Wrapper': GoogleDataWrapper,
+					'parameter': 42,
+					'callback': 42
+				})
+
+			expect(googleVisualCallbackMaker).toHaveBeenCalledWith(fakeChart)
+		})
+
+		it('assigns a HTML data wrapper, parameter and no callback', () => {
+			const options = {
+				'type': 'htmlTable',
+				'table': 42
+			}
+
+			expect(AudioChart._assignWrapperCallback(options))
+				.toEqual({
+					'Wrapper': HTMLTableDataWrapper,
+					'parameter': 42,
+					'callback': null
+				})
+		})
+
+		it('assigns a HTML data wrapper, parameter and callback', () => {
+			const options = {
+				'type': 'htmlTable',
+				'table': 42,
+				'highlightClass': 'moo'
+			}
+
+			spyOn(window, 'htmlTableVisualCallbackMaker').and.returnValue(42)
+
+			expect(AudioChart._assignWrapperCallback(options))
+				.toEqual({
+					'Wrapper': HTMLTableDataWrapper,
+					'parameter': 42,
+					'callback': 42
+				})
+
+			expect(htmlTableVisualCallbackMaker)
+				.toHaveBeenCalledWith(42, 'moo')
+		})
 	})
 
-	it('assigns a Google wrapper and parameter without a chart', function() {
-		const options = {
-			'type': 'google',
-			'data': 42
+	describe('options updating', () => {
+		const jsonDummyData = {
+			data: [
+				{
+					series: 'test',
+					values: [0, 1, 2]
+				}
+			]
 		}
 
-		expect(AudioChart._assignWrapperCallback(options))
-			.toEqual({
-				'Wrapper': GoogleDataWrapper,
-				'parameter': 42,
-				'callback': null
-			})
-	})
+		it('allows us to see the current options', () => {
+			const options = {
+				type: 'json',
+				data: jsonDummyData,
+				duration: 42,
+				frequencyLow: 0,
+				frequencyHigh: 1
+			}
 
-	it('assigns a Google wrapper, parameter and chart callback', function() {
-		const options = {
-			'type': 'google',
-			'data': 42,
-			'chart': {}
-		}
+			const ac = new AudioChart(options)
 
-		// FIXME Given that we have to do this to stub out this callback
-		// maker, maybe it is better to revert to doing this for *all* of
-		// these tests, because returning this artificial object thing is
-		// a bit naff...
-		spyOn(window, 'googleVisualCallbackMaker').and.returnValue(42)
+			expect(ac.options).toBe(options)
+		})
 
-		expect(AudioChart._assignWrapperCallback(options))
-			.toEqual({
-				'Wrapper': GoogleDataWrapper,
-				'parameter': 42,
-				'callback': 42
-			})
-	})
+		it("won't let us change options by editng the returned object", () => {
+			const initOptions = {
+				type: 'json',
+				data: jsonDummyData,
+				duration: 42,
+				frequencyLow: 0,
+				frequencyHigh: 1
+			}
 
-	it('assigns a HTML data wrapper, parameter and no callback', function() {
-		const options = {
-			'type': 'htmlTable',
-			'table': 42
-		}
+			const ac = new AudioChart(initOptions)
+			const acOptions = ac.options
+			expect(() => acOptions.type = 'moo').toThrow()
+		})
 
-		expect(AudioChart._assignWrapperCallback(options))
-			.toEqual({
-				'Wrapper': HTMLTableDataWrapper,
-				'parameter': 42,
-				'callback': null
-			})
-	})
+		it("won't let us add options by editng the returned object", () => {
+			const initOptions = {
+				type: 'json',
+				data: jsonDummyData,
+				duration: 42,
+				frequencyLow: 0,
+				frequencyHigh: 1
+			}
 
-	it('assigns a HTML data wrapper, parameter and callback', function() {
-		const options = {
-			'type': 'htmlTable',
-			'table': 42,
-			'highlightClass': 'moo'
-		}
+			const ac = new AudioChart(initOptions)
+			const acOptions = ac.options
+			expect(() => acOptions.moo = 42).toThrow()
+		})
 
-		spyOn(window, 'htmlTableVisualCallbackMaker').and.returnValue(42)
-
-		expect(AudioChart._assignWrapperCallback(options))
-			.toEqual({
-				'Wrapper': HTMLTableDataWrapper,
-				'parameter': 42,
-				'callback': 42
+		it('throws when no new options are given', () => {
+			const ac = new AudioChart({
+				type: 'json',
+				data: jsonDummyData,
+				duration: 42,
+				frequencyLow: 0,
+				frequencyHigh: 1
 			})
 
-		expect(htmlTableVisualCallbackMaker)
-			.toHaveBeenCalledWith(42, 'moo')
+			expect(() => {
+				ac.updateOptions()
+			}).toThrow(Error('No new options given'))
+
+			expect(() => {
+				ac.updateOptions({})
+			}).toThrow(Error('No new options given'))
+		})
+
+		it('allows all options to be updated', () => {
+			const initOptions = {
+				type: 'json',
+				data: jsonDummyData,
+				duration: 42,
+				frequencyLow: 0,
+				frequencyHigh: 0
+			}
+
+			spyOn(AudioChart, '_checkOptions')
+
+			const ac = new AudioChart(initOptions)
+
+			expect(AudioChart._checkOptions.calls.count()).toBe(1)
+			expect(AudioChart._checkOptions).toHaveBeenCalledWith(initOptions)
+			expect(ac.options).toBe(initOptions)
+
+			const newOptions = {
+				type: 'json',
+				data: jsonDummyData,
+				duration: 72,
+				frequencyLow: 42,
+				frequencyHigh: 420
+			}
+
+			expect(() => {
+				ac.updateOptions(newOptions)
+			}).not.toThrow()
+
+			expect(AudioChart._checkOptions.calls.count()).toBe(2)
+			expect(AudioChart._checkOptions).toHaveBeenCalledWith(newOptions)
+			expect(ac.options).toEqual(newOptions)
+		})
+
+		it('allows partial options updates', () => {
+			const initOptions = {
+				type: 'json',
+				data: jsonDummyData,
+				duration: 72,
+				frequencyLow: 0,
+				frequencyHigh: 0
+			}
+
+			const ac = new AudioChart(initOptions)
+
+			expect(ac.options).toBe(initOptions)
+
+			ac.updateOptions({
+				frequencyLow: 210,
+				frequencyHigh: 420
+			})
+
+			expect(ac.options).toEqual({
+				type: 'json',
+				data: jsonDummyData,
+				duration: 72,
+				frequencyLow: 210,
+				frequencyHigh: 420
+			})
+		})
 	})
 })

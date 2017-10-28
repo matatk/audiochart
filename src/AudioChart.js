@@ -20,7 +20,8 @@
 /**
  * @typedef {Object} AudioChartOptions
  * @todo move the documentation here? (Downside is that the branching/groups
- *       of different options required for different chart types would be less *       clear.)
+ *       of different options required for different chart types would be less
+ *       clear.)
  */
 
 /**
@@ -36,23 +37,125 @@
 class AudioChart {
 	/**
 	 * Create an AudioChart object.
-	 * This first checks to see if the Web Audio API is available, and
-	 * throws an {Error} if not.
-	 * @param {options} options - AudioChart options
-	 * @param {AudioContext} context - the window's AudioContext
+	 * This first checks to see if the Web Audio API is available, and throws
+	 * an {Error} if not. Then check the options given by the user.
+	 * @param {AudioChartOptions} options - AudioChart options
 	 */
-	constructor(options, context) {
-		const fail = "Sorry, your browser doesn't support the Web Audio API."
+	constructor(options) {
+		const context = getAudioContext()
+		if (context === null) {
+			throw Error(
+				"Sorry, your browser doesn't support the Web Audio API.")
+		}
+		this._setUp(context, options)
+	}
 
-		if (arguments.length < 2) {
-			context = getAudioContext()
-			if (context === null) {
-				throw Error(fail)
-			}
+	/**
+	 * Passes through play/pause commands to the Player
+	 */
+	playPause() {
+		this.player.playPause()
+	}
+
+	/**
+	 * Returns the current set of options (passed in at object creation, or
+	 * computed when options were updated).
+	 */
+	get options() {
+		return this._options
+	}
+
+	/**
+	 * Updates an AudioChart object to reflect new options. Can accept a subset
+	 * of the standard options, so if only, for example, duration changes, then
+	 * you need only specify the new duration and not the type and other
+	 * paramaters.
+	 * @param {AudioChartOptions} newOptions - Partial/full AudioChart options
+	 */
+	updateOptions(newOptions) {
+		if (newOptions === undefined || Object.keys(newOptions).length === 0) {
+			throw Error('No new options given')
+		}
+		const patchedOptions = Object.assign({}, this._options, newOptions)
+		this._setUp(getAudioContext(), patchedOptions)
+	}
+
+	/**
+	 * Checks options (either when a new AudioChart object is created, or when
+	 * the user has asked for them to be updated) and then set everything up.
+	 * @param {AudioContext} context - the Web Audio context
+	 * @param {AudioChartOptions} options - AudioChart options
+	 * @private
+	 */
+	_setUp(context, options) {
+		// The testing for this next bit is a bit of a fudge as curerntly I've
+		// not come up with a beter way than having the testing done on static
+		// functions and checking that they've been called with appropraite
+		// values, return appropriate values, or if they throw an exception.
+		//
+		// The thing blocking this is that I don't know how to stub out global
+		// ES6 classes *or* how to run each test via Karma in an isolated
+		// environment where I can mock those global classes.
+		//
+		// TODO, as per https://github.com/matatk/audiochart/issues/37
+
+		AudioChart._checkOptions(options)
+		this._wireUpStuff(context, options)
+		this._options = Object.freeze(options)
+	}
+
+	/**
+	 * Checks the passed-in options opbject for validity. This does not perform
+	 * detailed checks that are covered in the various components' constructors;
+	 * they run such checks themselves.
+	 * @param {AudioChartOptions} options - AudioChart options
+	 * @private
+	 */
+	static _checkOptions(options) {
+		if (!options.hasOwnProperty('duration')) {
+			throw Error('No duration given')
 		}
 
+		if (!options.hasOwnProperty('frequencyLow')) {
+			throw Error('No minimum frequency given')
+		}
+
+		if (!options.hasOwnProperty('frequencyHigh')) {
+			throw Error('No maximum frequency given')
+		}
+
+		switch (options.type) {
+			case 'google':
+			case 'c3':
+			case 'json':
+				if (!options.hasOwnProperty('data')) {
+					throw Error("Options must include a 'data' key")
+				}
+				break
+			case 'htmlTable':
+				if (!options.hasOwnProperty('table')) {
+					throw Error("Options must include a 'table' key")
+				}
+				break
+			default:
+				throw Error(`Invalid data type '${options.type}' given.`)
+		}
+	}
+
+	/**
+	 * Make a data wrapper of the appropriate class, instantiated with the
+	 * appropriate data paramater (from options.data) and, optionally, make
+	 * a visual callback (which may use options.chart, or other options if
+	 * it's an HTML table visual callback).
+	 * @private
+	 * @param {AudioContext} context - the Web Audio context
+	 * @param {AudioChartOptions} options - given by the user
+	 */
+	_wireUpStuff(context, options) {
 		const result = AudioChart._assignWrapperCallback(options)
-		const dataWrapper = new result.Wrapper(result.parameter)  // TODO would this be neater if it created and returned by the wrapper assignment function?
+
+		const dataWrapper = new result.Wrapper(result.parameter)
+
 		const callback = result.callback
 
 		const frequencyPitchMapper = new FrequencyPitchMapper(
@@ -78,13 +181,6 @@ class AudioChart {
 	}
 
 	/**
-	 * Passes through play/pause commands to the Player
-	 */
-	playPause() {
-		this.player.playPause()
-	}
-
-	/**
 	 * Works out which data source wrapper and visual callback (if requested)
 	 * should be used with this chart.
 	 * @param {AudioChartOptions} options - given by the user
@@ -100,18 +196,29 @@ class AudioChart {
 			'callback': null
 		}
 
+		const chartTypeToWrapperClass = {
+			google: GoogleDataWrapper,
+			json: JSONDataWrapper,
+			htmlTable: HTMLTableDataWrapper,
+			c3: C3DataWrapper
+		}
+
+		const chartTypeToVisualCallbackMaker = {
+			google: googleVisualCallbackMaker,
+			c3: c3VisualCallbackMaker
+		}
+
 		switch (options.type) {
 			case 'google':
-				result.Wrapper = GoogleDataWrapper
+			case 'json':
+			case 'c3':
+				result.Wrapper = chartTypeToWrapperClass[options.type]
 				result.parameter = options.data
 				if (options.hasOwnProperty('chart')) {
 					result.callback =
-						googleVisualCallbackMaker(options.chart)
+						chartTypeToVisualCallbackMaker[options.type](
+							options.chart)
 				}
-				break
-			case 'json':
-				result.Wrapper = JSONDataWrapper
-				result.parameter = options.data
 				break
 			case 'htmlTable':
 				result.Wrapper = HTMLTableDataWrapper
@@ -122,16 +229,6 @@ class AudioChart {
 						options.highlightClass)
 				}
 				break
-			case 'c3':
-				result.Wrapper = C3DataWrapper
-				result.parameter = options.data
-				if (options.hasOwnProperty('chart')) {
-					result.callback =
-						c3VisualCallbackMaker(options.chart)
-				}
-				break
-			default:
-				throw Error("Invalid data type '" + options.type + "' given.")
 		}
 
 		return result
