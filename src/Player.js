@@ -20,43 +20,12 @@ class Player {
 
 		const seriesLen = this.data.seriesLength(0)
 
-		const sampling = Player.samplingInfo(duration, seriesLen)
+		const sampling = Player._samplingInfo(duration, seriesLen)
 		this.interval = sampling.interval
 		this.sampleOneIn = sampling.in
 
 		this.seriesMaxIndex = seriesLen - 1  // TODO just use seriesLen?
 		this._state = 'ready'
-	}
-
-	/* static function to work out sampling rate */
-	static samplingInfo(duration, seriesLen) {
-		const minInterval = 10
-		let interval
-		let sampleOneIn
-		let slots
-
-		const idealInterval = Math.ceil(duration / seriesLen)
-		// console.log(`sampleInfo: duration: ${duration}; series length: ${seriesLen}; ideal interval: ${idealInterval}`)
-
-		if (idealInterval < minInterval) {
-			interval = minInterval
-			slots = Math.floor(duration / minInterval)
-			const sampleOneInFloat = seriesLen / slots
-			sampleOneIn = Math.round(seriesLen / slots)
-			// console.log(`sampleInfo: Need to sample 1 in ${sampleOneIn} (${sampleOneInFloat})`)
-		} else {
-			slots = Math.floor(duration / minInterval)
-			interval = idealInterval
-			sampleOneIn = 1
-		}
-
-		// console.log(`sampleInfo: it will take ${ (seriesLen / sampleOneIn) * interval}`)
-
-		return {
-			'sample': 1,
-			'in': sampleOneIn,
-			'interval': interval
-		}
 	}
 
 	/**
@@ -78,6 +47,28 @@ class Player {
 				break
 			default:
 				throw Error('Player error: invalid state: ' + String(this._state))
+		}
+	}
+
+	stepBackward(skip) {
+		const delta = skip || 50
+		this.playIndex -= delta
+		if (this.playIndex < 0) {
+			this.playIndex = 0  // TODO test limiting
+		}
+		if (this._state === 'paused') {
+			this._playOne()
+		}
+	}
+
+	stepForward(skip) {
+		const delta = skip || 50
+		this.playIndex += delta
+		if (this.playIndex > this.seriesMaxIndex) {
+			this.playIndex = this.seriesMaxIndex  // TODO test limiting
+		}
+		if (this._state === 'paused') {
+			this._playOne()
 		}
 	}
 
@@ -152,25 +143,34 @@ class Player {
 		this._state = 'paused'
 	}
 
-	stepBackward(skip) {
-		const delta = skip || 50
-		this.playIndex -= delta
-		if (this.playIndex < 0) {
-			this.playIndex = 0  // TODO test limiting
-		}
-		if (this._state === 'paused') {
-			this._playOne()
-		}
-	}
+	/* Work out sampling rate */
+	static _samplingInfo(duration, seriesLen) {
+		const minInterval = 10
+		let interval
+		let sampleOneIn
+		let slots
 
-	stepForward(skip) {
-		const delta = skip || 50
-		this.playIndex += delta
-		if (this.playIndex > this.seriesMaxIndex) {
-			this.playIndex = this.seriesMaxIndex  // TODO test limiting
+		const idealInterval = Math.ceil(duration / seriesLen)
+		// console.log(`sampleInfo: duration: ${duration}; series length: ${seriesLen}; ideal interval: ${idealInterval}`)
+
+		if (idealInterval < minInterval) {
+			interval = minInterval
+			slots = Math.floor(duration / minInterval)
+			const sampleOneInFloat = seriesLen / slots
+			sampleOneIn = Math.round(seriesLen / slots)
+			// console.log(`sampleInfo: Need to sample 1 in ${sampleOneIn} (${sampleOneInFloat})`)
+		} else {
+			slots = Math.floor(duration / minInterval)
+			interval = idealInterval
+			sampleOneIn = 1
 		}
-		if (this._state === 'paused') {
-			this._playOne()
+
+		// console.log(`sampleInfo: it will take ${ (seriesLen / sampleOneIn) * interval}`)
+
+		return {
+			'sample': 1,
+			'in': sampleOneIn,
+			'interval': interval
 		}
 	}
 }

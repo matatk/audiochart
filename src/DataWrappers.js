@@ -209,21 +209,15 @@ class HTMLTableDataWrapper {
 	}
 
 	seriesNames() {
-		const headerCells = this.table.getElementsByTagName('th')
-		const results = []
-		for (let i = 0; i < headerCells.length; i++) {
-			results.push(headerCells[i].textContent)
-		}
-		return results
+		return Array.from(
+			this.table.getElementsByTagName('th'),
+			(cell) => cell.textContent)
 	}
 
 	_seriesFloats(series) {
-		const dataCells = this.table.getElementsByTagName('td')
-		const results = []
-		for (let i = 0; i < dataCells.length; i++) {
-			results.push(parseFloat(dataCells[i].textContent))
-		}
-		return results
+		return Array.from(
+			this.table.getElementsByTagName('td'),
+			(cell) => parseFloat(cell.textContent))
 	}
 
 	seriesMin(series) {
@@ -235,7 +229,9 @@ class HTMLTableDataWrapper {
 	}
 
 	seriesValue(series, index) {
-		return parseFloat(this.table.getElementsByTagName('tr')[index + 1].children[series].textContent)
+		return parseFloat(
+			this.table.getElementsByTagName('tr')[index + 1]
+				.children[series].textContent)
 	}
 
 	seriesLength(series) {
