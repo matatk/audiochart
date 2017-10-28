@@ -3,13 +3,13 @@
 
 describe('Player sampling rate and interval', () => {
 	it('calculates the correct sampling rates and intervals', () => {
-		expect(Player.samplingInfo(1000,  50)).toEqual(
+		expect(Player._samplingInfo(1000,  50)).toEqual(
 			{ sample: 1, in: 1, interval: 20 })
-		expect(Player.samplingInfo(1000, 100)).toEqual(
+		expect(Player._samplingInfo(1000, 100)).toEqual(
 			{ sample: 1, in: 1, interval: 10 })
-		expect(Player.samplingInfo(1000, 629)).toEqual(
+		expect(Player._samplingInfo(1000, 629)).toEqual(
 			{ sample: 1, in: 6, interval: 10 })
-		expect(Player.samplingInfo(1000, 250)).toEqual(
+		expect(Player._samplingInfo(1000, 250)).toEqual(
 			{ sample: 1, in: 3, interval: 10 })
 	})
 })
