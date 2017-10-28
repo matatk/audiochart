@@ -26,13 +26,10 @@ var googleVisualCallbackMaker = function(chart) {
 var htmlTableVisualCallbackMaker = function(table, className) {
 	return function(series, row) {
 		const tds = table.getElementsByTagName('td')
-		let cell  // TODO remove
-		for (let i = 0; i < tds.length; i++) {
-			cell = tds[i]
+		for (const cell of tds) {
 			cell.classList.remove(className)
 		}
-		cell = table.getElementsByTagName('td')[row]
-		cell.classList.add(className)
+		tds[row].classList.add(className)
 	}
 }
 
