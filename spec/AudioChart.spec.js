@@ -221,6 +221,48 @@ describe('AudioChart', () => {
 			]
 		}
 
+		it('allows us to see the current options', () => {
+			const options = {
+				type: 'json',
+				data: jsonDummyData,
+				duration: 42,
+				frequencyLow: 0,
+				frequencyHigh: 1
+			}
+
+			const ac = new AudioChart(options)
+
+			expect(ac.options).toBe(options)
+		})
+
+		it("won't let us change options by editng the returned object", () => {
+			const initOptions = {
+				type: 'json',
+				data: jsonDummyData,
+				duration: 42,
+				frequencyLow: 0,
+				frequencyHigh: 1
+			}
+
+			const ac = new AudioChart(initOptions)
+			const acOptions = ac.options
+			expect(() => acOptions.type = 'moo').toThrow()
+		})
+
+		it("won't let us add options by editng the returned object", () => {
+			const initOptions = {
+				type: 'json',
+				data: jsonDummyData,
+				duration: 42,
+				frequencyLow: 0,
+				frequencyHigh: 1
+			}
+
+			const ac = new AudioChart(initOptions)
+			const acOptions = ac.options
+			expect(() => acOptions.moo = 42).toThrow()
+		})
+
 		it('throws when no new options are given', () => {
 			const ac = new AudioChart({
 				type: 'json',
@@ -239,9 +281,8 @@ describe('AudioChart', () => {
 			}).toThrow(Error('No new options given'))
 		})
 
-		// FIXME this doesn't check that the options were updated though!
-		it('allows options to be updated', () => {
-			const initialOptions = {
+		it('allows all options to be updated', () => {
+			const initOptions = {
 				type: 'json',
 				data: jsonDummyData,
 				duration: 42,
@@ -249,11 +290,17 @@ describe('AudioChart', () => {
 				frequencyHigh: 0
 			}
 
-			const ac = new AudioChart(initialOptions)
+			spyOn(AudioChart, '_checkOptions')
+
+			const ac = new AudioChart(initOptions)
+
+			expect(AudioChart._checkOptions.calls.count()).toBe(1)
+			expect(AudioChart._checkOptions).toHaveBeenCalledWith(initOptions)
+			expect(ac.options).toBe(initOptions)
 
 			const newOptions = {
 				type: 'json',
-				data: {},
+				data: jsonDummyData,
 				duration: 72,
 				frequencyLow: 42,
 				frequencyHigh: 420
@@ -262,6 +309,37 @@ describe('AudioChart', () => {
 			expect(() => {
 				ac.updateOptions(newOptions)
 			}).not.toThrow()
+
+			expect(AudioChart._checkOptions.calls.count()).toBe(2)
+			expect(AudioChart._checkOptions).toHaveBeenCalledWith(newOptions)
+			expect(ac.options).toEqual(newOptions)
+		})
+
+		it('allows partial options updates', () => {
+			const initOptions = {
+				type: 'json',
+				data: jsonDummyData,
+				duration: 72,
+				frequencyLow: 0,
+				frequencyHigh: 0
+			}
+
+			const ac = new AudioChart(initOptions)
+
+			expect(ac.options).toBe(initOptions)
+
+			ac.updateOptions({
+				frequencyLow: 210,
+				frequencyHigh: 420
+			})
+
+			expect(ac.options).toEqual({
+				type: 'json',
+				data: jsonDummyData,
+				duration: 72,
+				frequencyLow: 210,
+				frequencyHigh: 420
+			})
 		})
 	})
 })

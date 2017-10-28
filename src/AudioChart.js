@@ -50,12 +50,12 @@ class AudioChart {
 
 		// The testing for this next bit is a bit of a fudge as curerntly I've
 		// not come up with a beter way than having the testing done on static
-		// functions and checking their return values, or if they throw an
-		// exception.
+		// functions and checking that they've been called with appropraite
+		// values, return appropriate values, or if they throw an exception.
 		//
-		// The thing blocking this is that I don't know how to stub out
-		// globally-declared ES6 classes *or* to run each test via Karma in an
-		// isolated environment where I can mock those global classes.
+		// The thing blocking this is that I don't know how to stub out global
+		// ES6 classes *or* how to run each test via Karma in an isolated
+		// environment where I can mock those global classes.
 		//
 		// TODO, as per https://github.com/matatk/audiochart/issues/37
 
@@ -63,38 +63,10 @@ class AudioChart {
 		// values—that is checked by each object respectively).
 		AudioChart._checkOptions(options)
 
-		// Make a data wrapper of the appropriate class, instantiated with the
-		// appropriate data paramater (from options.data) and, optionally, make
-		// a visual callback (which may use options.chart, or other options if
-		// it's an HTML table visual callback).
-		const result = AudioChart._assignWrapperCallback(options)
-
 		// Now everything has been checked, we can set it all up...
+		this._wireUpStuff(context, options)
 
-		const dataWrapper = new result.Wrapper(result.parameter)
-
-		const callback = result.callback
-
-		const frequencyPitchMapper = new FrequencyPitchMapper(
-			dataWrapper.seriesMin(0),
-			dataWrapper.seriesMax(0),
-			options.frequencyLow,
-			options.frequencyHigh)
-
-		const sounder = new WebAudioSounder(context)
-
-		this.player = new Player(
-			options.duration,
-			dataWrapper,
-			frequencyPitchMapper,
-			sounder,
-			callback)
-
-		if (options.chartContainer) {
-			new KeyboardHandler(
-				options.chartContainer,
-				this.player)
-		}
+		this._options = Object.freeze(options)
 	}
 
 	/**
@@ -102,6 +74,14 @@ class AudioChart {
 	 */
 	playPause() {
 		this.player.playPause()
+	}
+
+	/**
+	 * Returns the current set of options (passed in at object creation, or
+	 * computed when options were updated).
+	 */
+	get options() {
+		return this._options
 	}
 
 	/**
@@ -114,6 +94,13 @@ class AudioChart {
 		if (newOptions === undefined || Object.keys(newOptions).length === 0) {
 			throw Error('No new options given')
 		}
+
+		const patchedOptions = Object.assign({}, this._options, newOptions)
+
+		// FIXME DRY
+		AudioChart._checkOptions(patchedOptions)
+		this._wireUpStuff(getAudioContext(), patchedOptions)
+		this._options = Object.freeze(patchedOptions)
 	}
 
 	/**
@@ -151,6 +138,44 @@ class AudioChart {
 				break
 			default:
 				throw Error(`Invalid data type '${options.type}' given.`)
+		}
+	}
+
+	/**
+	 * Make a data wrapper of the appropriate class, instantiated with the
+	 * appropriate data paramater (from options.data) and, optionally, make
+	 * a visual callback (which may use options.chart, or other options if
+	 * it's an HTML table visual callback).
+	 * @private
+	 * @param {AudioContext} context - the Web Audio context
+	 * @param {AudioChartOptions} options - given by the user
+	 */
+	_wireUpStuff(context, options) {
+		const result = AudioChart._assignWrapperCallback(options)
+
+		const dataWrapper = new result.Wrapper(result.parameter)
+
+		const callback = result.callback
+
+		const frequencyPitchMapper = new FrequencyPitchMapper(
+			dataWrapper.seriesMin(0),
+			dataWrapper.seriesMax(0),
+			options.frequencyLow,
+			options.frequencyHigh)
+
+		const sounder = new WebAudioSounder(context)
+
+		this.player = new Player(
+			options.duration,
+			dataWrapper,
+			frequencyPitchMapper,
+			sounder,
+			callback)
+
+		if (options.chartContainer) {
+			new KeyboardHandler(
+				options.chartContainer,
+				this.player)
 		}
 	}
 
