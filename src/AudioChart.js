@@ -43,30 +43,11 @@ class AudioChart {
 	 */
 	constructor(options) {
 		const context = getAudioContext()
-
 		if (context === null) {
-			throw Error("Sorry, your browser doesn't support the Web Audio API.")
+			throw Error(
+				"Sorry, your browser doesn't support the Web Audio API.")
 		}
-
-		// The testing for this next bit is a bit of a fudge as curerntly I've
-		// not come up with a beter way than having the testing done on static
-		// functions and checking that they've been called with appropraite
-		// values, return appropriate values, or if they throw an exception.
-		//
-		// The thing blocking this is that I don't know how to stub out global
-		// ES6 classes *or* how to run each test via Karma in an isolated
-		// environment where I can mock those global classes.
-		//
-		// TODO, as per https://github.com/matatk/audiochart/issues/37
-
-		// Check the passed-in options object for the right keys (not their
-		// values—that is checked by each object respectively).
-		AudioChart._checkOptions(options)
-
-		// Now everything has been checked, we can set it all up...
-		this._wireUpStuff(context, options)
-
-		this._options = Object.freeze(options)
+		this._setUp(context, options)
 	}
 
 	/**
@@ -86,21 +67,41 @@ class AudioChart {
 
 	/**
 	 * Updates an AudioChart object to reflect new options. Can accept a subset
-	 * of the standard options, so if only duration changes, then you need only
-	 * specify the new duration and not the type and other paramaters.
+	 * of the standard options, so if only, for example, duration changes, then
+	 * you need only specify the new duration and not the type and other
+	 * paramaters.
 	 * @param {AudioChartOptions} newOptions - Partial/full AudioChart options
 	 */
 	updateOptions(newOptions) {
 		if (newOptions === undefined || Object.keys(newOptions).length === 0) {
 			throw Error('No new options given')
 		}
-
 		const patchedOptions = Object.assign({}, this._options, newOptions)
+		this._setUp(getAudioContext(), patchedOptions)
+	}
 
-		// FIXME DRY
-		AudioChart._checkOptions(patchedOptions)
-		this._wireUpStuff(getAudioContext(), patchedOptions)
-		this._options = Object.freeze(patchedOptions)
+	/**
+	 * Checks options (either when a new AudioChart object is created, or when
+	 * the user has asked for them to be updated) and then set everything up.
+	 * @param {AudioContext} context - the Web Audio context
+	 * @param {AudioChartOptions} options - AudioChart options
+	 * @private
+	 */
+	_setUp(context, options) {
+		// The testing for this next bit is a bit of a fudge as curerntly I've
+		// not come up with a beter way than having the testing done on static
+		// functions and checking that they've been called with appropraite
+		// values, return appropriate values, or if they throw an exception.
+		//
+		// The thing blocking this is that I don't know how to stub out global
+		// ES6 classes *or* how to run each test via Karma in an isolated
+		// environment where I can mock those global classes.
+		//
+		// TODO, as per https://github.com/matatk/audiochart/issues/37
+
+		AudioChart._checkOptions(options)
+		this._wireUpStuff(context, options)
+		this._options = Object.freeze(options)
 	}
 
 	/**
