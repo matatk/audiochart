@@ -174,3 +174,5 @@ class Player {
 		}
 	}
 }
+
+export { Player }

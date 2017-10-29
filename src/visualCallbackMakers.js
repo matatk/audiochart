@@ -46,3 +46,5 @@ var c3VisualCallbackMaker = function(chart) {
 		chart.select(null, [row], true)
 	}
 }
+
+export { googleVisualCallbackMaker, htmlTableVisualCallbackMaker, c3VisualCallbackMaker }

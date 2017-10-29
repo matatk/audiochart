@@ -57,3 +57,5 @@ class KeyboardHandler {
 		this.player.playPause()
 	}
 }
+
+export { KeyboardHandler }

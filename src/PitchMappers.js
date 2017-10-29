@@ -65,3 +65,5 @@ class FrequencyPitchMapper extends PitchMapper {
 		return this.minimumFrequency + ratio * (this.maximumFrequency - this.minimumFrequency)
 	}
 }
+
+export { FrequencyPitchMapper }

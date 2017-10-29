@@ -21,3 +21,5 @@ var getAudioContext = (function() {
 
 	return _getAudioContext
 })()
+
+export { getAudioContext }

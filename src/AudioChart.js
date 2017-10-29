@@ -1,6 +1,11 @@
 /** @module */
-/* exported AudioChart */
-/* global getAudioContext FrequencyPitchMapper WebAudioSounder Player KeyboardHandler GoogleDataWrapper googleVisualCallbackMaker JSONDataWrapper HTMLTableDataWrapper htmlTableVisualCallbackMaker C3DataWrapper c3VisualCallbackMaker */
+import { getAudioContext } from './getAudioContext'
+import { FrequencyPitchMapper } from './PitchMappers'
+import { WebAudioSounder } from './WebAudioSounder'
+import { Player } from './Player'
+import { KeyboardHandler } from './KeyboardHandler'
+import { GoogleDataWrapper, HTMLTableDataWrapper, JSONDataWrapper, C3DataWrapper } from './DataWrappers'
+import { googleVisualCallbackMaker, htmlTableVisualCallbackMaker, c3VisualCallbackMaker } from './visualCallbackMakers'
 
 /**
  * Array index number (starts at zero).
@@ -234,3 +239,5 @@ class AudioChart {
 		return result
 	}
 }
+
+export default AudioChart

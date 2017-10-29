@@ -33,3 +33,5 @@ class WebAudioSounder {
 		this.oscillator.stop()
 	}
 }
+
+export { WebAudioSounder }

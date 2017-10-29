@@ -238,3 +238,5 @@ class HTMLTableDataWrapper {
 		return this.table.getElementsByTagName('tr').length - 1
 	}
 }
+
+export { GoogleDataWrapper, JSONDataWrapper, C3DataWrapper, HTMLTableDataWrapper }
