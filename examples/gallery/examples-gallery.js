@@ -153,17 +153,13 @@ function googleCore(Klass, data, chartId, buttonId) {
 
 	resizeChart()  // initial draw
 
-	// Resizing; thanks, http://stackoverflow.com/a/23594901
+	// Handle resizing when the viewport size changes
+	// Ta for initial idea: http://stackoverflow.com/a/23594901
 	function resizeChart() {
 		chart.draw(data, googleOptions)
 	}
-	if (document.addEventListener) {
-		window.addEventListener('resize', resizeChart)
-	} else if (document.attachEvent) {  // TODO can be removed now?
-		window.attachEvent('onresize', resizeChart)
-	} else {
-		window.resize = resizeChart
-	}
+
+	window.addEventListener('resize', resizeChart)
 
 	// Wire up to AudioChart
 	// TODO DRY
