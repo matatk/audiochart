@@ -40,18 +40,13 @@ function drawChart() {
 	// Trigger an initial draw
 	resizeChart()
 
-	// Handle resizing when the viewport size changes ([thanks asgallant of StackOverflow](http://stackoverflow.com/a/23594901))
+	// Handle resizing when the viewport size changes
+	// Ta for initial idea: http://stackoverflow.com/a/23594901
 	function resizeChart() {
 		chart.draw(data, chartOptions)
 	}
 
-	if (document.addEventListener) {
-		window.addEventListener('resize', resizeChart)
-	} else if (document.attachEvent) {
-		window.attachEvent('onresize', resizeChart)
-	} else {
-		window.resize = resizeChart
-	}
+	window.addEventListener('resize', resizeChart)
 
 	// ## AudioChart Stuff
 
