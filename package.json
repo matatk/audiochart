@@ -25,7 +25,7 @@
     "pretest": "npm run lint",
     "test": "karma start",
     "test:ci": "npm run test -- --browsers ChromeHeadless --reporters dots",
-    "preuglify": "mkdirp lib && node scripts/src-cat",
+    "preuglify": "mkdirp lib && rollup -f es -o src/audiochart-all.js src/AudioChart.js",
     "uglify": "uglifyjs --verbose --warn --compress --mangle --source-map=\"includeSources,url='audiochart.min.js.map'\" --output lib/audiochart.min.js src/audiochart-all.js && rimraf src/audiochart-all.js"
   },
   "devDependencies": {
@@ -46,6 +46,7 @@
     "mkdirp": "~0.5",
     "replace-in-file": "~3.0",
     "rimraf": "~2.6",
+    "rollup": "~0.51",
     "uglify-es": "~3.1"
   }
 }

@@ -3,4 +3,4 @@ coverage/
 lib/
 doc/
 audiochart.master/
-scripts/production-iife-and-exports.js
+src/audiochart-all.js
