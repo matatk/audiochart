@@ -32,7 +32,7 @@
     "c3": "~0.4",
     "copyfiles": "~1.2",
     "docco": "~0.7",
-    "eslint": "~4.11",
+    "eslint": "~4.12",
     "husky": "~0.14",
     "jasmine-core": "~2.8",
     "jsdoc": "~3.5",
@@ -46,6 +46,6 @@
     "mkdirp": "~0.5",
     "replace-in-file": "~3.0",
     "rimraf": "~2.6",
-    "uglify-es": "~3.1"
+    "uglify-es": "~3.2"
   }
 }

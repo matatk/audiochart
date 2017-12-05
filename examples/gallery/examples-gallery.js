@@ -56,12 +56,9 @@ function makePartialOptions() {
 		// Fill in 'type'
 		// Fill in 'data' and 'chart'
 		//  or 'htmlDocument' and 'htmlTableId'
-		'duration':
-		parseInt(document.getElementById('opt-duration').value) * 1000,
-		'frequencyLow':
-		document.getElementById('opt-freq-low').valueAsNumber,
-		'frequencyHigh':
-		document.getElementById('opt-freq-high').valueAsNumber
+		'duration': parseInt(document.getElementById('opt-duration').value) * 1000,
+		'frequencyLow': document.getElementById('opt-freq-low').valueAsNumber,
+		'frequencyHigh': document.getElementById('opt-freq-high').valueAsNumber
 	}
 }
 
@@ -91,43 +88,54 @@ function updateDurationOption(newDuration) {
 // Generating data for the charts
 //
 
-function dataHorizontalLine() {
-	const MIN = 0
-	const MAX = 1
-	const DELTA = 0.1
-	const results = []
-	let index = 0
-	for( let i = MIN; i <= MAX; i = i + DELTA ) {
-		results[index] = [i, 42]
-		index++
-	}
-	return results
+function dataSimpleAxis(stops) {
+	return Array.from({length: stops}, (_, i) => i)
+}
+
+function dataHorizontalLine(stops, value) {
+	const delta = stops ? (1 / stops) : 0.1
+	const y = value ? value : 42
+	return _dataCore(0, 1, delta, () => y)
 }
 
 function dataGradient() {
-	const MIN = 0
-	const MAX = 1
-	const DELTA = 0.01
+	return _dataCore(0, 1, 0.01, x => x)
+}
+
+function dataSine() {
+	return _dataTrig(Math.sin)
+}
+
+function dataCosine() {
+	return _dataTrig(Math.cos)
+}
+
+function dataTrigAxis() {
+	return _dataTrig(x => x)
+}
+
+function _dataTrig(callback) {
+	return _dataCore(-Math.PI, Math.PI, 0.01, callback)
+}
+
+function _dataCore(min, max, delta, callback) {
 	const results = []
 	let index = 0
-	for( let i = MIN; i <= MAX; i += DELTA ) {
-		results[index] = [i, i]
+	for(let i = min; i <= max; i = i + delta) {
+		results[index] = callback(i)
 		index++
 	}
 	return results
 }
 
-function dataSine() {
-	const MIN = -Math.PI
-	const MAX = Math.PI
-	const DELTA = 0.01
-	const results = []
-	let index = 0
-	for( let i = MIN; i <= MAX; i = i + DELTA ) {
-		results[index] = [i, Math.sin(i)]
-		index++
-	}
-	return results
+function zip() {
+	// Assumes all arrays are of the same length
+	const arrays = [...arguments]
+	return arrays[0].map((item, i) => {
+		return arrays.map(array => {
+			return array[i]
+		})
+	})
 }
 
 
@@ -182,16 +190,12 @@ function googleCore(Klass, data, chartId, buttonId) {
 // Core C3 drawing code
 //
 
-function makeC3Data(func, seriesName) {
-	const rawData = func()
-	const x = rawData.map((pair) => pair[0])
-	const values = rawData.map((pair) => pair[1])
-
+function makeC3Data(seriesName, seriesValues, xValues) {
 	return {
 		x: 'x',
 		columns: [
-			[seriesName].concat(values),
-			['x'].concat(x)
+			[seriesName].concat(seriesValues),
+			['x'].concat(xValues)
 		],
 		selection: {
 			enabled: true
@@ -248,30 +252,50 @@ function c3Core(data, chartId, buttonId, extraChartOptions) {
 
 function drawHorizontalLine() {
 	const data = new google.visualization.DataTable()
-	data.addColumn('number', 'blah')
-	data.addColumn('number', 'blah')
-	data.addRows(dataHorizontalLine())
+	data.addColumn('number', 'X')
+	data.addColumn('number', 'Line')
+	const rows = zip(dataSimpleAxis(10), dataHorizontalLine())
+	data.addRows(rows)
 	googleLineCore(data, 'chart-google-horizontal-line', 'btn-google-horizontal-line')
 }
 
 function drawGradient() {
+	const gradient = dataGradient()
+	const xValues = dataSimpleAxis(gradient.length)
+
 	const data = new google.visualization.DataTable()
-	data.addColumn('number', 'blah')
-	data.addColumn('number', 'blah')
-	data.addRows(dataGradient())
+	data.addColumn('number', 'X')
+	data.addColumn('number', 'Gradient')
+	data.addRows(zip(xValues, gradient))
 	googleLineCore(data, 'chart-google-gradient', 'btn-google-gradient')
 
-	c3Core(makeC3Data(dataGradient, 'Gradient'), 'chart-c3-gradient', 'btn-c3-gradient')
+	c3Core(makeC3Data('Gradient', gradient, xValues), 'chart-c3-gradient', 'btn-c3-gradient')
+}
+
+function drawHorizontalLineAndGradient() {
+	const line = dataHorizontalLine(100, 0.5)
+	const gradient = dataGradient()
+	const xValues = dataSimpleAxis(100)
+
+	const data = new google.visualization.DataTable()
+	data.addColumn('number', 'X')
+	data.addColumn('number', 'Line')
+	data.addColumn('number', 'Gradient')
+	data.addRows(zip(xValues, line, gradient))
+	googleLineCore(data, 'chart-google-line-and-gradient', 'btn-google-line-and-gradient')
 }
 
 function drawSine() {
+	const sine = dataSine()
+	const xValues = dataTrigAxis()
+
 	const data = new google.visualization.DataTable()
 	data.addColumn('number', 'Radians')
 	data.addColumn('number', 'Sine')
-	data.addRows(dataSine())
+	data.addRows(zip(xValues, sine))
 	googleLineCore(data, 'chart-google-sine', 'btn-google-sine')
 
-	c3Core(makeC3Data(dataSine, 'Sine'), 'chart-c3-sine', 'btn-c3-sine', {
+	c3Core(makeC3Data('Sine', sine, xValues), 'chart-c3-sine', 'btn-c3-sine', {
 		axis: {
 			x: {
 				tick: {
@@ -315,11 +339,11 @@ function drawSalesAnnotated() {
 	const data = new google.visualization.DataTable()
 	data.addColumn('string', 'Month') // Implicit domain label col.
 	data.addColumn('number', 'Sales') // Implicit series 1 data col.
-	data.addColumn({type: 'number', role: 'interval'})
-	data.addColumn({type: 'number', role: 'interval'})
-	data.addColumn({type: 'string', role: 'annotation'})
-	data.addColumn({type: 'string', role: 'annotationText'})
-	data.addColumn({type: 'boolean',role: 'certainty'})
+	data.addColumn({type: 'number',  role: 'interval'})
+	data.addColumn({type: 'number',  role: 'interval'})
+	data.addColumn({type: 'string',  role: 'annotation'})
+	data.addColumn({type: 'string',  role: 'annotationText'})
+	data.addColumn({type: 'boolean', role: 'certainty'})
 	data.addRows([
 		['April',1000,  900, 1100,  'A','Stolen data', true],
 		['May',  1170, 1000, 1200,  'B','Coffee spill', true],
@@ -327,6 +351,19 @@ function drawSalesAnnotated() {
 		['July', 1030, null, null, null, null, false]
 	])
 	googleLineCore(data, 'chart-google-sales-annotated', 'btn-google-sales-annotated')
+}
+
+function drawSineAndCosine() {
+	const sine = dataSine()
+	const cosine = dataCosine()
+	const xValues = dataTrigAxis()
+
+	const data = new google.visualization.DataTable()
+	data.addColumn('number', 'Radians')
+	data.addColumn('number', 'Sine')
+	data.addColumn('number', 'Cosine')
+	data.addRows(zip(xValues, sine, cosine))
+	googleLineCore(data, 'chart-google-sine-cosine', 'btn-google-sine-cosine')
 }
 
 
@@ -391,6 +428,8 @@ function init() {
 	drawSine()
 	drawSalesLineAndBar()
 	drawSalesAnnotated()
+	drawHorizontalLineAndGradient()
+	drawSineAndCosine()
 
 	initJSON()
 	initHTML()
