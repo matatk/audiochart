@@ -1,8 +1,8 @@
 'use strict'
 /* global dataWrappersTestCore GoogleDataWrapper */
 
-const testOne = [[0, 2], [1, 3], [2, 3], [3, 4]]
-const testNeg = [[0, 20], [1, -10], [2, 0], [3, 8], [4, -90]]
+const testOne = [['', 'Test'], [0, 2], [1, 3], [2, 3], [3, 4]]
+const testNeg = [['', 'Test'], [0, 20], [1, -10], [2, 0], [3, 8], [4, -90]]
 
 class FakeGoogleDataTable {
 	constructor(table) {
@@ -10,19 +10,19 @@ class FakeGoogleDataTable {
 	}
 
 	getValue(rowIndex, columnIndex) {
-		return this.table[rowIndex][columnIndex]
+		return this.table[rowIndex + 1][columnIndex]
 	}
 
 	getNumberOfColumns() {
-		return 2
+		return this.table[0].length
 	}
 
 	getNumberOfRows() {
-		return this.table.length
+		return this.table.length - 1
 	}
 
 	getColumnLabel(columnIndex) {
-		return 'Test'
+		return this.table[0][columnIndex + 1]
 	}
 
 	getColumnRange(columnIndex) {
@@ -33,10 +33,10 @@ class FakeGoogleDataTable {
 			}
 		}
 
-		let min = this.table[0][columnIndex]
-		let max = this.table[0][columnIndex]
+		let min = this.table[1][columnIndex]
+		let max = this.table[1][columnIndex]
 		const ref = this.table
-		for (let i = 0, len = ref.length; i < len; i++) {
+		for (let i = 1, len = ref.length; i < len; i++) {
 			const row = ref[i]
 			const value = row[columnIndex]
 			if (min > value) {
