@@ -10,7 +10,8 @@ describe('HTMLTableDataWrapper', () => {
 	dataWrappersTestCore(
 		'HTMLTableDataWrapper (data wrapper core)',
 		new HTMLTableDataWrapper(document.getElementById('testOne')),
-		new HTMLTableDataWrapper(document.getElementById('testNeg')))
+		new HTMLTableDataWrapper(document.getElementById('testNeg')),
+		new HTMLTableDataWrapper(document.getElementById('testTwo')))
 
 	it('Throws when a null table is given', () => {
 		expect(() => {

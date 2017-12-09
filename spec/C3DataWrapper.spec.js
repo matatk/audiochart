@@ -9,11 +9,19 @@ const c3TestOne = {
 
 const c3TestNeg = {
 	columns: [
-		['Test', 20, -10, 0, 8, -90]
+		['Test', 20, -10, 0, 8, -90],
+	]
+}
+
+const c3TestTwo = {
+	columns: [
+		['Test1', 20, -10, 0, 8, -90],
+		['Test2', 42, 72, -42, -8, 0]
 	]
 }
 
 dataWrappersTestCore(
 	'C3DataWrapper',
 	new C3DataWrapper(c3TestOne),
-	new C3DataWrapper(c3TestNeg))
+	new C3DataWrapper(c3TestNeg),
+	new C3DataWrapper(c3TestTwo))

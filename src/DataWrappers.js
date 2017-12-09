@@ -216,7 +216,7 @@ class HTMLTableDataWrapper {
 
 	_seriesFloats(series) {
 		return Array.from(
-			this.table.getElementsByTagName('td'),
+			this.table.querySelectorAll(`td:nth-child(${series + 1})`),
 			(cell) => parseFloat(cell.textContent))
 	}
 

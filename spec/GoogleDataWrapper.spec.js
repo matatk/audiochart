@@ -1,8 +1,28 @@
 'use strict'
 /* global dataWrappersTestCore GoogleDataWrapper */
 
-const testOne = [['', 'Test'], [0, 2], [1, 3], [2, 3], [3, 4]]
-const testNeg = [['', 'Test'], [0, 20], [1, -10], [2, 0], [3, 8], [4, -90]]
+const testOne = [
+	['', 'Test'],
+	[ 0,      2],
+	[ 1,      3],
+	[ 2,      3],
+	[ 3,      4]]
+
+const testNeg = [
+	['', 'Test'],
+	[ 0,     20],
+	[ 1,    -10],
+	[ 2,      0],
+	[ 3,      8],
+	[ 4,    -90]]
+
+const testTwo = [
+	['', 'Test1', 'Test2'],
+	[ 0,      20,      42],
+	[ 1,     -10,      72],
+	[ 2,       0,     -42],
+	[ 3,       8,      -8],
+	[ 4,     -90,       0]]
 
 class FakeGoogleDataTable {
 	constructor(table) {
@@ -35,17 +55,20 @@ class FakeGoogleDataTable {
 
 		let min = this.table[1][columnIndex]
 		let max = this.table[1][columnIndex]
-		const ref = this.table
-		for (let i = 1, len = ref.length; i < len; i++) {
-			const row = ref[i]
+
+		for (let i = 1; i < this.table.length; i++) {
+			const row = this.table[i]
 			const value = row[columnIndex]
+
 			if (min > value) {
 				min = value
 			}
+
 			if (max < value) {
 				max = value
 			}
 		}
+
 		return {
 			min: min,
 			max: max
@@ -56,4 +79,5 @@ class FakeGoogleDataTable {
 dataWrappersTestCore(
 	'GoogleDataWrapper',
 	new GoogleDataWrapper(new FakeGoogleDataTable(testOne)),
-	new GoogleDataWrapper(new FakeGoogleDataTable(testNeg)))
+	new GoogleDataWrapper(new FakeGoogleDataTable(testNeg)),
+	new GoogleDataWrapper(new FakeGoogleDataTable(testTwo)))
