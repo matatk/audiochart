@@ -94,13 +94,22 @@ class AudioChart {
 		// values, return appropriate values, or if they throw an exception.
 		//
 		// The thing blocking this is that I don't know how to stub out global
-		// ES6 classes *or* how to run each test via Karma in an isolated
-		// environment where I can mock those global classes.
+		// ES6 classes/functions *or* how to run each test via Karma in an
+		// isolated environment where I can mock those global classes.
 		//
 		// TODO, as per https://github.com/matatk/audiochart/issues/37
 
+		// Testing this separately allows us to check the options-checking code
+		// without having to pass in functioning source data objects.
 		AudioChart._checkOptions(options)
+
+		// This is not currently tested; to mitigate, it doesn't make decisions.
+		// Actually, it does call _assignWrapperCallback() but that /is/ tested.
 		this._wireUpStuff(context, options)
+
+		// Re _assignWrapperCallback(): that is also tested separately to avoid
+		// the need for very detailed mocks for the data sources.
+
 		this._options = Object.freeze(options)
 	}
 
