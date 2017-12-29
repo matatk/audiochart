@@ -1,7 +1,7 @@
 'use strict'
-/* global WebAudioSounder */
+/* global Sounder */
 
-describe('WebAudioSounder', () => {
+describe('Sounder', () => {
 	class FakeOscillator {
 		constructor() {
 			this.frequency = {
@@ -33,12 +33,12 @@ describe('WebAudioSounder', () => {
 	})
 
 	it('has no oscillator to start with', () => {
-		const sounder = new WebAudioSounder(fakeAudioContext)
+		const sounder = new Sounder(fakeAudioContext)
 		expect(sounder.oscillator).not.toBeDefined()
 	})
 
 	it('[TODO] connects and starts its oscillator', () => {
-		const sounder = new WebAudioSounder(fakeAudioContext)
+		const sounder = new Sounder(fakeAudioContext)
 		sounder.start()
 		const fakeOscillator = sounder.oscillator
 		spyOn(fakeOscillator, 'connect')
@@ -50,7 +50,7 @@ describe('WebAudioSounder', () => {
 
 	it('changes frequency', () => {
 		let fakeOscillator = null
-		const sounder = new WebAudioSounder(fakeAudioContext)
+		const sounder = new Sounder(fakeAudioContext)
 		jasmine.clock().install()
 		sounder.start()
 		fakeOscillator = sounder.oscillator
@@ -62,7 +62,7 @@ describe('WebAudioSounder', () => {
 	})
 
 	it('stops its oscillator', () => {
-		const sounder = new WebAudioSounder(fakeAudioContext)
+		const sounder = new Sounder(fakeAudioContext)
 		sounder.start()
 		const fakeOscillator = sounder.oscillator
 		spyOn(fakeOscillator, 'stop')
@@ -71,7 +71,7 @@ describe('WebAudioSounder', () => {
 	})
 
 	it('creates a new oscillator after the previous one has been stopped', () => {
-		const sounder = new WebAudioSounder(fakeAudioContext)
+		const sounder = new Sounder(fakeAudioContext)
 		sounder.start()
 		const fakeOscillator1 = sounder.oscillator
 		sounder.stop()

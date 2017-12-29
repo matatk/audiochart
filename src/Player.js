@@ -4,7 +4,7 @@
  * @param {integer} duration - the length of the rendering in milliseconds
  * @param {DataWrapper} data - the underlying data (wrapped in interface)
  * @param {PitchMapper} pitchMapper - maps data to pitches
- * @param {WebAudioSounder} sounder - the sounder object
+ * @param {Sounder} sounder - the sounder object
  * @param {VisualCallback} visualCallback - the callback function that highlights the current datum
  */
 class Player {

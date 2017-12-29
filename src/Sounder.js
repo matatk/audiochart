@@ -3,7 +3,7 @@
  * @private
  * @param {AudioContext} context - the Web Audio API context
  */
-class WebAudioSounder {
+class Sounder {
 	constructor(context) {
 		this.context = context
 	}

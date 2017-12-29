@@ -1,6 +1,6 @@
 /** @module */
 /* exported AudioChart */
-/* global getAudioContext FrequencyPitchMapper WebAudioSounder Player KeyboardHandler GoogleDataWrapper googleVisualCallbackMaker JSONDataWrapper HTMLTableDataWrapper htmlTableVisualCallbackMaker C3DataWrapper c3VisualCallbackMaker */
+/* global getAudioContext FrequencyPitchMapper Sounder Player KeyboardHandler GoogleDataWrapper googleVisualCallbackMaker JSONDataWrapper HTMLTableDataWrapper htmlTableVisualCallbackMaker C3DataWrapper c3VisualCallbackMaker */
 
 /**
  * Array index number (starts at zero).
@@ -173,7 +173,7 @@ class AudioChart {
 			options.frequencyLow,
 			options.frequencyHigh)
 
-		const sounder = new WebAudioSounder(context)
+		const sounder = new Sounder(context)
 
 		this.player = new Player(
 			options.duration,
