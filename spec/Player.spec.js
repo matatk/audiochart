@@ -1,19 +1,6 @@
 'use strict'
 /* global Player */
 
-describe('Player sampling rate and interval', () => {
-	it('calculates the correct sampling rates and intervals', () => {
-		expect(Player._samplingInfo(1000,  50)).toEqual(
-			{ sample: 1, in: 1, interval: 20 })
-		expect(Player._samplingInfo(1000, 100)).toEqual(
-			{ sample: 1, in: 1, interval: 10 })
-		expect(Player._samplingInfo(1000, 629)).toEqual(
-			{ sample: 1, in: 6, interval: 10 })
-		expect(Player._samplingInfo(1000, 250)).toEqual(
-			{ sample: 1, in: 3, interval: 10 })
-	})
-})
-
 class BaseFakeDataWrapper {
 	numSeries() {
 		return 1
@@ -32,6 +19,13 @@ class BaseFakeDataWrapper {
 class ShortFakeDataWrapper extends BaseFakeDataWrapper {
 	seriesLength(series) {
 		return 4
+	}
+}
+
+
+class ShortTwoSeriesFakeDataWrapper extends ShortFakeDataWrapper {
+	seriesNames() {
+		return ['Test1', 'Test2']
 	}
 }
 
@@ -246,7 +240,85 @@ function mixinDataWrapper(message, TestDataClass, testDuration, testCallCount, t
 }
 
 
+function twoSeries() {
+	describe('Playing two-series data', () => {
+		const testDuration = 1000
+		const testCallCount = 4
+
+		let fakeData = null
+		let fakeMapper = null
+		let fakeSounder1 = null
+		let fakeSounder2 = null
+		let player = null
+
+		beforeEach(() => {
+			fakeData = new ShortTwoSeriesFakeDataWrapper()
+			fakeMapper = new FakeMapper()
+			fakeSounder1 = new FakeSounder()
+			fakeSounder2 = new FakeSounder()
+			player = new Player(testDuration, fakeData, fakeMapper, fakeSounder1)
+			jasmine.clock().install()
+		})
+
+		afterEach(() => {
+			jasmine.clock().uninstall()
+		})
+
+		it('starts the sounder', () => {
+			spyOn(fakeSounder1, 'start')
+			player.playPause()
+			jasmine.clock().tick(testDuration)
+			expect(fakeSounder1.start.calls.count()).toBe(1)
+		})
+
+		it('stops the sounder', () => {
+			spyOn(fakeSounder1, 'stop')
+			player.playPause()
+			jasmine.clock().tick(testDuration)
+			expect(fakeSounder1.stop.calls.count()).toBe(1)
+		})
+
+		it('makes the correct number of map calls', () => {
+			spyOn(fakeMapper, 'map')
+			player.playPause()
+			jasmine.clock().tick(testDuration)
+			expect(fakeMapper.map.calls.count()).toBe(testCallCount)
+		})
+
+		it('makes the right number of calls to the sounder', () => {
+			spyOn(fakeSounder1, 'frequency')
+			player.playPause()
+			jasmine.clock().tick(testDuration)
+			expect(fakeSounder1.frequency.calls.count()).toBe(testCallCount)
+		})
+
+		it('calls the sounder with the correct arguments each time', () => {
+			spyOn(fakeSounder1, 'frequency')
+			player.playPause()
+			jasmine.clock().tick(testDuration)
+			expect(fakeSounder1.frequency.calls.allArgs()).toEqual(expectedFrequencyCalls(testCallCount))
+		})
+
+		// it('updates the sound (and visual cursor) when stepped backward whilst paused', () => {
+		// it('updates the sound (and visual cursor) when stepped forward whilst paused', () => {
+	})
+}
+
+
 describe('Player', () => {
+	describe('Sampling rate and interval', () => {
+		it('calculates the correct sampling rates and intervals', () => {
+			expect(Player._samplingInfo(1000,  50)).toEqual(
+				{ sample: 1, in: 1, interval: 20 })
+			expect(Player._samplingInfo(1000, 100)).toEqual(
+				{ sample: 1, in: 1, interval: 10 })
+			expect(Player._samplingInfo(1000, 629)).toEqual(
+				{ sample: 1, in: 6, interval: 10 })
+			expect(Player._samplingInfo(1000, 250)).toEqual(
+				{ sample: 1, in: 3, interval: 10 })
+		})
+	})
+
 	// With 'long' intervals
 	mixinDataWrapper('instantiated with short fake data source for 5000ms', ShortFakeDataWrapper, 5000, 4, 1250)
 	mixinDataWrapper('instantiated with short fake data source for 3000ms', ShortFakeDataWrapper, 3000, 4, 750)
@@ -256,4 +328,7 @@ describe('Player', () => {
 	// With minimum intervals
 	mixinDataWrapper('instantiated with long fake data source for 500ms', LongFakeDataWrapper, 500, 50, 10)
 	mixinDataWrapper('instantiated with long fake data source for 500ms', LongFakeDataWrapper, 100, 10, 10)
+
+	// Playing back two-series data
+	twoSeries()
 })
