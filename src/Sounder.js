@@ -4,8 +4,18 @@
  * @param {AudioContext} context - the Web Audio API context
  */
 class Sounder {
-	constructor(context) {
+	constructor(context, numSeries) {
+		if (context === undefined) {
+			throw Error('No audio context given')
+		}
 		this.context = context
+
+		if (numSeries === undefined) {
+			throw Error('No number of data series given')
+		} else if (numSeries > 2) {
+			throw Error('Large number of data series given')
+		}
+		this.numSeries = numSeries
 	}
 
 	/**

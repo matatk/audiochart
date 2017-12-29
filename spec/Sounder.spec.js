@@ -32,13 +32,31 @@ describe('Sounder', () => {
 		fakeAudioContext = new FakeAudioContext()
 	})
 
+	it('throws when no context is specified', () => {
+		expect(() => {
+			new Sounder()
+		}).toThrow(Error('No audio context given'))
+	})
+
+	it('throws when no number of series is given', () => {
+		expect(() => {
+			new Sounder(fakeAudioContext)
+		}).toThrow(Error('No number of data series given'))
+	})
+
+	it('throws when a large number of series is given', () => {
+		expect(() => {
+			new Sounder(fakeAudioContext, 3)
+		}).toThrow(Error('Large number of data series given'))
+	})
+
 	it('has no oscillator to start with', () => {
-		const sounder = new Sounder(fakeAudioContext)
+		const sounder = new Sounder(fakeAudioContext, 1)
 		expect(sounder.oscillator).not.toBeDefined()
 	})
 
 	it('[TODO] connects and starts its oscillator', () => {
-		const sounder = new Sounder(fakeAudioContext)
+		const sounder = new Sounder(fakeAudioContext, 1)
 		sounder.start()
 		const fakeOscillator = sounder.oscillator
 		spyOn(fakeOscillator, 'connect')
@@ -50,7 +68,7 @@ describe('Sounder', () => {
 
 	it('changes frequency', () => {
 		let fakeOscillator = null
-		const sounder = new Sounder(fakeAudioContext)
+		const sounder = new Sounder(fakeAudioContext, 1)
 		jasmine.clock().install()
 		sounder.start()
 		fakeOscillator = sounder.oscillator
@@ -62,7 +80,7 @@ describe('Sounder', () => {
 	})
 
 	it('stops its oscillator', () => {
-		const sounder = new Sounder(fakeAudioContext)
+		const sounder = new Sounder(fakeAudioContext, 1)
 		sounder.start()
 		const fakeOscillator = sounder.oscillator
 		spyOn(fakeOscillator, 'stop')
@@ -71,7 +89,7 @@ describe('Sounder', () => {
 	})
 
 	it('creates a new oscillator after the previous one has been stopped', () => {
-		const sounder = new Sounder(fakeAudioContext)
+		const sounder = new Sounder(fakeAudioContext, 1)
 		sounder.start()
 		const fakeOscillator1 = sounder.oscillator
 		sounder.stop()

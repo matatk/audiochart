@@ -23,7 +23,7 @@ class PitchMapper {
 	 * @abstract
 	 */
 	map(datum) {
-		throw new Error('Base map() must be overriden.')
+		throw Error('Base map() must be overriden.')
 	}
 }
 

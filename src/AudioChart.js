@@ -160,9 +160,7 @@ class AudioChart {
 	 */
 	_wireUpStuff(context, options) {
 		const assigned = AudioChart._assignWrapperCallback(options)
-
 		const dataWrapper = new assigned.WrapperClass(assigned.dataSource)
-
 		const callback = assigned.visualCallback
 
 		const frequencyPitchMapper = new FrequencyPitchMapper(
@@ -171,7 +169,7 @@ class AudioChart {
 			options.frequencyLow,
 			options.frequencyHigh)
 
-		const sounder = new Sounder(context)
+		const sounder = new Sounder(context, 1)
 
 		this.player = new Player(
 			options.duration,
