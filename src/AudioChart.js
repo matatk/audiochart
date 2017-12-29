@@ -26,11 +26,9 @@
 
 /**
  * @typedef {Object} WrapperAndCallbackResults
- * @property {Function} Wrapper - the data wrapper function
- * @property {Object|HTMLTableElement} parameter
- *	the rendered chart, or HTML table
- * @property {VisualCallback} callback
- *	if requested by the user, a callback is created and returned
+ * @property {Class} WrapperClass - the data wrapper class
+ * @property {Object|HTMLTableElement} dataSource - the data source to wrap
+ * @property {VisualCallback} visualCallback - created if requested by the user
  */
 
 /** Main object for API consumers */
@@ -161,11 +159,11 @@ class AudioChart {
 	 * @param {AudioChartOptions} options - given by the user
 	 */
 	_wireUpStuff(context, options) {
-		const result = AudioChart._assignWrapperCallback(options)
+		const assigned = AudioChart._assignWrapperCallback(options)
 
-		const dataWrapper = new result.Wrapper(result.parameter)
+		const dataWrapper = new assigned.WrapperClass(assigned.dataSource)
 
-		const callback = result.callback
+		const callback = assigned.visualCallback
 
 		const frequencyPitchMapper = new FrequencyPitchMapper(
 			dataWrapper.seriesMin(0),
@@ -194,15 +192,14 @@ class AudioChart {
 	 * should be used with this chart.
 	 * @param {AudioChartOptions} options - given by the user
 	 * @returns {WrapperAndCallbackResults}
-	 *	- data wrapper, data wrapper parameter and callback (if applicable)
-	 *	  for this chart
+	 *	- data wrapper, data source and callback (if applicable) for this chart
 	 * @private
 	 */
 	static _assignWrapperCallback(options) {
 		const result = {
-			'Wrapper': null,
-			'parameter': null,
-			'callback': null
+			'WrapperClass': null,
+			'dataSource': null,
+			'visualCallback': null
 		}
 
 		const chartTypeToWrapperClass = {
@@ -221,19 +218,19 @@ class AudioChart {
 			case 'google':
 			case 'json':
 			case 'c3':
-				result.Wrapper = chartTypeToWrapperClass[options.type]
-				result.parameter = options.data
+				result.WrapperClass = chartTypeToWrapperClass[options.type]
+				result.dataSource = options.data
 				if (options.hasOwnProperty('chart')) {
-					result.callback =
+					result.visualCallback =
 						chartTypeToVisualCallbackMaker[options.type](
 							options.chart)
 				}
 				break
 			case 'htmlTable':
-				result.Wrapper = HTMLTableDataWrapper
-				result.parameter = options.table
+				result.WrapperClass = HTMLTableDataWrapper
+				result.dataSource = options.table
 				if (options.hasOwnProperty('highlightClass')) {
-					result.callback = htmlTableVisualCallbackMaker(
+					result.visualCallback = htmlTableVisualCallbackMaker(
 						options.table,
 						options.highlightClass)
 				}
