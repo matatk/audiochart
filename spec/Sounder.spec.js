@@ -50,9 +50,12 @@ describe('Sounder', () => {
 		}).toThrow(Error('Large number of data series given'))
 	})
 
-	it('has no oscillator to start with', () => {
+	it('creates an oscillator when started', () => {
+		spyOn(fakeAudioContext, 'createOscillator').and.callThrough()
 		const sounder = new Sounder(fakeAudioContext, 1)
 		expect(sounder.oscillator).not.toBeDefined()
+		sounder.start()
+		expect(fakeAudioContext.createOscillator.calls.count()).toBe(1)
 	})
 
 	it('[TODO] connects and starts its oscillator', () => {
