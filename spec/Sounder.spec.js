@@ -70,11 +70,10 @@ describe('Sounder', () => {
 	})
 
 	it('changes frequency', () => {
-		let fakeOscillator = null
 		const sounder = new Sounder(fakeAudioContext, 1)
 		jasmine.clock().install()
 		sounder.start()
-		fakeOscillator = sounder.oscillator
+		const fakeOscillator = sounder.oscillator
 		expect(fakeOscillator.frequency.value).toBe(0)
 		sounder.frequency(42)
 		jasmine.clock().tick(1)
