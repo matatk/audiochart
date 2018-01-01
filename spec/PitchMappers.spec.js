@@ -24,6 +24,18 @@ function mixinMinMax(Klass) {
 			maximumFrequency: 0
 		}]
 
+		const twoSeriesBad = [{
+			minimumDatum: -4,
+			maximumDatum: 2,
+			minimumFrequency: 0,
+			maximumFrequency: 100
+		}, {
+			minimumDatum: 100,
+			maximumDatum: -100,
+			minimumFrequency: 400,
+			maximumFrequency: 800
+		}]
+
 		const twoSeriesGood = [{
 			minimumDatum: -4,
 			maximumDatum: 2,
@@ -53,6 +65,18 @@ function mixinMinMax(Klass) {
 				new Klass(singleSeriesGood)
 			}).not.toThrow()
 		})
+
+		it("throws when there's an error with the second series' info", () => {
+			expect(() => {
+				new Klass(twoSeriesBad)
+			}).toThrow()
+		})
+
+		it("doesn't throw when both series are OK", () => {
+			expect(() => {
+				new Klass(twoSeriesGood)
+			}).not.toThrow()
+		})
 	})
 }
 
@@ -72,6 +96,24 @@ describe('FrequencyPitchMapper', () => {
 			expect(fm.map(0, 0)).toBe(100)
 			expect(fm.map(0, 42)).toBe(1000)
 			expect(fm.map(0, 21)).toBe(550)
+		})
+
+		it('with second series data from 0 to 42 and frequencies from 0 to 1000', () => {
+			const fm = new FrequencyPitchMapper([{
+				minimumDatum: 0,
+				maximumDatum: 1,
+				minimumFrequency: 0,
+				maximumFrequency: 1
+			}, {
+				minimumDatum: 0,
+				maximumDatum: 42,
+				minimumFrequency: 100,
+				maximumFrequency: 1000
+			}])
+
+			expect(fm.map(1, 0)).toBe(100)
+			expect(fm.map(1, 42)).toBe(1000)
+			expect(fm.map(1, 21)).toBe(550)
 		})
 
 		it('with data from 0 to 100 and frequencies from 0 to 100', () => {

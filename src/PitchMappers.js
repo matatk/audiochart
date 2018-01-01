@@ -13,22 +13,34 @@ class PitchMapper {
 	 * @param {string} seriesInfo[].maximumFrequency - maximun frequency
 	 */
 	constructor(seriesInfo) {
-		const series = seriesInfo[0]
+		// Store the info for all series
+		this._minimumDatum = []
+		this._maximumDatum = []
+		this._minimumFrequency = []
+		this._maximumFrequency = []
+		this._dataRange = []
+		this._frequencyRange = []
 
-		if (series.maximumDatum < series.minimumDatum) {
-			throw Error('minimum datum should be <= maximum datum')
-		}
+		seriesInfo.forEach((series, index) => {
+			if (series.maximumDatum < series.minimumDatum) {
+				throw Error('minimum datum should be <= maximum datum')
+			}
 
-		if (series.maximumFrequency < series.minimumFrequency) {
-			throw Error('minimum frequency should be <= maximum frequency')
-		}
+			if (series.maximumFrequency < series.minimumFrequency) {
+				throw Error('minimum frequency should be <= maximum frequency')
+			}
 
-		this._minimumDatum = series.minimumDatum
-		this._maximumDatum = series.maximumDatum
-		this._minimumFrequency = series.minimumFrequency
-		this._maximumFrequency = series.maximumFrequency
-		this._dataRange = this._maximumDatum - this._minimumDatum
-		this._frequencyRange = this._maximumFrequency - this._minimumFrequency
+			this._minimumDatum[index] = series.minimumDatum
+			this._maximumDatum[index] = series.maximumDatum
+			this._minimumFrequency[index] = series.minimumFrequency
+			this._maximumFrequency[index] = series.maximumFrequency
+
+			// Pre-calculate for performance (I expect) when mapping
+			this._dataRange[index] =
+				this._maximumDatum[index] - this._minimumDatum[index]
+			this._frequencyRange[index] =
+				this._maximumFrequency[index] - this._minimumFrequency[index]
+		})
 	}
 
 	/**
@@ -69,11 +81,13 @@ class FrequencyPitchMapper extends PitchMapper {
 	 */
 	map(series, datum) {
 		let ratio
-		if (this._dataRange) {
-			ratio = (datum - this._minimumDatum) / this._dataRange
+		if (this._dataRange[series]) {
+			ratio = (datum - this._minimumDatum[series])
+				/ this._dataRange[series]
 		} else {
 			ratio = 0.5
 		}
-		return this._minimumFrequency + (ratio * this._frequencyRange)
+		return this._minimumFrequency[series]
+			+ (ratio * this._frequencyRange[series])
 	}
 }
