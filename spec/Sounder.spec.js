@@ -53,7 +53,7 @@ describe('Sounder', () => {
 	it('creates an oscillator when started', () => {
 		spyOn(fakeAudioContext, 'createOscillator').and.callThrough()
 		const sounder = new Sounder(fakeAudioContext, 1)
-		expect(sounder.oscillator).not.toBeDefined()
+		expect(sounder._oscillator).not.toBeDefined()
 		sounder.start()
 		expect(fakeAudioContext.createOscillator.calls.count()).toBe(1)
 	})
@@ -61,7 +61,7 @@ describe('Sounder', () => {
 	it('[TODO] connects and starts its oscillator', () => {
 		const sounder = new Sounder(fakeAudioContext, 1)
 		sounder.start()
-		const fakeOscillator = sounder.oscillator
+		const fakeOscillator = sounder._oscillator
 		spyOn(fakeOscillator, 'connect')
 		spyOn(fakeOscillator, 'start')
 		// expect(fakeOscillator.connect).toHaveBeenCalledWith(fakeAudioContext.destination)
@@ -73,7 +73,7 @@ describe('Sounder', () => {
 		const sounder = new Sounder(fakeAudioContext, 1)
 		jasmine.clock().install()
 		sounder.start()
-		const fakeOscillator = sounder.oscillator
+		const fakeOscillator = sounder._oscillator
 		expect(fakeOscillator.frequency.value).toBe(0)
 		sounder.frequency(42)
 		jasmine.clock().tick(1)
@@ -84,7 +84,7 @@ describe('Sounder', () => {
 	it('stops its oscillator', () => {
 		const sounder = new Sounder(fakeAudioContext, 1)
 		sounder.start()
-		const fakeOscillator = sounder.oscillator
+		const fakeOscillator = sounder._oscillator
 		spyOn(fakeOscillator, 'stop')
 		sounder.stop()
 		expect(fakeOscillator.stop).toHaveBeenCalled()
@@ -93,10 +93,10 @@ describe('Sounder', () => {
 	it('creates a new oscillator after the previous one has been stopped', () => {
 		const sounder = new Sounder(fakeAudioContext, 1)
 		sounder.start()
-		const fakeOscillator1 = sounder.oscillator
+		const fakeOscillator1 = sounder._oscillator
 		sounder.stop()
 		sounder.start()
-		const fakeOscillator2 = sounder.oscillator
+		const fakeOscillator2 = sounder._oscillator
 		sounder.stop()
 		expect(fakeOscillator1).not.toBe(fakeOscillator2)
 	})

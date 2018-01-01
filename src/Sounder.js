@@ -8,14 +8,14 @@ class Sounder {
 		if (context === undefined) {
 			throw Error('No audio context given')
 		}
-		this.context = context
+		this._context = context
 
 		if (numSeries === undefined) {
 			throw Error('No number of data series given')
 		} else if (numSeries > 2) {
 			throw Error('Large number of data series given')
 		}
-		this.numSeries = numSeries
+		this._numSeries = numSeries
 	}
 
 	/**
@@ -23,9 +23,9 @@ class Sounder {
 	 */
 	start() {
 		// Oscillators cannot be re-used
-		this.oscillator = this.context.createOscillator()
-		this.oscillator.connect(this.context.destination)
-		this.oscillator.start(0)
+		this._oscillator = this._context.createOscillator()
+		this._oscillator.connect(this._context.destination)
+		this._oscillator.start(0)
 	}
 
 	/**
@@ -33,13 +33,13 @@ class Sounder {
 	 * @param {number} frequency - the frequency to change to
 	 */
 	frequency(frequency) {
-		this.oscillator.frequency.value = frequency
+		this._oscillator.frequency.value = frequency
 	}
 
 	/**
 	 * Stop the oscillator at a given time
 	 */
 	stop() {
-		this.oscillator.stop()
+		this._oscillator.stop()
 	}
 }
