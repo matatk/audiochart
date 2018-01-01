@@ -69,9 +69,9 @@ describe('FrequencyPitchMapper', () => {
 				maximumFrequency: 1000
 			}])
 
-			expect(fm.map(0)).toBe(100)
-			expect(fm.map(42)).toBe(1000)
-			expect(fm.map(21)).toBe(550)
+			expect(fm.map(0, 0)).toBe(100)
+			expect(fm.map(0, 42)).toBe(1000)
+			expect(fm.map(0, 21)).toBe(550)
 		})
 
 		it('with data from 0 to 100 and frequencies from 0 to 100', () => {
@@ -82,12 +82,12 @@ describe('FrequencyPitchMapper', () => {
 				maximumFrequency: 100
 			}])
 
-			expect(fm.map(0)).toBe(0)
-			expect(fm.map(21)).toBe(21)
-			expect(fm.map(42)).toBe(42)
-			expect(fm.map(50)).toBe(50)
-			expect(fm.map(70)).toBe(70)
-			expect(fm.map(100)).toBe(100)
+			expect(fm.map(0, 0)).toBe(0)
+			expect(fm.map(0, 21)).toBe(21)
+			expect(fm.map(0, 42)).toBe(42)
+			expect(fm.map(0, 50)).toBe(50)
+			expect(fm.map(0, 70)).toBe(70)
+			expect(fm.map(0, 100)).toBe(100)
 		})
 
 		it('with data from 0 to 100 and frequencies from 1 to 101', () => {
@@ -98,12 +98,12 @@ describe('FrequencyPitchMapper', () => {
 				maximumFrequency: 101
 			}])
 
-			expect(fm.map(0)).toBe(1)
-			expect(fm.map(21)).toBe(22)
-			expect(fm.map(42)).toBe(43)
-			expect(fm.map(50)).toBe(51)
-			expect(fm.map(70)).toBe(71)
-			expect(fm.map(100)).toBe(101)
+			expect(fm.map(0, 0)).toBe(1)
+			expect(fm.map(0, 21)).toBe(22)
+			expect(fm.map(0, 42)).toBe(43)
+			expect(fm.map(0, 50)).toBe(51)
+			expect(fm.map(0, 70)).toBe(71)
+			expect(fm.map(0, 100)).toBe(101)
 		})
 
 		it('with data from -100 to 0 and frequencies from 0 to 100', () => {
@@ -114,11 +114,11 @@ describe('FrequencyPitchMapper', () => {
 				maximumFrequency: 100
 			}])
 
-			expect(fm.map(-100)).toBe(0)
-			expect(fm.map(-70)).toBe(30)
-			expect(fm.map(-50)).toBe(50)
-			expect(fm.map(-20)).toBe(80)
-			expect(fm.map(0)).toBe(100)
+			expect(fm.map(0, -100)).toBe(0)
+			expect(fm.map(0, -70)).toBe(30)
+			expect(fm.map(0, -50)).toBe(50)
+			expect(fm.map(0, -20)).toBe(80)
+			expect(fm.map(0, 0)).toBe(100)
 		})
 
 		it('with data from -100 to 100 and frequencies from 0 to 100', () => {
@@ -129,11 +129,11 @@ describe('FrequencyPitchMapper', () => {
 				maximumFrequency: 100
 			}])
 
-			expect(fm.map(-100)).toBe(0)
-			expect(fm.map(-50)).toBe(25)
-			expect(fm.map(0)).toBe(50)
-			expect(fm.map(50)).toBe(75)
-			expect(fm.map(100)).toBe(100)
+			expect(fm.map(0, -100)).toBe(0)
+			expect(fm.map(0, -50)).toBe(25)
+			expect(fm.map(0, 0)).toBe(50)
+			expect(fm.map(0, 50)).toBe(75)
+			expect(fm.map(0, 100)).toBe(100)
 		})
 
 		it('with data from 42 to 42 and frequencies from 0 to 100', () => {
@@ -144,7 +144,7 @@ describe('FrequencyPitchMapper', () => {
 				maximumFrequency: 100
 			}])
 
-			expect(fm.map(42)).toBe(50)
+			expect(fm.map(0, 42)).toBe(50)
 		})
 	})
 })

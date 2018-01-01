@@ -28,6 +28,7 @@ class PitchMapper {
 		this._minimumFrequency = series.minimumFrequency
 		this._maximumFrequency = series.maximumFrequency
 		this._dataRange = this._maximumDatum - this._minimumDatum
+		this._frequencyRange = this._maximumFrequency - this._minimumFrequency
 	}
 
 	/**
@@ -61,17 +62,18 @@ class FrequencyPitchMapper extends PitchMapper {
 	}
 
 	/**
+	 * Given a datum value, compute the corresponding frequency
+	 * @param {number} series - map on which series?
 	 * @param {number} datum - the datum to be mapped
 	 * @returns {number} frequency for this datum
 	 */
-	map(datum) {
+	map(series, datum) {
 		let ratio
 		if (this._dataRange) {
 			ratio = (datum - this._minimumDatum) / this._dataRange
 		} else {
 			ratio = 0.5
 		}
-		return this._minimumFrequency +
-			ratio * (this._maximumFrequency - this._minimumFrequency)
+		return this._minimumFrequency + (ratio * this._frequencyRange)
 	}
 }
