@@ -54,7 +54,7 @@ class FakeSounder {
 function expectedFrequencyCalls(seriesLength) {
 	const out = []
 	for (let i = 0; i <= seriesLength - 1; i++) {
-		out.push([21])
+		out.push([0, 21])  // series, frequency
 	}
 	return out
 }

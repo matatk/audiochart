@@ -113,6 +113,7 @@ class Player {
 			}
 
 			this.sounder.frequency(
+				0,
 				this.pitchMapper.map(
 					this.data.seriesValue(0, this.playIndex)))
 		} else {

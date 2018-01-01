@@ -53,29 +53,30 @@ describe('Sounder', () => {
 	it('creates an oscillator when started', () => {
 		spyOn(fakeAudioContext, 'createOscillator').and.callThrough()
 		const sounder = new Sounder(fakeAudioContext, 1)
-		expect(sounder._oscillator).not.toBeDefined()
+		expect(sounder._oscillators).not.toBeDefined()
 		sounder.start()
 		expect(fakeAudioContext.createOscillator.calls.count()).toBe(1)
 	})
 
-	it('[TODO] connects and starts its oscillator', () => {
-		const sounder = new Sounder(fakeAudioContext, 1)
+	it('creates two oscillators when started with two series', () => {
+		spyOn(fakeAudioContext, 'createOscillator').and.callThrough()
+		const sounder = new Sounder(fakeAudioContext, 2)
+		expect(sounder._oscillators).not.toBeDefined()
 		sounder.start()
-		const fakeOscillator = sounder._oscillator
-		spyOn(fakeOscillator, 'connect')
-		spyOn(fakeOscillator, 'start')
-		// expect(fakeOscillator.connect).toHaveBeenCalledWith(fakeAudioContext.destination)
-		// expect(fakeOscillator.start).toHaveBeenCalledWith(0)
-		expect(true).toBe(true)
+		expect(fakeAudioContext.createOscillator.calls.count()).toBe(2)
 	})
+
+	// Note: test for 'connects and starts its oscillator' not implemented
+	//       becuase the sounder code is too tightly coupled, and it is
+	//       actually very simple and easily manually verifiable.
 
 	it('changes frequency', () => {
 		const sounder = new Sounder(fakeAudioContext, 1)
 		jasmine.clock().install()
 		sounder.start()
-		const fakeOscillator = sounder._oscillator
+		const fakeOscillator = sounder._oscillators[0]
 		expect(fakeOscillator.frequency.value).toBe(0)
-		sounder.frequency(42)
+		sounder.frequency(0, 42)
 		jasmine.clock().tick(1)
 		expect(fakeOscillator.frequency.value).toBe(42)
 		jasmine.clock().uninstall()
@@ -84,7 +85,7 @@ describe('Sounder', () => {
 	it('stops its oscillator', () => {
 		const sounder = new Sounder(fakeAudioContext, 1)
 		sounder.start()
-		const fakeOscillator = sounder._oscillator
+		const fakeOscillator = sounder._oscillators[0]
 		spyOn(fakeOscillator, 'stop')
 		sounder.stop()
 		expect(fakeOscillator.stop).toHaveBeenCalled()
@@ -93,10 +94,10 @@ describe('Sounder', () => {
 	it('creates a new oscillator after the previous one has been stopped', () => {
 		const sounder = new Sounder(fakeAudioContext, 1)
 		sounder.start()
-		const fakeOscillator1 = sounder._oscillator
+		const fakeOscillator1 = sounder._oscillators[0]
 		sounder.stop()
 		sounder.start()
-		const fakeOscillator2 = sounder._oscillator
+		const fakeOscillator2 = sounder._oscillators[0]
 		sounder.stop()
 		expect(fakeOscillator1).not.toBe(fakeOscillator2)
 	})
