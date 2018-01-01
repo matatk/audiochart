@@ -61,7 +61,18 @@ class GoogleDataWrapper {
 	}
 
 	numSeries() {
-		return this.data.getNumberOfColumns() - 1
+		let numberOfDataColumns = 0
+
+		// Check the role of each column
+		// Note: the first, domain, column, isn't counted
+		for (let i = 1; i < this.data.getNumberOfColumns(); i++) {
+			const role = this.data.getColumnRole(i)
+			if (role === '' || role === 'data') {  // TODO 'data' used?
+				numberOfDataColumns += 1
+			}
+		}
+
+		return numberOfDataColumns
 	}
 
 	seriesNames() {

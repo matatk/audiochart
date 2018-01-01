@@ -1,4 +1,5 @@
-'use strict' /* global dataWrappersTestCore HTMLTableDataWrapper */
+'use strict'
+/* global dataWrappersTestCore HTMLTableDataWrapper */
 
 describe('HTMLTableDataWrapper', () => {
 	jasmine.getFixtures().fixturesPath = 'base/spec/'
@@ -8,7 +9,7 @@ describe('HTMLTableDataWrapper', () => {
 	const actualTable = document.getElementById('testOne')
 
 	dataWrappersTestCore(
-		'HTMLTableDataWrapper (data wrapper core)',
+		'HTMLTableDataWrapper',
 		new HTMLTableDataWrapper(document.getElementById('testOne')),
 		new HTMLTableDataWrapper(document.getElementById('testNeg')),
 		new HTMLTableDataWrapper(document.getElementById('testTwo')))

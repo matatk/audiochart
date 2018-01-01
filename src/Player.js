@@ -20,6 +20,8 @@ class Player {
 
 		const seriesLen = this.data.seriesLength(0)
 
+		this._numberOfSeries = this.data.numSeries()
+
 		const sampling = Player._samplingInfo(duration, seriesLen)
 		this.interval = sampling.interval
 		this.sampleOneIn = sampling.in
@@ -108,16 +110,16 @@ class Player {
 		const thisPlayTimeStart = performance.now()
 
 		if (this.playIndex <= this.seriesMaxIndex) {
-			if (this.visualCallback !== null) {
-				this.visualCallback(0, this.playIndex)
+			// Play back one datum point
+			for (let i = 0; i < this._numberOfSeries; i++ ) {
+				if (this.visualCallback !== null) {
+					this.visualCallback(i, this.playIndex)
+				}
+				this.sounder.frequency(i, this.pitchMapper.map(i,
+					this.data.seriesValue(i, this.playIndex)))
 			}
-
-			this.sounder.frequency(
-				0,
-				this.pitchMapper.map(
-					0,
-					this.data.seriesValue(0, this.playIndex)))
 		} else {
+			// Playback is complete; clean up
 			clearInterval(this.intervalID)
 			this.sounder.stop()
 			this._state = 'finished'

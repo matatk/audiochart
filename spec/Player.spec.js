@@ -27,6 +27,10 @@ class ShortTwoSeriesFakeDataWrapper extends ShortFakeDataWrapper {
 	seriesNames() {
 		return ['Test1', 'Test2']
 	}
+
+	numSeries() {
+		return 2
+	}
 }
 
 
@@ -51,25 +55,27 @@ class FakeSounder {
 }
 
 
-function expectedMapCalls(seriesLength) {
+function expectedMapCalls(seriesLength, twoSeries) {
 	const out = []
 	for (let i = 0; i <= seriesLength - 1; i++) {
 		out.push([0, 42])  // series, datum
+		if (twoSeries) out.push([1, 42])
 	}
 	return out
 }
 
 
-function expectedSounderFrequencyCalls(seriesLength) {
+function expectedSounderFrequencyCalls(seriesLength, twoSeries) {
 	const out = []
 	for (let i = 0; i <= seriesLength - 1; i++) {
 		out.push([0, 21])  // series, frequency
+		if (twoSeries) out.push([1, 21])
 	}
 	return out
 }
 
 
-function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCount, testInterval, useVisualCallback) {
+function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCount, testInterval, useVisualCallback, twoSeries) {
 	describe(message, () => {
 		let fakeData = null
 		let fakeMapper = null
@@ -114,34 +120,49 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 		})
 
 		it('makes the correct number of map calls', () => {
+			const expectedNumberOfCalls = twoSeries ?
+				testCallCount * 2 : testCallCount
+
 			spyOn(fakeMapper, 'map')
 			player.playPause()
 			jasmine.clock().tick(testDuration)
-			expect(fakeMapper.map.calls.count()).toBe(testCallCount)
+
+			expect(fakeMapper.map.calls.count()).toBe(expectedNumberOfCalls)
+
 			expect(fakeMapper.map.calls.allArgs()).toEqual(
-				expectedMapCalls(testCallCount))
+				expectedMapCalls(testCallCount, twoSeries))
 		})
 
 		it('makes the right number of calls to the sounder', () => {
+			const expectedNumberOfCalls = twoSeries ?
+				testCallCount * 2 : testCallCount
+
 			spyOn(fakeSounder, 'frequency')
 			player.playPause()
 			jasmine.clock().tick(testDuration)
-			expect(fakeSounder.frequency.calls.count()).toBe(testCallCount)
+
+			expect(fakeSounder.frequency.calls.count()).toBe(
+				expectedNumberOfCalls)
 		})
 
 		it('calls the sounder with the correct arguments each time', () => {
 			spyOn(fakeSounder, 'frequency')
 			player.playPause()
 			jasmine.clock().tick(testDuration)
+
 			expect(fakeSounder.frequency.calls.allArgs()).toEqual(
-				expectedSounderFrequencyCalls(testCallCount))
+				expectedSounderFrequencyCalls(testCallCount, twoSeries))
 		})
 
 		if (useVisualCallback) {
 			it('makes the correct number of visual callback calls', () => {
+				const expectedNumberOfCalls = twoSeries ?
+					testCallCount * 2 : testCallCount
+
 				player.playPause()
 				jasmine.clock().tick(testDuration)
-				expect(fakeVisualCallback.calls.count()).toBe(testCallCount)
+				expect(fakeVisualCallback.calls.count()).toBe(
+					expectedNumberOfCalls)
 			})
 		}
 
@@ -244,75 +265,10 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 }
 
 
-function mixinDataWrapper(message, TestDataClass, testDuration, testCallCount, testInterval) {
+function mixinDataWrapper(message, TestDataClass, testDuration, testCallCount, testInterval, twoSeries) {
 	describe(message, () => {
-		mixinDataWrapperCore('when not having a callback', TestDataClass, testDuration, testCallCount, testInterval, false)
-		mixinDataWrapperCore('when having a callback', TestDataClass, testDuration, testCallCount, testInterval, true)
-	})
-}
-
-
-function twoSeries() {
-	describe('Playing two-series data', () => {
-		const testDuration = 1000
-		const testCallCount = 4
-
-		let fakeData = null
-		let fakeMapper = null
-		let fakeSounder1 = null
-		let fakeSounder2 = null
-		let player = null
-
-		beforeEach(() => {
-			fakeData = new ShortTwoSeriesFakeDataWrapper()
-			fakeMapper = new FakeMapper()
-			fakeSounder1 = new FakeSounder()
-			fakeSounder2 = new FakeSounder()
-			player = new Player(testDuration, fakeData, fakeMapper, fakeSounder1)
-			jasmine.clock().install()
-		})
-
-		afterEach(() => {
-			jasmine.clock().uninstall()
-		})
-
-		it('starts the sounder', () => {
-			spyOn(fakeSounder1, 'start')
-			player.playPause()
-			jasmine.clock().tick(testDuration)
-			expect(fakeSounder1.start.calls.count()).toBe(1)
-		})
-
-		it('stops the sounder', () => {
-			spyOn(fakeSounder1, 'stop')
-			player.playPause()
-			jasmine.clock().tick(testDuration)
-			expect(fakeSounder1.stop.calls.count()).toBe(1)
-		})
-
-		it('makes the correct number of map calls', () => {
-			spyOn(fakeMapper, 'map')
-			player.playPause()
-			jasmine.clock().tick(testDuration)
-			expect(fakeMapper.map.calls.count()).toBe(testCallCount)
-		})
-
-		it('makes the right number of calls to the sounder', () => {
-			spyOn(fakeSounder1, 'frequency')
-			player.playPause()
-			jasmine.clock().tick(testDuration)
-			expect(fakeSounder1.frequency.calls.count()).toBe(testCallCount)
-		})
-
-		it('calls the sounder with the correct arguments each time', () => {
-			spyOn(fakeSounder1, 'frequency')
-			player.playPause()
-			jasmine.clock().tick(testDuration)
-			expect(fakeSounder1.frequency.calls.allArgs()).toEqual(expectedSounderFrequencyCalls(testCallCount))
-		})
-
-		// it('updates the sound (and visual cursor) when stepped backward whilst paused', () => {
-		// it('updates the sound (and visual cursor) when stepped forward whilst paused', () => {
+		mixinDataWrapperCore('when not having a callback', TestDataClass, testDuration, testCallCount, testInterval, false, twoSeries)
+		mixinDataWrapperCore('when having a callback', TestDataClass, testDuration, testCallCount, testInterval, true, twoSeries)
 	})
 }
 
@@ -341,6 +297,6 @@ describe('Player', () => {
 	mixinDataWrapper('instantiated with long fake data source for 500ms', LongFakeDataWrapper, 500, 50, 10)
 	mixinDataWrapper('instantiated with long fake data source for 500ms', LongFakeDataWrapper, 100, 10, 10)
 
-	// Playing back two-series data
-	twoSeries()
+	// With Two series
+	mixinDataWrapper('instantiated with short two-series fake data source for 5000ms', ShortTwoSeriesFakeDataWrapper, 5000, 4, 1250, true)
 })

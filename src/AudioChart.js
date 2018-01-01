@@ -154,6 +154,7 @@ class AudioChart {
 	 * appropriate data paramater (from options.data) and, optionally, make
 	 * a visual callback (which may use options.chart, or other options if
 	 * it's an HTML table visual callback).
+	 * FIXME: Test somehow
 	 * @private
 	 * @param {AudioContext} context - the Web Audio context
 	 * @param {AudioChartOptions} options - given by the user
@@ -163,14 +164,21 @@ class AudioChart {
 		const dataWrapper = new assigned.WrapperClass(assigned.dataSource)
 		const callback = assigned.visualCallback
 
-		const frequencyPitchMapper = new FrequencyPitchMapper([{
-			minimumDatum: dataWrapper.seriesMin(0),
-			maximumDatum: dataWrapper.seriesMax(0),
-			minimumFrequency: options.frequencyLow,
-			maximumFrequency: options.frequencyHigh
-		}])
+		const numberOfSeries = dataWrapper.numSeries()
 
-		const sounder = new Sounder(context, 1)
+		const seriesInfo = []
+		for (let i = 0; i < numberOfSeries; i++ ) {
+			seriesInfo.push({
+				minimumDatum: dataWrapper.seriesMin(i),
+				maximumDatum: dataWrapper.seriesMax(i),
+				minimumFrequency: options.frequencyLow,
+				maximumFrequency: options.frequencyHigh
+			})
+		}
+
+		const frequencyPitchMapper = new FrequencyPitchMapper(seriesInfo)
+
+		const sounder = new Sounder(context, numberOfSeries)
 
 		this.player = new Player(
 			options.duration,

@@ -74,10 +74,65 @@ class FakeGoogleDataTable {
 			max: max
 		}
 	}
+
+	getColumnRole(columnIndex) {
+		return columnIndex === 0 ? 'domain' : 'data'
+	}
 }
 
-dataWrappersTestCore(
-	'GoogleDataWrapper',
-	new GoogleDataWrapper(new FakeGoogleDataTable(testOne)),
-	new GoogleDataWrapper(new FakeGoogleDataTable(testNeg)),
-	new GoogleDataWrapper(new FakeGoogleDataTable(testTwo)))
+
+const testOneAnnotated = [
+	['', 'Test1', 'Test1Annotation'],
+	[ 0,      20,          'thingA'],
+	[ 1,     -10,          'thingB'],
+	[ 2,       0,          'thingC'],
+	[ 3,       8,          'thingD'],
+	[ 4,     -90,          'thingE']]
+
+const testOneAnnotatedRoles = [
+	'domain',
+	'data',
+	'annotation']
+
+class FakeGoogleDataTableAnnotatedOne extends FakeGoogleDataTable {
+	getColumnRole(columnIndex) {
+		return testOneAnnotatedRoles[columnIndex]
+	}
+}
+
+
+const testTwoAnnotated = [
+	['', 'Test1', 'Test1Annotation', 'Test2'],
+	[ 0,      20,          'thingA',      42],
+	[ 1,     -10,          'thingB',      72],
+	[ 2,       0,          'thingC',     -42],
+	[ 3,       8,          'thingD',      -8],
+	[ 4,     -90,          'thingE',       0]]
+
+const testTwoAnnotatedRoles = [
+	'domain',
+	'data',
+	'annotation',
+	'data']
+
+class FakeGoogleDataTableAnnotatedTwo extends FakeGoogleDataTable {
+	getColumnRole(columnIndex) {
+		return testTwoAnnotatedRoles[columnIndex]
+	}
+}
+
+
+describe('GoogleDataWrapper', () => {
+	dataWrappersTestCore(
+		'GoogleDataWrapper',
+		new GoogleDataWrapper(new FakeGoogleDataTable(testOne)),
+		new GoogleDataWrapper(new FakeGoogleDataTable(testNeg)),
+		new GoogleDataWrapper(new FakeGoogleDataTable(testTwo)))
+
+	it('skips an annotation column after a single data column', () => {
+		const wrapper = new GoogleDataWrapper(
+			new FakeGoogleDataTableAnnotatedOne(testOneAnnotated))
+
+		expect(wrapper.numSeries()).toBe(1)
+	})
+})
