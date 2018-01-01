@@ -38,7 +38,7 @@ class LongFakeDataWrapper extends BaseFakeDataWrapper {
 
 
 class FakeMapper {
-	map(datum) {
+	map(series, datum) {
 		return 21
 	}
 }
@@ -51,7 +51,16 @@ class FakeSounder {
 }
 
 
-function expectedFrequencyCalls(seriesLength) {
+function expectedMapCalls(seriesLength) {
+	const out = []
+	for (let i = 0; i <= seriesLength - 1; i++) {
+		out.push([0, 42])  // series, datum
+	}
+	return out
+}
+
+
+function expectedSounderFrequencyCalls(seriesLength) {
 	const out = []
 	for (let i = 0; i <= seriesLength - 1; i++) {
 		out.push([0, 21])  // series, frequency
@@ -109,6 +118,8 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 			player.playPause()
 			jasmine.clock().tick(testDuration)
 			expect(fakeMapper.map.calls.count()).toBe(testCallCount)
+			expect(fakeMapper.map.calls.allArgs()).toEqual(
+				expectedMapCalls(testCallCount))
 		})
 
 		it('makes the right number of calls to the sounder', () => {
@@ -122,7 +133,8 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 			spyOn(fakeSounder, 'frequency')
 			player.playPause()
 			jasmine.clock().tick(testDuration)
-			expect(fakeSounder.frequency.calls.allArgs()).toEqual(expectedFrequencyCalls(testCallCount))
+			expect(fakeSounder.frequency.calls.allArgs()).toEqual(
+				expectedSounderFrequencyCalls(testCallCount))
 		})
 
 		if (useVisualCallback) {
@@ -296,7 +308,7 @@ function twoSeries() {
 			spyOn(fakeSounder1, 'frequency')
 			player.playPause()
 			jasmine.clock().tick(testDuration)
-			expect(fakeSounder1.frequency.calls.allArgs()).toEqual(expectedFrequencyCalls(testCallCount))
+			expect(fakeSounder1.frequency.calls.allArgs()).toEqual(expectedSounderFrequencyCalls(testCallCount))
 		})
 
 		// it('updates the sound (and visual cursor) when stepped backward whilst paused', () => {

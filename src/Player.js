@@ -115,6 +115,7 @@ class Player {
 			this.sounder.frequency(
 				0,
 				this.pitchMapper.map(
+					0,
 					this.data.seriesValue(0, this.playIndex)))
 		} else {
 			clearInterval(this.intervalID)
