@@ -163,11 +163,12 @@ class AudioChart {
 		const dataWrapper = new assigned.WrapperClass(assigned.dataSource)
 		const callback = assigned.visualCallback
 
-		const frequencyPitchMapper = new FrequencyPitchMapper(
-			dataWrapper.seriesMin(0),
-			dataWrapper.seriesMax(0),
-			options.frequencyLow,
-			options.frequencyHigh)
+		const frequencyPitchMapper = new FrequencyPitchMapper([{
+			minimumDatum: dataWrapper.seriesMin(0),
+			maximumDatum: dataWrapper.seriesMax(0),
+			minimumFrequency: options.frequencyLow,
+			maximumFrequency: options.frequencyHigh
+		}])
 
 		const sounder = new Sounder(context, 1)
 

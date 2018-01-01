@@ -6,15 +6,28 @@
 class PitchMapper {
 	/**
 	 * Create a base Pitch Mapper
-	 * @param {number} minimumDatum - the minimum value in this data series
-	 * @param {number} maximumDatum - the maximum value in this data series
+	 * @param {Object[]} seriesInfo - min and max data and frequencies
+	 * @param {string} seriesInfo[].minimumDatum - minimun data value
+	 * @param {string} seriesInfo[].maximumDatum - maximun data value
+	 * @param {string} seriesInfo[].minimumFrequency - minimun frequency
+	 * @param {string} seriesInfo[].maximumFrequency - maximun frequency
 	 */
-	constructor(minimumDatum, maximumDatum) {
-		this.minimumDatum = minimumDatum
-		this.maximumDatum = maximumDatum
-		if (this.minimumDatum > this.maximumDatum) {
+	constructor(seriesInfo) {
+		const series = seriesInfo[0]
+
+		if (series.maximumDatum < series.minimumDatum) {
 			throw Error('minimum datum should be <= maximum datum')
 		}
+
+		if (series.maximumFrequency < series.minimumFrequency) {
+			throw Error('minimum frequency should be <= maximum frequency')
+		}
+
+		this._minimumDatum = series.minimumDatum
+		this._maximumDatum = series.maximumDatum
+		this._minimumFrequency = series.minimumFrequency
+		this._maximumFrequency = series.maximumFrequency
+		this._dataRange = this._maximumDatum - this._minimumDatum
 	}
 
 	/**
@@ -34,21 +47,17 @@ class PitchMapper {
  * @extends {PitchMapper}
  */
 class FrequencyPitchMapper extends PitchMapper {
+	// TODO: dupe docs for now: https://github.com/jsdoc3/jsdoc/issues/1012
 	/**
 	 * Create a Frequency Pitch Mapper
-	 * @param {number} minimumDatum - the minimum value in this data series
-	 * @param {number} maximumDatum - the maximum value in this data series
-	 * @param {number} minimumFrequency - the minimum output frequency
-	 * @param {number} maximumFrequency - the maximum output frequency
+	 * @param {Object[]} seriesInfo - minimum and maximums for each series
+	 * @param {string} seriesInfo[].minimumDatum - minimun data value
+	 * @param {string} seriesInfo[].maximumDatum - maximun data value
+	 * @param {string} seriesInfo[].minimumFrequency - minimun frequency
+	 * @param {string} seriesInfo[].maximumFrequency - maximun frequency
 	 */
-	constructor(minimumDatum, maximumDatum, minimumFrequency, maximumFrequency) {
-		super(minimumDatum, maximumDatum)
-		this.minimumFrequency = minimumFrequency
-		this.maximumFrequency = maximumFrequency
-		if (this.minimumFrequency > this.maximumFrequency) {
-			throw Error('minimum frequency must be <= maximum frequency')
-		}
-		this.dataRange = this.maximumDatum - this.minimumDatum
+	constructor(seriesInfo) {
+		super(seriesInfo)
 	}
 
 	/**
@@ -57,11 +66,12 @@ class FrequencyPitchMapper extends PitchMapper {
 	 */
 	map(datum) {
 		let ratio
-		if (this.dataRange) {
-			ratio = (datum - this.minimumDatum) / this.dataRange
+		if (this._dataRange) {
+			ratio = (datum - this._minimumDatum) / this._dataRange
 		} else {
 			ratio = 0.5
 		}
-		return this.minimumFrequency + ratio * (this.maximumFrequency - this.minimumFrequency)
+		return this._minimumFrequency +
+			ratio * (this._maximumFrequency - this._minimumFrequency)
 	}
 }
