@@ -27,6 +27,7 @@ class Sounder {
 		this._oscillators = []
 		for (let i = 0; i < this._numberOfSeries; i++) {
 			this._oscillators[i] = this._context.createOscillator()
+			if (i === 1) this._oscillators[i].type = 'square'
 			this._oscillators[i].connect(this._context.destination)
 			this._oscillators[i].start(0)
 		}

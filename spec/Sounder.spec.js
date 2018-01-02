@@ -7,6 +7,7 @@ describe('Sounder', () => {
 			this.frequency = {
 				value: 0
 			}
+			this.type = 'sine'
 		}
 
 		connect(destination) {}
@@ -56,6 +57,7 @@ describe('Sounder', () => {
 		expect(sounder._oscillators).not.toBeDefined()
 		sounder.start()
 		expect(fakeAudioContext.createOscillator.calls.count()).toBe(1)
+		expect(sounder._oscillators[0].type).toBe('sine')
 	})
 
 	it('creates two oscillators when started with two series', () => {
@@ -64,6 +66,8 @@ describe('Sounder', () => {
 		expect(sounder._oscillators).not.toBeDefined()
 		sounder.start()
 		expect(fakeAudioContext.createOscillator.calls.count()).toBe(2)
+		expect(sounder._oscillators[0].type).toBe('sine')
+		expect(sounder._oscillators[1].type).toBe('square')
 	})
 
 	// Note: test for 'connects and starts its oscillator' not implemented
