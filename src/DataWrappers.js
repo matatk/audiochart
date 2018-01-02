@@ -170,7 +170,11 @@ class C3DataWrapper {
 	}
 
 	numSeries() {
-		return this.object.columns.length
+		let numberOfSeries = this.object.columns.length
+		if (this.object.hasOwnProperty('x')) {
+			numberOfSeries -= 1
+		}
+		return numberOfSeries
 	}
 
 	seriesNames() {
