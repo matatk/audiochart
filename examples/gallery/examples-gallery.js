@@ -190,13 +190,16 @@ function googleCore(Klass, data, chartId, buttonId) {
 // Core C3 drawing code
 //
 
-function makeC3Data(seriesName, seriesValues, xValues) {
+function makeC3Data(seriesNames, seriesValueLists, xValues) {
+	const columns = []
+	for (let i = 0; i < seriesNames.length; i++) {
+		columns.push([seriesNames[i]].concat(seriesValueLists[i]))
+	}
+	columns.push(['x'].concat(xValues))
+
 	return {
 		x: 'x',
-		columns: [
-			[seriesName].concat(seriesValues),
-			['x'].concat(xValues)
-		],
+		columns: columns,
 		selection: {
 			enabled: true
 		}
@@ -269,7 +272,10 @@ function drawGradient() {
 	data.addRows(zip(xValues, gradient))
 	googleLineCore(data, 'chart-google-gradient', 'btn-google-gradient')
 
-	c3Core(makeC3Data('Gradient', gradient, xValues), 'chart-c3-gradient', 'btn-c3-gradient')
+	c3Core(
+		makeC3Data(['Gradient'], [gradient], xValues),
+		'chart-c3-gradient',
+		'btn-c3-gradient')
 }
 
 function drawHorizontalLineAndGradient() {
@@ -282,7 +288,12 @@ function drawHorizontalLineAndGradient() {
 	data.addColumn('number', 'Line')
 	data.addColumn('number', 'Gradient')
 	data.addRows(zip(xValues, line, gradient))
-	googleLineCore(data, 'chart-google-line-and-gradient', 'btn-google-line-and-gradient')
+	googleLineCore(data, 'chart-google-line-gradient', 'btn-google-line-gradient')
+
+	c3Core(
+		makeC3Data(['Line', 'Gradient'], [line, gradient], xValues),
+		'chart-c3-line-gradient',
+		'btn-c3-line-gradient')
 }
 
 function drawSine() {
@@ -295,30 +306,33 @@ function drawSine() {
 	data.addRows(zip(xValues, sine))
 	googleLineCore(data, 'chart-google-sine', 'btn-google-sine')
 
-	c3Core(makeC3Data('Sine', sine, xValues), 'chart-c3-sine', 'btn-c3-sine', {
-		axis: {
-			x: {
-				tick: {
-					count: 20,
-					format: d3.format('.2f')
+	c3Core(
+		makeC3Data(['Sine'], [sine], xValues),
+		'chart-c3-sine',
+		'btn-c3-sine', {
+			axis: {
+				x: {
+					tick: {
+						count: 20,
+						format: d3.format('.2f')
+					}
+				}
+			},
+			grid: {
+				x: {
+					show: true,
+					lines: [
+						{ value: 0 }
+					]
+				},
+				y: {
+					show: true,
+					lines: [
+						{ value: 0 }
+					]
 				}
 			}
-		},
-		grid: {
-			x: {
-				show: true,
-				lines: [
-					{ value: 0 }
-				]
-			},
-			y: {
-				show: true,
-				lines: [
-					{ value: 0 }
-				]
-			}
-		}
-	})
+		})
 }
 
 function drawSalesLineAndBar() {
@@ -364,6 +378,35 @@ function drawSineAndCosine() {
 	data.addColumn('number', 'Cosine')
 	data.addRows(zip(xValues, sine, cosine))
 	googleLineCore(data, 'chart-google-sine-cosine', 'btn-google-sine-cosine')
+
+	c3Core(
+		makeC3Data(['Sine', 'Cosine'], [sine, cosine], xValues),
+		'chart-c3-sine-cosine',
+		'btn-c3-sine-cosine', {
+			axis: {
+				x: {
+					tick: {
+						count: 20,
+						format: d3.format('.2f')
+					}
+				}
+			},
+			grid: {
+				x: {
+					show: true,
+					lines: [
+						{ value: 0 }
+					]
+				},
+				y: {
+					show: true,
+					lines: [
+						{ value: 0 }
+					]
+				}
+			}
+		})
+
 }
 
 
@@ -389,18 +432,26 @@ function initJSON() {  // TODO DRY re HTML
 // HTML Example
 //
 
-function initHTML() {  // TODO DRY re JSON
+function initHTML(tableId, buttonId) {  // TODO DRY re JSON
 	const htmlOptions = makePartialOptions()
 	htmlOptions['type'] = 'htmlTable'
-	htmlOptions['table'] = document.getElementById('table1')
+	htmlOptions['table'] = document.getElementById(tableId)
 	htmlOptions['highlightClass'] = 'current-datum'
 	const htmlAC = new AudioChart(htmlOptions)
 
 	optionsUpdateObjects.push(htmlAC)  // register for options updates
 
-	document.getElementById('btn-table1').onclick = function() {
+	document.getElementById(buttonId).onclick = function() {
 		htmlAC.playPause()
 	}
+}
+
+function oneSeriesTable() {
+	initHTML('table1', 'btn-table1')
+}
+
+function twoSeriesTable() {
+	initHTML('table2', 'btn-table2')
 }
 
 
@@ -409,7 +460,7 @@ function initHTML() {  // TODO DRY re JSON
 //
 
 function init() {
-	// Wire up error checking
+	// Wire up options error checking
 	function frequencyChangeHandler(id) {
 		document.getElementById(id).addEventListener('change', errorCheck)
 	}
@@ -417,12 +468,11 @@ function init() {
 	frequencyChangeHandler('opt-freq-low')
 	frequencyChangeHandler('opt-freq-high')
 
-	document.getElementById('opt-duration').addEventListener('change',
-		function() {
-			updateDurationOption(this.value)
-		})
+	document.getElementById('opt-duration').addEventListener('change', function() {  // TODO => ?
+		updateDurationOption(this.value)
+	})
 
-	// Graphical charts
+	// Draw charts
 	drawHorizontalLine()
 	drawGradient()
 	drawSine()
@@ -431,6 +481,8 @@ function init() {
 	drawHorizontalLineAndGradient()
 	drawSineAndCosine()
 
+	// Prepare non-graphical charts
 	initJSON()
-	initHTML()
+	oneSeriesTable()
+	twoSeriesTable()
 }
