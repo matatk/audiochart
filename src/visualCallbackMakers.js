@@ -25,11 +25,15 @@ var googleVisualCallbackMaker = function(chart) {
  */
 var htmlTableVisualCallbackMaker = function(table, className) {
 	return function(series, row) {
-		const tds = table.getElementsByTagName('td')
-		for (const cell of tds) {
+		const seriesDataCells = Array.from(
+			table.getElementsByTagName('tr'), row => row.children[series])
+			.slice(1)
+
+		for (const cell of seriesDataCells) {
 			cell.classList.remove(className)
 		}
-		tds[row].classList.add(className)
+
+		seriesDataCells[row].classList.add(className)
 	}
 }
 

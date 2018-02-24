@@ -50,15 +50,27 @@ describe('htmlTableVisualCallback', () => {
 
 		simpleTests()
 
-		it('removes the class from one cell and adds it to another', () => {
-			// FIXME this doesn't properly test two-series tables!
+		it('only removes the class from cells in the same column', () => {
 			htmlTableVisualCallback(0, 0)
-			const firstDataCell = table.getElementsByTagName('td')[0]
-			expect(firstDataCell.className).toBe(highlightClassName)
+			const columnOneFirst = table
+				.getElementsByTagName('tr')[1]
+				.getElementsByTagName('td')[0]
+			expect(columnOneFirst.className).toBe(highlightClassName)
+
+			htmlTableVisualCallback(1, 0)
+			const columnTwoFirst = table
+				.getElementsByTagName('tr')[1]
+				.getElementsByTagName('td')[1]
+			expect(columnOneFirst.className).toBe(highlightClassName)
+			expect(columnTwoFirst.className).toBe(highlightClassName)
+
 			htmlTableVisualCallback(0, 1)
-			const secondDataCell = table.getElementsByTagName('td')[1]
-			expect(firstDataCell.className).toBe('')
-			expect(secondDataCell.className).toBe(highlightClassName)
+			const columnOneSecond = table
+				.getElementsByTagName('tr')[2]
+				.getElementsByTagName('td')[0]
+			expect(columnOneFirst.className).toBe('')
+			expect(columnOneSecond.className).toBe(highlightClassName)
+			expect(columnTwoFirst.className).toBe(highlightClassName)
 		})
 	})
 })
