@@ -10,10 +10,9 @@
 
 
 /**
- * A function that highlights the current datum visually.
+ * A function that highlights the current datum, in all series, visually.
  * Different callbacks must be created for different types of chart.
  * @callback VisualCallback
- * @param {index} series - The column of the cell to highlight
  * @param {index} row - The row of the cell to highlight
  */
 

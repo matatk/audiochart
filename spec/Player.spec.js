@@ -156,8 +156,7 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 
 		if (useVisualCallback) {
 			it('makes the correct number of visual callback calls', () => {
-				const expectedNumberOfCalls = twoSeries ?
-					testCallCount * 2 : testCallCount
+				const expectedNumberOfCalls = testCallCount  // one per row
 
 				player.playPause()
 				jasmine.clock().tick(testDuration)

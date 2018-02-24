@@ -15,43 +15,13 @@ describe('googleVisualCallback', () => {
 		spyOn(fakeChart, 'setSelection')
 	})
 
-	it('correctly munges its parameters (1a)', () => {
-		googleVisualCallback(0, 0)
-		expect(fakeChart.setSelection).toHaveBeenCalledWith([
-			{
-				'row': 0,
-				'column': 1
-			}
-		])
+	it('correctly munges its parameters for the first datum', () => {
+		googleVisualCallback(0)
+		expect(fakeChart.setSelection).toHaveBeenCalledWith([{'row': 0}])
 	})
 
-	it('correctly munges its parameters (1b)', () => {
-		googleVisualCallback(0, 1)
-		expect(fakeChart.setSelection).toHaveBeenCalledWith([
-			{
-				'row': 1,
-				'column': 1
-			}
-		])
-	})
-
-	it('correctly munges its parameters (1c)', () => {
-		googleVisualCallback(0, 2)
-		expect(fakeChart.setSelection).toHaveBeenCalledWith([
-			{
-				'row': 2,
-				'column': 1
-			}
-		])
-	})
-
-	it('correctly munges its parameters (2)', () => {
-		googleVisualCallback(1, 0)
-		expect(fakeChart.setSelection).toHaveBeenCalledWith([
-			{
-				'row': 0,
-				'column': 2
-			}
-		])
+	it('correctly munges its parameters for the second datum', () => {
+		googleVisualCallback(1)
+		expect(fakeChart.setSelection).toHaveBeenCalledWith([{'row': 1 }])
 	})
 })

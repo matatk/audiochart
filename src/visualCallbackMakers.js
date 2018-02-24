@@ -5,11 +5,10 @@
  * @returns {VisualCallback} the callback
  */
 var googleVisualCallbackMaker = function(chart) {
-	return function(series, row) {
+	return function(row) {
 		chart.setSelection([
 			{
-				'row': row,
-				'column': series + 1
+				'row': row
 			}
 		])
 	}
@@ -24,16 +23,14 @@ var googleVisualCallbackMaker = function(chart) {
  * @returns {VisualCallback} The highlighting function
  */
 var htmlTableVisualCallbackMaker = function(table, className) {
-	return function(series, row) {
-		const seriesDataCells = Array.from(
-			table.getElementsByTagName('tr'), row => row.children[series])
-			.slice(1)
+	return function(row) {
+		const rows = table.getElementsByTagName('tr')
 
-		for (const cell of seriesDataCells) {
-			cell.classList.remove(className)
+		for (const row of rows) {
+			row.classList.remove(className)
 		}
 
-		seriesDataCells[row].classList.add(className)
+		rows[row + 1].classList.add(className)
 	}
 }
 
@@ -46,7 +43,7 @@ var htmlTableVisualCallbackMaker = function(table, className) {
  * @todo define C3 chart type?
  */
 var c3VisualCallbackMaker = function(chart) {
-	return function(series, row) {
+	return function(row) {
 		chart.select(null, [row], true)
 	}
 }

@@ -111,10 +111,10 @@ class Player {
 
 		if (this.playIndex <= this.seriesMaxIndex) {
 			// Play back one datum point
+			if (this.visualCallback !== null) {
+				this.visualCallback(this.playIndex)
+			}
 			for (let i = 0; i < this._numberOfSeries; i++ ) {
-				if (this.visualCallback !== null) {
-					this.visualCallback(i, this.playIndex)
-				}
 				this.sounder.frequency(i, this.pitchMapper.map(i,
 					this.data.seriesValue(i, this.playIndex)))
 			}

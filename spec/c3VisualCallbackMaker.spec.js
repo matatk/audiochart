@@ -15,9 +15,8 @@ describe('c3VisualCallback', () => {
 		spyOn(fakeChart, 'select')
 	})
 
-	it('asks for the first datum in the first series', () => {
-		// FIXME filter to series 1
-		c3VisualCallback(0, 0)
+	it('asks for the first datum in all series', () => {
+		c3VisualCallback(0)
 		expect(fakeChart.select).toHaveBeenCalledWith(
 			null,
 			[0],
@@ -25,22 +24,11 @@ describe('c3VisualCallback', () => {
 		)
 	})
 
-	it('asks for the second datum in the first series', () => {
-		// FIXME filter to series 1
-		c3VisualCallback(0, 1)
+	it('asks for the second datum in all series', () => {
+		c3VisualCallback(1)
 		expect(fakeChart.select).toHaveBeenCalledWith(
 			null,
 			[1],
-			true
-		)
-	})
-
-	it('asks for the first datum in the second series', () => {
-		// FIXME this test is borked; won't select series two
-		c3VisualCallback(1, 0)
-		expect(fakeChart.select).toHaveBeenCalledWith(
-			null,
-			[0],
 			true
 		)
 	})
