@@ -24,7 +24,7 @@
     "replace:3": "replace-in-file /#261a3b/g auto examples/hello-*/docco.css --isRegex",
     "pretest": "npm run lint",
     "test": "karma start",
-    "test:ci": "npm run test -- --browsers ChromeHeadless --reporters dots",
+    "test:ci": "npm run test -- --browsers ChromeHeadlessNoSandbox --reporters dots",
     "preuglify": "mkdirp lib && node scripts/src-cat",
     "uglify": "uglifyjs --verbose --warn --compress --mangle --source-map=\"includeSources,url='audiochart.min.js.map'\" --output lib/audiochart.min.js src/audiochart-all.js && rimraf src/audiochart-all.js"
   },

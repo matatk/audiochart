@@ -23,6 +23,12 @@ module.exports = function(config) {
 				{type: 'html', dir: 'coverage/', subdir: '.'},
 				{type: 'text'},
 			]
+		},
+		customLaunchers: {
+			ChromeHeadlessNoSandbox: {
+				base: 'ChromeHeadless',
+				flags: ['--no-sandbox']
+			}
 		}
 	})
 
