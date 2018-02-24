@@ -25,4 +25,6 @@ describe('HTMLTableDataWrapper', () => {
 			new HTMLTableDataWrapper(actualTable)
 		}).not.toThrow()
 	})
+
+	// TODO: test the _labelled table fixtures!
 })
