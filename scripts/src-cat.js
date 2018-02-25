@@ -6,7 +6,7 @@ const src = path.join(__dirname, '..', 'src')
 const files = [
 	'DataWrappers.js',
 	'PitchMappers.js',
-	'WebAudioSounder.js',
+	'Sounder.js',
 	'Player.js',
 	'getAudioContext.js',
 	'visualCallbackMakers.js',

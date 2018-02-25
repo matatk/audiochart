@@ -4,7 +4,7 @@
  * @param {integer} duration - the length of the rendering in milliseconds
  * @param {DataWrapper} data - the underlying data (wrapped in interface)
  * @param {PitchMapper} pitchMapper - maps data to pitches
- * @param {WebAudioSounder} sounder - the sounder object
+ * @param {Sounder} sounder - the sounder object
  * @param {VisualCallback} visualCallback - the callback function that highlights the current datum
  */
 class Player {
@@ -19,6 +19,8 @@ class Player {
 		}
 
 		const seriesLen = this.data.seriesLength(0)
+
+		this._numberOfSeries = this.data.numSeries()
 
 		const sampling = Player._samplingInfo(duration, seriesLen)
 		this.interval = sampling.interval
@@ -108,14 +110,16 @@ class Player {
 		const thisPlayTimeStart = performance.now()
 
 		if (this.playIndex <= this.seriesMaxIndex) {
+			// Play back one datum point
 			if (this.visualCallback !== null) {
-				this.visualCallback(0, this.playIndex)
+				this.visualCallback(this.playIndex)
 			}
-
-			this.sounder.frequency(
-				this.pitchMapper.map(
-					this.data.seriesValue(0, this.playIndex)))
+			for (let i = 0; i < this._numberOfSeries; i++ ) {
+				this.sounder.frequency(i, this.pitchMapper.map(i,
+					this.data.seriesValue(i, this.playIndex)))
+			}
 		} else {
+			// Playback is complete; clean up
 			clearInterval(this.intervalID)
 			this.sounder.stop()
 			this._state = 'finished'

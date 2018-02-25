@@ -1,6 +1,6 @@
 /** @module */
 /* exported AudioChart */
-/* global getAudioContext FrequencyPitchMapper WebAudioSounder Player KeyboardHandler GoogleDataWrapper googleVisualCallbackMaker JSONDataWrapper HTMLTableDataWrapper htmlTableVisualCallbackMaker C3DataWrapper c3VisualCallbackMaker */
+/* global getAudioContext FrequencyPitchMapper Sounder Player KeyboardHandler GoogleDataWrapper googleVisualCallbackMaker JSONDataWrapper HTMLTableDataWrapper htmlTableVisualCallbackMaker C3DataWrapper c3VisualCallbackMaker */
 
 /**
  * Array index number (starts at zero).
@@ -10,10 +10,9 @@
 
 
 /**
- * A function that highlights the current datum visually.
+ * A function that highlights the current datum, in all series, visually.
  * Different callbacks must be created for different types of chart.
  * @callback VisualCallback
- * @param {index} series - The column of the cell to highlight
  * @param {index} row - The row of the cell to highlight
  */
 
@@ -26,11 +25,9 @@
 
 /**
  * @typedef {Object} WrapperAndCallbackResults
- * @property {Function} Wrapper - the data wrapper function
- * @property {Object|HTMLTableElement} parameter
- *	the rendered chart, or HTML table
- * @property {VisualCallback} callback
- *	if requested by the user, a callback is created and returned
+ * @property {Class} WrapperClass - the data wrapper class
+ * @property {Object|HTMLTableElement} dataSource - the data source to wrap
+ * @property {VisualCallback} visualCallback - created if requested by the user
  */
 
 /** Main object for API consumers */
@@ -94,13 +91,22 @@ class AudioChart {
 		// values, return appropriate values, or if they throw an exception.
 		//
 		// The thing blocking this is that I don't know how to stub out global
-		// ES6 classes *or* how to run each test via Karma in an isolated
-		// environment where I can mock those global classes.
+		// ES6 classes/functions *or* how to run each test via Karma in an
+		// isolated environment where I can mock those global classes.
 		//
 		// TODO, as per https://github.com/matatk/audiochart/issues/37
 
+		// Testing this separately allows us to check the options-checking code
+		// without having to pass in functioning source data objects.
 		AudioChart._checkOptions(options)
+
+		// This is not currently tested; to mitigate, it doesn't make decisions.
+		// Actually, it does call _assignWrapperCallback() but that /is/ tested.
 		this._wireUpStuff(context, options)
+
+		// Re _assignWrapperCallback(): that is also tested separately to avoid
+		// the need for very detailed mocks for the data sources.
+
 		this._options = Object.freeze(options)
 	}
 
@@ -147,24 +153,31 @@ class AudioChart {
 	 * appropriate data paramater (from options.data) and, optionally, make
 	 * a visual callback (which may use options.chart, or other options if
 	 * it's an HTML table visual callback).
+	 * FIXME: Test somehow
 	 * @private
 	 * @param {AudioContext} context - the Web Audio context
 	 * @param {AudioChartOptions} options - given by the user
 	 */
 	_wireUpStuff(context, options) {
-		const result = AudioChart._assignWrapperCallback(options)
+		const assigned = AudioChart._assignWrapperCallback(options)
+		const dataWrapper = new assigned.WrapperClass(assigned.dataSource)
+		const callback = assigned.visualCallback
 
-		const dataWrapper = new result.Wrapper(result.parameter)
+		const numberOfSeries = dataWrapper.numSeries()
 
-		const callback = result.callback
+		const seriesInfo = []
+		for (let i = 0; i < numberOfSeries; i++ ) {
+			seriesInfo.push({
+				minimumDatum: dataWrapper.seriesMin(i),
+				maximumDatum: dataWrapper.seriesMax(i),
+				minimumFrequency: options.frequencyLow,
+				maximumFrequency: options.frequencyHigh
+			})
+		}
 
-		const frequencyPitchMapper = new FrequencyPitchMapper(
-			dataWrapper.seriesMin(0),
-			dataWrapper.seriesMax(0),
-			options.frequencyLow,
-			options.frequencyHigh)
+		const frequencyPitchMapper = new FrequencyPitchMapper(seriesInfo)
 
-		const sounder = new WebAudioSounder(context)
+		const sounder = new Sounder(context, numberOfSeries)
 
 		this.player = new Player(
 			options.duration,
@@ -185,15 +198,14 @@ class AudioChart {
 	 * should be used with this chart.
 	 * @param {AudioChartOptions} options - given by the user
 	 * @returns {WrapperAndCallbackResults}
-	 *	- data wrapper, data wrapper parameter and callback (if applicable)
-	 *	  for this chart
+	 *	- data wrapper, data source and callback (if applicable) for this chart
 	 * @private
 	 */
 	static _assignWrapperCallback(options) {
 		const result = {
-			'Wrapper': null,
-			'parameter': null,
-			'callback': null
+			'WrapperClass': null,
+			'dataSource': null,
+			'visualCallback': null
 		}
 
 		const chartTypeToWrapperClass = {
@@ -212,19 +224,19 @@ class AudioChart {
 			case 'google':
 			case 'json':
 			case 'c3':
-				result.Wrapper = chartTypeToWrapperClass[options.type]
-				result.parameter = options.data
+				result.WrapperClass = chartTypeToWrapperClass[options.type]
+				result.dataSource = options.data
 				if (options.hasOwnProperty('chart')) {
-					result.callback =
+					result.visualCallback =
 						chartTypeToVisualCallbackMaker[options.type](
 							options.chart)
 				}
 				break
 			case 'htmlTable':
-				result.Wrapper = HTMLTableDataWrapper
-				result.parameter = options.table
+				result.WrapperClass = HTMLTableDataWrapper
+				result.dataSource = options.table
 				if (options.hasOwnProperty('highlightClass')) {
-					result.callback = htmlTableVisualCallbackMaker(
+					result.visualCallback = htmlTableVisualCallbackMaker(
 						options.table,
 						options.highlightClass)
 				}

@@ -1,19 +1,6 @@
 'use strict'
 /* global Player */
 
-describe('Player sampling rate and interval', () => {
-	it('calculates the correct sampling rates and intervals', () => {
-		expect(Player._samplingInfo(1000,  50)).toEqual(
-			{ sample: 1, in: 1, interval: 20 })
-		expect(Player._samplingInfo(1000, 100)).toEqual(
-			{ sample: 1, in: 1, interval: 10 })
-		expect(Player._samplingInfo(1000, 629)).toEqual(
-			{ sample: 1, in: 6, interval: 10 })
-		expect(Player._samplingInfo(1000, 250)).toEqual(
-			{ sample: 1, in: 3, interval: 10 })
-	})
-})
-
 class BaseFakeDataWrapper {
 	numSeries() {
 		return 1
@@ -36,6 +23,17 @@ class ShortFakeDataWrapper extends BaseFakeDataWrapper {
 }
 
 
+class ShortTwoSeriesFakeDataWrapper extends ShortFakeDataWrapper {
+	seriesNames() {
+		return ['Test1', 'Test2']
+	}
+
+	numSeries() {
+		return 2
+	}
+}
+
+
 class LongFakeDataWrapper extends BaseFakeDataWrapper {
 	seriesLength(series) {
 		return 100
@@ -44,7 +42,7 @@ class LongFakeDataWrapper extends BaseFakeDataWrapper {
 
 
 class FakeMapper {
-	map(datum) {
+	map(series, datum) {
 		return 21
 	}
 }
@@ -57,16 +55,27 @@ class FakeSounder {
 }
 
 
-function expectedFrequencyCalls(seriesLength) {
+function expectedMapCalls(seriesLength, twoSeries) {
 	const out = []
 	for (let i = 0; i <= seriesLength - 1; i++) {
-		out.push([21])
+		out.push([0, 42])  // series, datum
+		if (twoSeries) out.push([1, 42])
 	}
 	return out
 }
 
 
-function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCount, testInterval, useVisualCallback) {
+function expectedSounderFrequencyCalls(seriesLength, twoSeries) {
+	const out = []
+	for (let i = 0; i <= seriesLength - 1; i++) {
+		out.push([0, 21])  // series, frequency
+		if (twoSeries) out.push([1, 21])
+	}
+	return out
+}
+
+
+function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCount, testInterval, useVisualCallback, twoSeries) {
 	describe(message, () => {
 		let fakeData = null
 		let fakeMapper = null
@@ -111,31 +120,48 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 		})
 
 		it('makes the correct number of map calls', () => {
+			const expectedNumberOfCalls = twoSeries ?
+				testCallCount * 2 : testCallCount
+
 			spyOn(fakeMapper, 'map')
 			player.playPause()
 			jasmine.clock().tick(testDuration)
-			expect(fakeMapper.map.calls.count()).toBe(testCallCount)
+
+			expect(fakeMapper.map.calls.count()).toBe(expectedNumberOfCalls)
+
+			expect(fakeMapper.map.calls.allArgs()).toEqual(
+				expectedMapCalls(testCallCount, twoSeries))
 		})
 
 		it('makes the right number of calls to the sounder', () => {
+			const expectedNumberOfCalls = twoSeries ?
+				testCallCount * 2 : testCallCount
+
 			spyOn(fakeSounder, 'frequency')
 			player.playPause()
 			jasmine.clock().tick(testDuration)
-			expect(fakeSounder.frequency.calls.count()).toBe(testCallCount)
+
+			expect(fakeSounder.frequency.calls.count()).toBe(
+				expectedNumberOfCalls)
 		})
 
 		it('calls the sounder with the correct arguments each time', () => {
 			spyOn(fakeSounder, 'frequency')
 			player.playPause()
 			jasmine.clock().tick(testDuration)
-			expect(fakeSounder.frequency.calls.allArgs()).toEqual(expectedFrequencyCalls(testCallCount))
+
+			expect(fakeSounder.frequency.calls.allArgs()).toEqual(
+				expectedSounderFrequencyCalls(testCallCount, twoSeries))
 		})
 
 		if (useVisualCallback) {
 			it('makes the correct number of visual callback calls', () => {
+				const expectedNumberOfCalls = testCallCount  // one per row
+
 				player.playPause()
 				jasmine.clock().tick(testDuration)
-				expect(fakeVisualCallback.calls.count()).toBe(testCallCount)
+				expect(fakeVisualCallback.calls.count()).toBe(
+					expectedNumberOfCalls)
 			})
 		}
 
@@ -238,15 +264,28 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 }
 
 
-function mixinDataWrapper(message, TestDataClass, testDuration, testCallCount, testInterval) {
+function mixinDataWrapper(message, TestDataClass, testDuration, testCallCount, testInterval, twoSeries) {
 	describe(message, () => {
-		mixinDataWrapperCore('when not having a callback', TestDataClass, testDuration, testCallCount, testInterval, false)
-		mixinDataWrapperCore('when having a callback', TestDataClass, testDuration, testCallCount, testInterval, true)
+		mixinDataWrapperCore('when not having a callback', TestDataClass, testDuration, testCallCount, testInterval, false, twoSeries)
+		mixinDataWrapperCore('when having a callback', TestDataClass, testDuration, testCallCount, testInterval, true, twoSeries)
 	})
 }
 
 
 describe('Player', () => {
+	describe('Sampling rate and interval', () => {
+		it('calculates the correct sampling rates and intervals', () => {
+			expect(Player._samplingInfo(1000,  50)).toEqual(
+				{ sample: 1, in: 1, interval: 20 })
+			expect(Player._samplingInfo(1000, 100)).toEqual(
+				{ sample: 1, in: 1, interval: 10 })
+			expect(Player._samplingInfo(1000, 629)).toEqual(
+				{ sample: 1, in: 6, interval: 10 })
+			expect(Player._samplingInfo(1000, 250)).toEqual(
+				{ sample: 1, in: 3, interval: 10 })
+		})
+	})
+
 	// With 'long' intervals
 	mixinDataWrapper('instantiated with short fake data source for 5000ms', ShortFakeDataWrapper, 5000, 4, 1250)
 	mixinDataWrapper('instantiated with short fake data source for 3000ms', ShortFakeDataWrapper, 3000, 4, 750)
@@ -256,4 +295,7 @@ describe('Player', () => {
 	// With minimum intervals
 	mixinDataWrapper('instantiated with long fake data source for 500ms', LongFakeDataWrapper, 500, 50, 10)
 	mixinDataWrapper('instantiated with long fake data source for 500ms', LongFakeDataWrapper, 100, 10, 10)
+
+	// With Two series
+	mixinDataWrapper('instantiated with short two-series fake data source for 5000ms', ShortTwoSeriesFakeDataWrapper, 5000, 4, 1250, true)
 })

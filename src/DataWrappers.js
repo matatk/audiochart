@@ -61,7 +61,18 @@ class GoogleDataWrapper {
 	}
 
 	numSeries() {
-		return this.data.getNumberOfColumns() - 1
+		let numberOfDataColumns = 0
+
+		// Check the role of each column
+		// Note: the first, domain, column, isn't counted
+		for (let i = 1; i < this.data.getNumberOfColumns(); i++) {
+			const role = this.data.getColumnRole(i)
+			if (role === '' || role === 'data') {  // TODO 'data' used?
+				numberOfDataColumns += 1
+			}
+		}
+
+		return numberOfDataColumns
 	}
 
 	seriesNames() {
@@ -159,7 +170,11 @@ class C3DataWrapper {
 	}
 
 	numSeries() {
-		return this.object.columns.length
+		let numberOfSeries = this.object.columns.length
+		if (this.object.hasOwnProperty('x')) {
+			numberOfSeries -= 1
+		}
+		return numberOfSeries
 	}
 
 	seriesNames() {
@@ -216,7 +231,7 @@ class HTMLTableDataWrapper {
 
 	_seriesFloats(series) {
 		return Array.from(
-			this.table.getElementsByTagName('td'),
+			this.table.querySelectorAll(`td:nth-child(${series + 1})`),
 			(cell) => parseFloat(cell.textContent))
 	}
 

@@ -1,6 +1,6 @@
 {
   "name": "audiochart",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
   "homepage": "http://matatk.agrip.org.uk/audiochart/",
   "license": "MIT",
@@ -24,7 +24,7 @@
     "replace:3": "replace-in-file /#261a3b/g auto examples/hello-*/docco.css --isRegex",
     "pretest": "npm run lint",
     "test": "karma start",
-    "test:ci": "npm run test -- --browsers ChromeHeadless --reporters dots",
+    "test:ci": "npm run test -- --browsers ChromeHeadlessNoSandbox --reporters dots",
     "preuglify": "mkdirp lib && node scripts/src-cat",
     "uglify": "uglifyjs --verbose --warn --compress --mangle --source-map=\"includeSources,url='audiochart.min.js.map'\" --output lib/audiochart.min.js src/audiochart-all.js && rimraf src/audiochart-all.js"
   },
@@ -32,20 +32,20 @@
     "c3": "~0.4",
     "copyfiles": "~1.2",
     "docco": "~0.7",
-    "eslint": "~4.11",
+    "eslint": "~4.18",
     "husky": "~0.14",
-    "jasmine-core": "~2.8",
+    "jasmine-core": "~2.99",
     "jsdoc": "~3.5",
-    "karma": "~1.7",
+    "karma": "~2.0",
     "karma-chrome-launcher": "~2.2",
     "karma-coverage": "~1.1",
-    "karma-firefox-launcher": "~1.0",
+    "karma-firefox-launcher": "~1.1",
     "karma-jasmine": "~1.1",
     "karma-jasmine-jquery": "~0.1",
     "karma-spec-reporter": "~0.0",
     "mkdirp": "~0.5",
-    "replace-in-file": "~3.0",
+    "replace-in-file": "~3.1",
     "rimraf": "~2.6",
-    "uglify-es": "~3.1"
+    "uglify-es": "~3.3"
   }
 }

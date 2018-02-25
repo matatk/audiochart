@@ -135,9 +135,9 @@ describe('AudioChart', () => {
 
 			expect(AudioChart._assignWrapperCallback(options))
 				.toEqual({
-					'Wrapper': JSONDataWrapper,
-					'parameter': 42,
-					'callback': null
+					'WrapperClass': JSONDataWrapper,
+					'dataSource': 42,
+					'visualCallback': null
 				})
 		})
 
@@ -149,9 +149,9 @@ describe('AudioChart', () => {
 
 			expect(AudioChart._assignWrapperCallback(options))
 				.toEqual({
-					'Wrapper': GoogleDataWrapper,
-					'parameter': 42,
-					'callback': null
+					'WrapperClass': GoogleDataWrapper,
+					'dataSource': 42,
+					'visualCallback': null
 				})
 		})
 
@@ -168,9 +168,9 @@ describe('AudioChart', () => {
 
 			expect(AudioChart._assignWrapperCallback(options))
 				.toEqual({
-					'Wrapper': GoogleDataWrapper,
-					'parameter': 42,
-					'callback': 42
+					'WrapperClass': GoogleDataWrapper,
+					'dataSource': 42,
+					'visualCallback': 42
 				})
 
 			expect(googleVisualCallbackMaker).toHaveBeenCalledWith(fakeChart)
@@ -184,9 +184,9 @@ describe('AudioChart', () => {
 
 			expect(AudioChart._assignWrapperCallback(options))
 				.toEqual({
-					'Wrapper': HTMLTableDataWrapper,
-					'parameter': 42,
-					'callback': null
+					'WrapperClass': HTMLTableDataWrapper,
+					'dataSource': 42,
+					'visualCallback': null
 				})
 		})
 
@@ -201,9 +201,9 @@ describe('AudioChart', () => {
 
 			expect(AudioChart._assignWrapperCallback(options))
 				.toEqual({
-					'Wrapper': HTMLTableDataWrapper,
-					'parameter': 42,
-					'callback': 42
+					'WrapperClass': HTMLTableDataWrapper,
+					'dataSource': 42,
+					'visualCallback': 42
 				})
 
 			expect(htmlTableVisualCallbackMaker)
