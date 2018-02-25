@@ -32,7 +32,7 @@
  * @param {integer} duration - the length of the rendering in milliseconds
  * @param {DataWrapper} data - the underlying data (wrapped in interface)
  * @param {PitchMapper} pitchMapper - maps data to pitches
- * @param {WebAudioSounder} sounder - the sounder object
+ * @param {Sounder} sounder - the sounder object
  * @param {VisualCallback} visualCallback - the callback function that highlights the current datum
  */
 class Player {
@@ -48,43 +48,14 @@ class Player {
 
 		const seriesLen = this.data.seriesLength(0)
 
-		const sampling = Player.samplingInfo(duration, seriesLen)
+		this._numberOfSeries = this.data.numSeries()
+
+		const sampling = Player._samplingInfo(duration, seriesLen)
 		this.interval = sampling.interval
 		this.sampleOneIn = sampling.in
 
 		this.seriesMaxIndex = seriesLen - 1  // TODO just use seriesLen?
 		this._state = 'ready'
-	}
-
-	/* static function to work out sampling rate */
-	static samplingInfo(duration, seriesLen) {
-		const minInterval = 10
-		let interval
-		let sampleOneIn
-		let slots
-
-		const idealInterval = Math.ceil(duration / seriesLen)
-		console.log(`sampleInfo: duration: ${duration}; series length: ${seriesLen}; ideal interval: ${idealInterval}`)
-
-		if (idealInterval &lt; minInterval) {
-			interval = minInterval
-			slots = Math.floor(duration / minInterval)
-			const sampleOneInFloat = seriesLen / slots
-			sampleOneIn = Math.round(seriesLen / slots)
-			console.log(`sampleInfo: Need to sample 1 in ${sampleOneIn} (${sampleOneInFloat})`)
-		} else {
-			slots = Math.floor(duration / minInterval)
-			interval = idealInterval
-			sampleOneIn = 1
-		}
-
-		console.log(`sampleInfo: it will take ${ (seriesLen / sampleOneIn) * interval}`)
-
-		return {
-			'sample': 1,
-			'in': sampleOneIn,
-			'interval': interval
-		}
 	}
 
 	/**
@@ -106,6 +77,28 @@ class Player {
 				break
 			default:
 				throw Error('Player error: invalid state: ' + String(this._state))
+		}
+	}
+
+	stepBackward(skip) {
+		const delta = skip || 50
+		this.playIndex -= delta
+		if (this.playIndex &lt; 0) {
+			this.playIndex = 0  // TODO test limiting
+		}
+		if (this._state === 'paused') {
+			this._playOne()
+		}
+	}
+
+	stepForward(skip) {
+		const delta = skip || 50
+		this.playIndex += delta
+		if (this.playIndex > this.seriesMaxIndex) {
+			this.playIndex = this.seriesMaxIndex  // TODO test limiting
+		}
+		if (this._state === 'paused') {
+			this._playOne()
 		}
 	}
 
@@ -145,23 +138,25 @@ class Player {
 		const thisPlayTimeStart = performance.now()
 
 		if (this.playIndex &lt;= this.seriesMaxIndex) {
+			// Play back one datum point
 			if (this.visualCallback !== null) {
-				this.visualCallback(0, this.playIndex)
+				this.visualCallback(this.playIndex)
 			}
-
-			this.sounder.frequency(
-				this.pitchMapper.map(
-					this.data.seriesValue(0, this.playIndex)))
+			for (let i = 0; i &lt; this._numberOfSeries; i++ ) {
+				this.sounder.frequency(i, this.pitchMapper.map(i,
+					this.data.seriesValue(i, this.playIndex)))
+			}
 		} else {
+			// Playback is complete; clean up
 			clearInterval(this.intervalID)
 			this.sounder.stop()
 			this._state = 'finished'
 
 			// Debugging info
-			console.log(`Player: Playing ${this.playCount} of ${this.playIndex} took ${Math.round(performance.now() - this.startTime)} ms`)
+			// console.log(`Player: Playing ${this.playCount} of ${this.playIndex} took ${Math.round(performance.now() - this.startTime)} ms`)
 			const sum = this.playTimes.reduce((acc, cur) => acc + cur)
 			const mean = sum / this.playTimes.length
-			console.log(`Player: Average play func time: ${mean.toFixed(2)} ms`)
+			// console.log(`Player: Average play func time: ${mean.toFixed(2)} ms`)
 		}
 
 		this.playIndex += this.sampleOneIn > 0 ? this.sampleOneIn : 1  // TODO sl
@@ -180,25 +175,34 @@ class Player {
 		this._state = 'paused'
 	}
 
-	stepBackward(skip) {
-		const delta = skip || 50
-		this.playIndex -= delta
-		if (this.playIndex &lt; 0) {
-			this.playIndex = 0  // TODO test limiting
-		}
-		if (this._state === 'paused') {
-			this._playOne()
-		}
-	}
+	/* Work out sampling rate */
+	static _samplingInfo(duration, seriesLen) {
+		const minInterval = 10
+		let interval
+		let sampleOneIn
+		let slots
 
-	stepForward(skip) {
-		const delta = skip || 50
-		this.playIndex += delta
-		if (this.playIndex > this.seriesMaxIndex) {
-			this.playIndex = this.seriesMaxIndex  // TODO test limiting
+		const idealInterval = Math.ceil(duration / seriesLen)
+		// console.log(`sampleInfo: duration: ${duration}; series length: ${seriesLen}; ideal interval: ${idealInterval}`)
+
+		if (idealInterval &lt; minInterval) {
+			interval = minInterval
+			slots = Math.floor(duration / minInterval)
+			const sampleOneInFloat = seriesLen / slots
+			sampleOneIn = Math.round(seriesLen / slots)
+			// console.log(`sampleInfo: Need to sample 1 in ${sampleOneIn} (${sampleOneInFloat})`)
+		} else {
+			slots = Math.floor(duration / minInterval)
+			interval = idealInterval
+			sampleOneIn = 1
 		}
-		if (this._state === 'paused') {
-			this._playOne()
+
+		// console.log(`sampleInfo: it will take ${ (seriesLen / sampleOneIn) * interval}`)
+
+		return {
+			'sample': 1,
+			'in': sampleOneIn,
+			'interval': interval
 		}
 	}
 }
@@ -212,13 +216,13 @@ class Player {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-AudioChart.html">AudioChart</a></li></ul><h3>Classes</h3><ul><li><a href="C3DataWrapper.html">C3DataWrapper</a></li><li><a href="FrequencyPitchMapper.html">FrequencyPitchMapper</a></li><li><a href="GoogleDataWrapper.html">GoogleDataWrapper</a></li><li><a href="HTMLTableDataWrapper.html">HTMLTableDataWrapper</a></li><li><a href="JSONDataWrapper.html">JSONDataWrapper</a></li><li><a href="KeyboardHandler.html">KeyboardHandler</a></li><li><a href="module-AudioChart-AudioChart.html">AudioChart</a></li><li><a href="PitchMapper.html">PitchMapper</a></li><li><a href="Player.html">Player</a></li><li><a href="WebAudioSounder.html">WebAudioSounder</a></li></ul><h3>Interfaces</h3><ul><li><a href="DataWrapper.html">DataWrapper</a></li></ul><h3>Global</h3><ul><li><a href="global.html#c3VisualCallbackMaker">c3VisualCallbackMaker</a></li><li><a href="global.html#getAudioContext">getAudioContext</a></li><li><a href="global.html#googleVisualCallbackMaker">googleVisualCallbackMaker</a></li><li><a href="global.html#htmlTableVisualCallbackMaker">htmlTableVisualCallbackMaker</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-AudioChart.html">AudioChart</a></li></ul><h3>Classes</h3><ul><li><a href="C3DataWrapper.html">C3DataWrapper</a></li><li><a href="FrequencyPitchMapper.html">FrequencyPitchMapper</a></li><li><a href="GoogleDataWrapper.html">GoogleDataWrapper</a></li><li><a href="HTMLTableDataWrapper.html">HTMLTableDataWrapper</a></li><li><a href="JSONDataWrapper.html">JSONDataWrapper</a></li><li><a href="KeyboardHandler.html">KeyboardHandler</a></li><li><a href="module-AudioChart-AudioChart.html">AudioChart</a></li><li><a href="PitchMapper.html">PitchMapper</a></li><li><a href="Player.html">Player</a></li><li><a href="Sounder.html">Sounder</a></li></ul><h3>Interfaces</h3><ul><li><a href="DataWrapper.html">DataWrapper</a></li></ul><h3>Global</h3><ul><li><a href="global.html#c3VisualCallbackMaker">c3VisualCallbackMaker</a></li><li><a href="global.html#getAudioContext">getAudioContext</a></li><li><a href="global.html#googleVisualCallbackMaker">googleVisualCallbackMaker</a></li><li><a href="global.html#htmlTableVisualCallbackMaker">htmlTableVisualCallbackMaker</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 20 2017 14:57:20 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Feb 25 2018 12:40:59 GMT+0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>

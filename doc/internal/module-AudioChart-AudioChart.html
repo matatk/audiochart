@@ -29,7 +29,7 @@
 <header>
     
         <h2><span class="attribs"><span class="type-signature"></span></span>
-            <span class="ancestors"><a href="module-AudioChart.html">AudioChart</a>~</span>AudioChart<span class="signature">(options, context)</span><span class="type-signature"></span></h2>
+            <span class="ancestors"><a href="module-AudioChart.html">AudioChart</a>~</span>AudioChart<span class="signature">(options)</span><span class="type-signature"></span></h2>
         
             <div class="class-description">Main object for API consumers</div>
         
@@ -46,7 +46,7 @@
     
 
     
-    <h4 class="name" id="AudioChart"><span class="type-signature"></span>new AudioChart<span class="signature">(options, context)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="AudioChart"><span class="type-signature"></span>new AudioChart<span class="signature">(options)</span><span class="type-signature"></span></h4>
     
 
     
@@ -55,8 +55,8 @@
 
 <div class="description">
     Create an AudioChart object.
-This first checks to see if the Web Audio API is available, and
-throws an {Error} if not.
+This first checks to see if the Web Audio API is available, and throws
+an {Error} if not. Then check the options given by the user.
 </div>
 
 
@@ -98,7 +98,7 @@ throws an {Error} if not.
             <td class="type">
             
                 
-<span class="param-type">options</span>
+<span class="param-type">AudioChartOptions</span>
 
 
             
@@ -109,29 +109,6 @@ throws an {Error} if not.
             
 
             <td class="description last">AudioChart options</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>context</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">AudioContext</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the window's AudioContext</td>
         </tr>
 
     
@@ -172,7 +149,7 @@ throws an {Error} if not.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="AudioChart.js.html">AudioChart.js</a>, <a href="AudioChart.js.html#line36">line 36</a>
+        <a href="AudioChart.js.html">AudioChart.js</a>, <a href="AudioChart.js.html#line34">line 34</a>
     </li></ul></dd>
     
 
@@ -215,6 +192,73 @@ throws an {Error} if not.
 
     
 
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="options"><span class="type-signature"></span>options<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Returns the current set of options (passed in at object creation, or
+computed when options were updated).
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="AudioChart.js.html">AudioChart.js</a>, <a href="AudioChart.js.html#line61">line 61</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
     
 
     
@@ -328,7 +372,7 @@ should be used with this chart.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="AudioChart.js.html">AudioChart.js</a>, <a href="AudioChart.js.html#line96">line 96</a>
+        <a href="AudioChart.js.html">AudioChart.js</a>, <a href="AudioChart.js.html#line204">line 204</a>
     </li></ul></dd>
     
 
@@ -355,8 +399,7 @@ should be used with this chart.
 
         
 <div class="param-desc">
-    - data wrapper, data wrapper parameter and callback (if applicable)
-	  for this chart
+    - data wrapper, data source and callback (if applicable) for this chart
 </div>
 
 
@@ -374,6 +417,464 @@ should be used with this chart.
 </dl>
 
     
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="._checkOptions"><span class="type-signature">(private, static) </span>_checkOptions<span class="signature">(options)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Checks the passed-in options opbject for validity. This does not perform
+detailed checks that are covered in the various components' constructors;
+they run such checks themselves.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">AudioChartOptions</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">AudioChart options</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="AudioChart.js.html">AudioChart.js</a>, <a href="AudioChart.js.html#line120">line 120</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="_setUp"><span class="type-signature">(private) </span>_setUp<span class="signature">(context, options)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Checks options (either when a new AudioChart object is created, or when
+the user has asked for them to be updated) and then set everything up.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>context</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">AudioContext</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the Web Audio context</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">AudioChartOptions</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">AudioChart options</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="AudioChart.js.html">AudioChart.js</a>, <a href="AudioChart.js.html#line87">line 87</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="_wireUpStuff"><span class="type-signature">(private) </span>_wireUpStuff<span class="signature">(context, options)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Make a data wrapper of the appropriate class, instantiated with the
+appropriate data paramater (from options.data) and, optionally, make
+a visual callback (which may use options.chart, or other options if
+it's an HTML table visual callback).
+FIXME: Test somehow
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>context</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">AudioContext</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the Web Audio context</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">AudioChartOptions</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">given by the user</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="AudioChart.js.html">AudioChart.js</a>, <a href="AudioChart.js.html#line161">line 161</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -437,7 +938,145 @@ should be used with this chart.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="AudioChart.js.html">AudioChart.js</a>, <a href="AudioChart.js.html#line83">line 83</a>
+        <a href="AudioChart.js.html">AudioChart.js</a>, <a href="AudioChart.js.html#line53">line 53</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="updateOptions"><span class="type-signature"></span>updateOptions<span class="signature">(newOptions)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Updates an AudioChart object to reflect new options. Can accept a subset
+of the standard options, so if only, for example, duration changes, then
+you need only specify the new duration and not the type and other
+paramaters.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>newOptions</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">AudioChartOptions</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Partial/full AudioChart options</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="AudioChart.js.html">AudioChart.js</a>, <a href="AudioChart.js.html#line72">line 72</a>
     </li></ul></dd>
     
 
@@ -481,13 +1120,13 @@ should be used with this chart.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-AudioChart.html">AudioChart</a></li></ul><h3>Classes</h3><ul><li><a href="C3DataWrapper.html">C3DataWrapper</a></li><li><a href="FrequencyPitchMapper.html">FrequencyPitchMapper</a></li><li><a href="GoogleDataWrapper.html">GoogleDataWrapper</a></li><li><a href="HTMLTableDataWrapper.html">HTMLTableDataWrapper</a></li><li><a href="JSONDataWrapper.html">JSONDataWrapper</a></li><li><a href="KeyboardHandler.html">KeyboardHandler</a></li><li><a href="module-AudioChart-AudioChart.html">AudioChart</a></li><li><a href="PitchMapper.html">PitchMapper</a></li><li><a href="Player.html">Player</a></li><li><a href="WebAudioSounder.html">WebAudioSounder</a></li></ul><h3>Interfaces</h3><ul><li><a href="DataWrapper.html">DataWrapper</a></li></ul><h3>Global</h3><ul><li><a href="global.html#c3VisualCallbackMaker">c3VisualCallbackMaker</a></li><li><a href="global.html#getAudioContext">getAudioContext</a></li><li><a href="global.html#googleVisualCallbackMaker">googleVisualCallbackMaker</a></li><li><a href="global.html#htmlTableVisualCallbackMaker">htmlTableVisualCallbackMaker</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-AudioChart.html">AudioChart</a></li></ul><h3>Classes</h3><ul><li><a href="C3DataWrapper.html">C3DataWrapper</a></li><li><a href="FrequencyPitchMapper.html">FrequencyPitchMapper</a></li><li><a href="GoogleDataWrapper.html">GoogleDataWrapper</a></li><li><a href="HTMLTableDataWrapper.html">HTMLTableDataWrapper</a></li><li><a href="JSONDataWrapper.html">JSONDataWrapper</a></li><li><a href="KeyboardHandler.html">KeyboardHandler</a></li><li><a href="module-AudioChart-AudioChart.html">AudioChart</a></li><li><a href="PitchMapper.html">PitchMapper</a></li><li><a href="Player.html">Player</a></li><li><a href="Sounder.html">Sounder</a></li></ul><h3>Interfaces</h3><ul><li><a href="DataWrapper.html">DataWrapper</a></li></ul><h3>Global</h3><ul><li><a href="global.html#c3VisualCallbackMaker">c3VisualCallbackMaker</a></li><li><a href="global.html#getAudioContext">getAudioContext</a></li><li><a href="global.html#googleVisualCallbackMaker">googleVisualCallbackMaker</a></li><li><a href="global.html#htmlTableVisualCallbackMaker">htmlTableVisualCallbackMaker</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 20 2017 14:57:20 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Feb 25 2018 12:40:59 GMT+0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>

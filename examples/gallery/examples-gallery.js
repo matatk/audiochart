@@ -2,6 +2,8 @@
 google.load('visualization', '1.0', {'packages':['corechart']})
 google.setOnLoadCallback(init)  // TODO use standard DOM loaded event?
 
+const optionsUpdateObjects = []
+
 
 //
 // Options UI handling
@@ -15,6 +17,10 @@ function errorCheck() {
 		errorCheckToggle('on')
 	} else {
 		errorCheckToggle('off')
+		updateFrequencyOptions(
+			freqLowInput.valueAsNumber,
+			freqHighInput.valueAsNumber
+		)
 	}
 }
 
@@ -45,17 +51,35 @@ function errorCheckToggleInvalid(toState) {
 }
 
 /* Create a default options structure */
-function makeAudiochartOptions() {
+function makePartialOptions() {
 	return {
 		// Fill in 'type'
 		// Fill in 'data' and 'chart'
 		//  or 'htmlDocument' and 'htmlTableId'
-		'duration':
-		parseInt(document.getElementById('opt-duration').value) * 1000,
-		'frequencyLow':
-		document.getElementById('opt-freq-low').valueAsNumber,
-		'frequencyHigh':
-		document.getElementById('opt-freq-high').valueAsNumber
+		'duration': parseInt(document.getElementById('opt-duration').value) * 1000,
+		'frequencyLow': document.getElementById('opt-freq-low').valueAsNumber,
+		'frequencyHigh': document.getElementById('opt-freq-high').valueAsNumber
+	}
+}
+
+/* Update all active AudioChart objects' frequency options */
+function updateFrequencyOptions(lowFreq, highFreq) {
+	const newSettings = {
+		frequencyLow: lowFreq,
+		frequencyHigh: highFreq
+	}
+
+	for (const ac of optionsUpdateObjects) {
+		ac.updateOptions(newSettings)
+	}
+}
+
+/* Update all active AudioChart objects' duration option */
+function updateDurationOption(newDuration) {
+	for (const ac of optionsUpdateObjects) {
+		ac.updateOptions({
+			duration: newDuration * 1000
+		})
 	}
 }
 
@@ -64,43 +88,54 @@ function makeAudiochartOptions() {
 // Generating data for the charts
 //
 
-function dataHorizontalLine() {
-	const MIN = 0
-	const MAX = 1
-	const DELTA = 0.1
-	const results = []
-	let index = 0
-	for( let i = MIN; i <= MAX; i = i + DELTA ) {
-		results[index] = [i, 42]
-		index++
-	}
-	return results
+function dataSimpleAxis(stops) {
+	return Array.from({length: stops}, (_, i) => i)
+}
+
+function dataHorizontalLine(stops, value) {
+	const delta = stops ? (1 / stops) : 0.1
+	const y = value ? value : 42
+	return _dataCore(0, 1, delta, () => y)
 }
 
 function dataGradient() {
-	const MIN = 0
-	const MAX = 1
-	const DELTA = 0.01
+	return _dataCore(0, 1, 0.01, x => x)
+}
+
+function dataSine() {
+	return _dataTrig(Math.sin)
+}
+
+function dataCosine() {
+	return _dataTrig(Math.cos)
+}
+
+function dataTrigAxis() {
+	return _dataTrig(x => x)
+}
+
+function _dataTrig(callback) {
+	return _dataCore(-Math.PI, Math.PI, 0.01, callback)
+}
+
+function _dataCore(min, max, delta, callback) {
 	const results = []
 	let index = 0
-	for( let i = MIN; i <= MAX; i += DELTA ) {
-		results[index] = [i, i]
+	for(let i = min; i <= max; i = i + delta) {
+		results[index] = callback(i)
 		index++
 	}
 	return results
 }
 
-function dataSine() {
-	const MIN = -Math.PI
-	const MAX = Math.PI
-	const DELTA = 0.01
-	const results = []
-	let index = 0
-	for( let i = MIN; i <= MAX; i = i + DELTA ) {
-		results[index] = [i, Math.sin(i)]
-		index++
-	}
-	return results
+function zip() {
+	// Assumes all arrays are of the same length
+	const arrays = [...arguments]
+	return arrays[0].map((item, i) => {
+		return arrays.map(array => {
+			return array[i]
+		})
+	})
 }
 
 
@@ -126,27 +161,26 @@ function googleCore(Klass, data, chartId, buttonId) {
 
 	resizeChart()  // initial draw
 
-	// Resizing; thanks, http://stackoverflow.com/a/23594901
+	// Handle resizing when the viewport size changes
+	// Ta for initial idea: http://stackoverflow.com/a/23594901
 	function resizeChart() {
 		chart.draw(data, googleOptions)
 	}
-	if (document.addEventListener) {
-		window.addEventListener('resize', resizeChart)
-	} else if (document.attachEvent) {  // TODO can be removed now?
-		window.attachEvent('onresize', resizeChart)
-	} else {
-		window.resize = resizeChart
-	}
+
+	window.addEventListener('resize', resizeChart)
 
 	// Wire up to AudioChart
 	// TODO DRY
+	const audiochartOptions = makePartialOptions()
+	audiochartOptions['type'] = 'google'
+	audiochartOptions['data'] = data
+	audiochartOptions['chart'] = chart
+	audiochartOptions['chartContainer'] = document.getElementById(chartId)
+	const ac = new AudioChart(audiochartOptions)
+
+	optionsUpdateObjects.push(ac)  // register for options updates
+
 	document.getElementById(buttonId).onclick = function() {
-		const audiochartOptions = makeAudiochartOptions()
-		audiochartOptions['type'] = 'google'
-		audiochartOptions['data'] = data
-		audiochartOptions['chart'] = chart
-		audiochartOptions['chartContainer'] = document.getElementById(chartId)
-		const ac = new AudioChart(audiochartOptions)
 		ac.playPause()
 	}
 }
@@ -156,17 +190,16 @@ function googleCore(Klass, data, chartId, buttonId) {
 // Core C3 drawing code
 //
 
-function makeC3Data(func, seriesName) {
-	const rawData = func()
-	const x = rawData.map((pair) => pair[0])
-	const values = rawData.map((pair) => pair[1])
+function makeC3Data(seriesNames, seriesValueLists, xValues) {
+	const columns = []
+	for (let i = 0; i < seriesNames.length; i++) {
+		columns.push([seriesNames[i]].concat(seriesValueLists[i]))
+	}
+	columns.push(['x'].concat(xValues))
 
 	return {
 		x: 'x',
-		columns: [
-			[seriesName].concat(values),
-			['x'].concat(x)
-		],
+		columns: columns,
 		selection: {
 			enabled: true
 		}
@@ -201,13 +234,16 @@ function c3Core(data, chartId, buttonId, extraChartOptions) {
 
 	// Wire up to AudioChart
 	// TODO DRY
+	const audiochartOptions = makePartialOptions()
+	audiochartOptions['type'] = 'c3'
+	audiochartOptions['data'] = data
+	audiochartOptions['chart'] = chart
+	audiochartOptions['chartContainer'] = document.getElementById(chartId)
+	const ac = new AudioChart(audiochartOptions)
+
+	optionsUpdateObjects.push(ac)  // register for options updates
+
 	document.getElementById(buttonId).onclick = function() {
-		const audiochartOptions = makeAudiochartOptions()
-		audiochartOptions['type'] = 'c3'
-		audiochartOptions['data'] = data
-		audiochartOptions['chart'] = chart
-		audiochartOptions['chartContainer'] = document.getElementById(chartId)
-		const ac = new AudioChart(audiochartOptions)
 		ac.playPause()
 	}
 }
@@ -219,53 +255,84 @@ function c3Core(data, chartId, buttonId, extraChartOptions) {
 
 function drawHorizontalLine() {
 	const data = new google.visualization.DataTable()
-	data.addColumn('number', 'blah')
-	data.addColumn('number', 'blah')
-	data.addRows(dataHorizontalLine())
+	data.addColumn('number', 'X')
+	data.addColumn('number', 'Line')
+	const rows = zip(dataSimpleAxis(10), dataHorizontalLine())
+	data.addRows(rows)
 	googleLineCore(data, 'chart-google-horizontal-line', 'btn-google-horizontal-line')
 }
 
 function drawGradient() {
+	const gradient = dataGradient()
+	const xValues = dataSimpleAxis(gradient.length)
+
 	const data = new google.visualization.DataTable()
-	data.addColumn('number', 'blah')
-	data.addColumn('number', 'blah')
-	data.addRows(dataGradient())
+	data.addColumn('number', 'X')
+	data.addColumn('number', 'Gradient')
+	data.addRows(zip(xValues, gradient))
 	googleLineCore(data, 'chart-google-gradient', 'btn-google-gradient')
 
-	c3Core(makeC3Data(dataGradient, 'Gradient'), 'chart-c3-gradient', 'btn-c3-gradient')
+	c3Core(
+		makeC3Data(['Gradient'], [gradient], xValues),
+		'chart-c3-gradient',
+		'btn-c3-gradient')
+}
+
+function drawHorizontalLineAndGradient() {
+	const line = dataHorizontalLine(100, 0.5)
+	const gradient = dataGradient()
+	const xValues = dataSimpleAxis(100)
+
+	const data = new google.visualization.DataTable()
+	data.addColumn('number', 'X')
+	data.addColumn('number', 'Line')
+	data.addColumn('number', 'Gradient')
+	data.addRows(zip(xValues, line, gradient))
+	googleLineCore(data, 'chart-google-line-gradient', 'btn-google-line-gradient')
+
+	c3Core(
+		makeC3Data(['Line', 'Gradient'], [line, gradient], xValues),
+		'chart-c3-line-gradient',
+		'btn-c3-line-gradient')
 }
 
 function drawSine() {
+	const sine = dataSine()
+	const xValues = dataTrigAxis()
+
 	const data = new google.visualization.DataTable()
 	data.addColumn('number', 'Radians')
 	data.addColumn('number', 'Sine')
-	data.addRows(dataSine())
+	data.addRows(zip(xValues, sine))
 	googleLineCore(data, 'chart-google-sine', 'btn-google-sine')
 
-	c3Core(makeC3Data(dataSine, 'Sine'), 'chart-c3-sine', 'btn-c3-sine', {
-		axis: {
-			x: {
-				tick: {
-					count: 20,
-					format: d3.format('.2f')
+	c3Core(
+		makeC3Data(['Sine'], [sine], xValues),
+		'chart-c3-sine',
+		'btn-c3-sine', {
+			axis: {
+				x: {
+					tick: {
+						count: 20,
+						format: d3.format('.2f')
+					}
+				}
+			},
+			grid: {
+				x: {
+					show: true,
+					lines: [
+						{ value: 0 }
+					]
+				},
+				y: {
+					show: true,
+					lines: [
+						{ value: 0 }
+					]
 				}
 			}
-		},
-		grid: {
-			x: {
-				show: true,
-				lines: [
-					{ value: 0 }
-				]
-			},
-			y: {
-				show: true,
-				lines: [
-					{ value: 0 }
-				]
-			}
-		}
-	})
+		})
 }
 
 function drawSalesLineAndBar() {
@@ -286,11 +353,11 @@ function drawSalesAnnotated() {
 	const data = new google.visualization.DataTable()
 	data.addColumn('string', 'Month') // Implicit domain label col.
 	data.addColumn('number', 'Sales') // Implicit series 1 data col.
-	data.addColumn({type: 'number', role: 'interval'})
-	data.addColumn({type: 'number', role: 'interval'})
-	data.addColumn({type: 'string', role: 'annotation'})
-	data.addColumn({type: 'string', role: 'annotationText'})
-	data.addColumn({type: 'boolean',role: 'certainty'})
+	data.addColumn({type: 'number',  role: 'interval'})
+	data.addColumn({type: 'number',  role: 'interval'})
+	data.addColumn({type: 'string',  role: 'annotation'})
+	data.addColumn({type: 'string',  role: 'annotationText'})
+	data.addColumn({type: 'boolean', role: 'certainty'})
 	data.addRows([
 		['April',1000,  900, 1100,  'A','Stolen data', true],
 		['May',  1170, 1000, 1200,  'B','Coffee spill', true],
@@ -300,17 +367,62 @@ function drawSalesAnnotated() {
 	googleLineCore(data, 'chart-google-sales-annotated', 'btn-google-sales-annotated')
 }
 
+function drawSineAndCosine() {
+	const sine = dataSine()
+	const cosine = dataCosine()
+	const xValues = dataTrigAxis()
+
+	const data = new google.visualization.DataTable()
+	data.addColumn('number', 'Radians')
+	data.addColumn('number', 'Sine')
+	data.addColumn('number', 'Cosine')
+	data.addRows(zip(xValues, sine, cosine))
+	googleLineCore(data, 'chart-google-sine-cosine', 'btn-google-sine-cosine')
+
+	c3Core(
+		makeC3Data(['Sine', 'Cosine'], [sine, cosine], xValues),
+		'chart-c3-sine-cosine',
+		'btn-c3-sine-cosine', {
+			axis: {
+				x: {
+					tick: {
+						count: 20,
+						format: d3.format('.2f')
+					}
+				}
+			},
+			grid: {
+				x: {
+					show: true,
+					lines: [
+						{ value: 0 }
+					]
+				},
+				y: {
+					show: true,
+					lines: [
+						{ value: 0 }
+					]
+				}
+			}
+		})
+
+}
+
 
 //
 // JSON Example
 //
 
 function initJSON() {  // TODO DRY re HTML
+	const jsonOptions = makePartialOptions()
+	jsonOptions['type'] = 'json'
+	jsonOptions['data'] = document.getElementById('json1').textContent
+	const jsonAC = new AudioChart(jsonOptions)
+
+	optionsUpdateObjects.push(jsonAC)  // register for options updates
+
 	document.getElementById('btn-json1').onclick = function() {
-		const jsonOptions = makeAudiochartOptions()
-		jsonOptions['type'] = 'json'
-		jsonOptions['data'] = document.getElementById('json1').textContent
-		const jsonAC = new AudioChart(jsonOptions)
 		jsonAC.playPause()
 	}
 }
@@ -320,15 +432,26 @@ function initJSON() {  // TODO DRY re HTML
 // HTML Example
 //
 
-function initHTML() {  // TODO DRY re JSON
-	document.getElementById('btn-table1').onclick = function() {
-		const htmlOptions = makeAudiochartOptions()
-		htmlOptions['type'] = 'htmlTable'
-		htmlOptions['table'] = document.getElementById('table1')
-		htmlOptions['highlightClass'] = 'current-datum'
-		const htmlAC = new AudioChart(htmlOptions)
+function initHTML(tableId, buttonId) {  // TODO DRY re JSON
+	const htmlOptions = makePartialOptions()
+	htmlOptions['type'] = 'htmlTable'
+	htmlOptions['table'] = document.getElementById(tableId)
+	htmlOptions['highlightClass'] = 'current-datum'
+	const htmlAC = new AudioChart(htmlOptions)
+
+	optionsUpdateObjects.push(htmlAC)  // register for options updates
+
+	document.getElementById(buttonId).onclick = function() {
 		htmlAC.playPause()
 	}
+}
+
+function oneSeriesTable() {
+	initHTML('table1', 'btn-table1')
+}
+
+function twoSeriesTable() {
+	initHTML('table2', 'btn-table2')
 }
 
 
@@ -337,21 +460,29 @@ function initHTML() {  // TODO DRY re JSON
 //
 
 function init() {
-	// Wire up error checking
-	function changeHandler(id) {
+	// Wire up options error checking
+	function frequencyChangeHandler(id) {
 		document.getElementById(id).addEventListener('change', errorCheck)
 	}
 
-	changeHandler('opt-freq-low')
-	changeHandler('opt-freq-high')
+	frequencyChangeHandler('opt-freq-low')
+	frequencyChangeHandler('opt-freq-high')
 
-	// Graphical charts
+	document.getElementById('opt-duration').addEventListener('change', function() {  // TODO => ?
+		updateDurationOption(this.value)
+	})
+
+	// Draw charts
 	drawHorizontalLine()
 	drawGradient()
 	drawSine()
 	drawSalesLineAndBar()
 	drawSalesAnnotated()
+	drawHorizontalLineAndGradient()
+	drawSineAndCosine()
 
+	// Prepare non-graphical charts
 	initJSON()
-	initHTML()
+	oneSeriesTable()
+	twoSeriesTable()
 }

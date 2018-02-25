@@ -150,7 +150,8 @@ google.setOnLoadCallback(drawChart)
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>Handle resizing when the viewport size changes (<a href="http://stackoverflow.com/a/23594901">thanks asgallant of StackOverflow</a>)</p>
+              <p>Handle resizing when the viewport size changes
+Ta for initial idea: <a href="http://stackoverflow.com/a/23594901">http://stackoverflow.com/a/23594901</a></p>
 
             </div>
             
@@ -158,13 +159,7 @@ google.setOnLoadCallback(drawChart)
 		chart.draw(data, chartOptions)
 	}
 
-	<span class="hljs-keyword">if</span> (<span class="hljs-built_in">document</span>.addEventListener) {
-		<span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">'resize'</span>, resizeChart)
-	} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">document</span>.attachEvent) {
-		<span class="hljs-built_in">window</span>.attachEvent(<span class="hljs-string">'onresize'</span>, resizeChart)
-	} <span class="hljs-keyword">else</span> {
-		<span class="hljs-built_in">window</span>.resize = resizeChart
-	}</pre></div></div>
+	<span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">'resize'</span>, resizeChart)</pre></div></div>
             
         </li>
         

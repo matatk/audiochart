@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature">(abstract, private) </span></span>PitchMapper<span class="signature">(minimumDatum, maximumDatum)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature">(abstract, private) </span></span>PitchMapper<span class="signature">(seriesInfo)</span><span class="type-signature"></span></h2>
         
             <div class="class-description">Base Pitch Mapper</div>
         
@@ -45,7 +45,7 @@
     
 
     
-    <h4 class="name" id="PitchMapper"><span class="type-signature">(abstract, private) </span>new PitchMapper<span class="signature">(minimumDatum, maximumDatum)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="PitchMapper"><span class="type-signature">(abstract, private) </span>new PitchMapper<span class="signature">(seriesInfo)</span><span class="type-signature"></span></h4>
     
 
     
@@ -89,13 +89,13 @@
 
         <tr>
             
-                <td class="name"><code>minimumDatum</code></td>
+                <td class="name"><code>seriesInfo</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">Array.&lt;Object></span>
 
 
             
@@ -105,7 +105,49 @@
 
             
 
-            <td class="description last">the minimum value in this data series</td>
+            <td class="description last">min and max data and frequencies
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>minimumDatum</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">minimun data value</td>
         </tr>
 
     
@@ -118,7 +160,7 @@
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">string</span>
 
 
             
@@ -128,7 +170,60 @@
 
             
 
-            <td class="description last">the maximum value in this data series</td>
+            <td class="description last">maximun data value</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>minimumFrequency</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">minimun frequency</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>maximumFrequency</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">maximun frequency</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -324,7 +419,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PitchMappers.js.html">PitchMappers.js</a>, <a href="PitchMappers.js.html#line25">line 25</a>
+        <a href="PitchMappers.js.html">PitchMappers.js</a>, <a href="PitchMappers.js.html#line51">line 51</a>
     </li></ul></dd>
     
 
@@ -368,13 +463,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-AudioChart.html">AudioChart</a></li></ul><h3>Classes</h3><ul><li><a href="C3DataWrapper.html">C3DataWrapper</a></li><li><a href="FrequencyPitchMapper.html">FrequencyPitchMapper</a></li><li><a href="GoogleDataWrapper.html">GoogleDataWrapper</a></li><li><a href="HTMLTableDataWrapper.html">HTMLTableDataWrapper</a></li><li><a href="JSONDataWrapper.html">JSONDataWrapper</a></li><li><a href="KeyboardHandler.html">KeyboardHandler</a></li><li><a href="module-AudioChart-AudioChart.html">AudioChart</a></li><li><a href="PitchMapper.html">PitchMapper</a></li><li><a href="Player.html">Player</a></li><li><a href="WebAudioSounder.html">WebAudioSounder</a></li></ul><h3>Interfaces</h3><ul><li><a href="DataWrapper.html">DataWrapper</a></li></ul><h3>Global</h3><ul><li><a href="global.html#c3VisualCallbackMaker">c3VisualCallbackMaker</a></li><li><a href="global.html#getAudioContext">getAudioContext</a></li><li><a href="global.html#googleVisualCallbackMaker">googleVisualCallbackMaker</a></li><li><a href="global.html#htmlTableVisualCallbackMaker">htmlTableVisualCallbackMaker</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-AudioChart.html">AudioChart</a></li></ul><h3>Classes</h3><ul><li><a href="C3DataWrapper.html">C3DataWrapper</a></li><li><a href="FrequencyPitchMapper.html">FrequencyPitchMapper</a></li><li><a href="GoogleDataWrapper.html">GoogleDataWrapper</a></li><li><a href="HTMLTableDataWrapper.html">HTMLTableDataWrapper</a></li><li><a href="JSONDataWrapper.html">JSONDataWrapper</a></li><li><a href="KeyboardHandler.html">KeyboardHandler</a></li><li><a href="module-AudioChart-AudioChart.html">AudioChart</a></li><li><a href="PitchMapper.html">PitchMapper</a></li><li><a href="Player.html">Player</a></li><li><a href="Sounder.html">Sounder</a></li></ul><h3>Interfaces</h3><ul><li><a href="DataWrapper.html">DataWrapper</a></li></ul><h3>Global</h3><ul><li><a href="global.html#c3VisualCallbackMaker">c3VisualCallbackMaker</a></li><li><a href="global.html#getAudioContext">getAudioContext</a></li><li><a href="global.html#googleVisualCallbackMaker">googleVisualCallbackMaker</a></li><li><a href="global.html#htmlTableVisualCallbackMaker">htmlTableVisualCallbackMaker</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 20 2017 14:57:20 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Feb 25 2018 12:40:59 GMT+0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>
