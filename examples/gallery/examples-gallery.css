@@ -2,15 +2,8 @@
  * Examples Gallery
  */
 
-nav ul {
-	margin: 0;
-	padding: 0;
-}
-
-nav ul li {
-	display: inline;
-	list-style-type: none;
-	padding-right: 1.5em;
+summary h2 {
+	display: inline-block;
 }
 
 table {
