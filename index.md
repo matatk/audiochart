@@ -17,10 +17,8 @@ abstract: <p>Allows the user to explore charts on web pages using sound and the 
 
 AudioChart uses the Web Audio API, which is [supported by modern browsers, including Microsoft Edge](http://caniuse.com/audio-api) (but not Internet Explorer).
 
-Thanks to [The Sonification Handbook](http://sonification.de/handbook/) for the research behind it and to [The Paciello Group](http://paciellogroup.com) for allowing me to share this with you.
-
 Use Cases
-----------
+---------
 
 What does it let your users do?
 
@@ -37,7 +35,7 @@ What sort of charts/data does it work with?
 The [examples gallery](http://matatk.agrip.org.uk/audiochart/examples/gallery/) covers using AudioChart with Google Charts, JSON and HTML tables.
 
 Examples and Documentation
----------------------------
+--------------------------
 
  * These "getting started" examples contain commented code samples.
    - ["Hello, World" AudioChart&mdash;Google Chart Tools example](http://matatk.agrip.org.uk/audiochart/examples/hello-google/)
@@ -47,7 +45,7 @@ Examples and Documentation
  * [Public API documentation](http://matatk.agrip.org.uk/audiochart/doc/public/)
 
 Development
-------------
+-----------
 
 Current and planned work is documented and discussed in the [AudioChart issue tracker](https://github.com/matatk/audiochart/issues) on GitHub.
 
