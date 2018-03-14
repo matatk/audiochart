@@ -6,7 +6,8 @@ module.exports = function(config) {
 		files: [
 			'src/*.js',
 			'spec/*.html',
-			'spec/*.js'
+			'spec/util*.js',
+			'spec/*.spec.js'
 		],
 		preprocessors: {
 			'src/*.js': ['coverage']
