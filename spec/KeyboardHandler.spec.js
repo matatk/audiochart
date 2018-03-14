@@ -1,5 +1,5 @@
 'use strict'
-/* global KeyboardHandler */
+/* global loadFixture KeyboardHandler */
 
 class FakePlayer {
 	play() {}
@@ -29,8 +29,7 @@ describe('KeyboardHandler', () => {
 	let fakePlayer
 
 	beforeEach(() => {
-		jasmine.getFixtures().fixturesPath = 'base/spec/'
-		loadFixtures('KeyboardHandler.fixtures.html')
+		loadFixture('KeyboardHandler.fixtures.html')
 
 		nonExistantDiv = document.getElementById('moo')
 		keyTargetDiv = document.getElementById('test-01')

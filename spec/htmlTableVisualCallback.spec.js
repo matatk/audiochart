@@ -1,9 +1,7 @@
 'use strict'
-/* global htmlTableVisualCallbackMaker */
+/* global loadFixture htmlTableVisualCallbackMaker */
 
 describe('htmlTableVisualCallback', () => {
-	jasmine.getFixtures().fixturesPath = 'base/spec/'
-
 	let htmlTableVisualCallback = null
 	const highlightClassName = 'audiochart-playing'
 	let table = null
@@ -34,7 +32,7 @@ describe('htmlTableVisualCallback', () => {
 
 	describe('looking at the "testOne" table', () => {
 		beforeEach(() => {
-			loadFixtures('HTMLTableDataWrapper.fixtures.html')
+			loadFixture('HTMLTableDataWrapper.fixtures.html')
 			table = document.getElementById('testOne')
 			htmlTableVisualCallback = htmlTableVisualCallbackMaker(table, highlightClassName)
 		})
@@ -44,7 +42,7 @@ describe('htmlTableVisualCallback', () => {
 
 	describe('looking at the "testTwo" table', () => {
 		beforeEach(() => {
-			loadFixtures('HTMLTableDataWrapper.fixtures.html')
+			loadFixture('HTMLTableDataWrapper.fixtures.html')
 			table = document.getElementById('testTwo')
 			htmlTableVisualCallback = htmlTableVisualCallbackMaker(table, highlightClassName)
 		})
