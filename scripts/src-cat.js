@@ -11,7 +11,8 @@ const files = [
 	'getAudioContext.js',
 	'visualCallbackMakers.js',
 	'KeyboardHandler.js',
-	'AudioChart.js'
+	'AudioChart.js',
+	'OptionsMaker.js'
 ]
 
 let code = ''

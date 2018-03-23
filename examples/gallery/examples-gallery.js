@@ -246,6 +246,11 @@ function c3Core(data, chartId, buttonId, extraChartOptions) {
 	document.getElementById(buttonId).onclick = function() {
 		ac.playPause()
 	}
+
+	const popupButton = document.getElementById(buttonId + '-options')
+	if (popupButton) {
+		new OptionsMaker(popupButton)
+	}
 }
 
 
