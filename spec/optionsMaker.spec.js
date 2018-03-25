@@ -5,24 +5,23 @@ describe('OptionsMaker', () => {
 	let trigger = null  // the button used to open the popup.
 
 	// After some tests we could end up with a dangling dialog.
-	// Store a copy of the last element on the page before the test;
-	// this is used to compare, to detect a created dialog later.
+	// Store a copy of the last element on the page before all tests;
+	// this is used to detect a created dialog later.
 	let _initialLastElement = null
+
+	beforeAll(() => {
+		_initialLastElement = document.body.lastChild
+	})
 
 	beforeEach(() => {
 		loadFixture('optionsMaker.fixtures.html')
 		trigger = document.getElementById('options-popup-trigger')
-		_initialLastElement = document.body.lastChild
-		spyOn(trigger, 'click').and.callThrough()
 	})
 
 	afterEach(() => {
-		// Remove a dangling dialog if we're expecting one and it is there
-		const clicks = trigger.click.calls.count()
-		if (clicks > 0 && clicks % 2 !== 0) {
-			if (_initialLastElement !== document.body.lastChild) {
-				document.body.lastChild.remove()
-			}
+		// Remove a dangling dialog if need be
+		if (_initialLastElement !== document.body.lastChild) {
+			document.body.lastChild.remove()
 		}
 	})
 
@@ -95,16 +94,12 @@ describe('OptionsMaker', () => {
 		const gap = 8
 		const dialog = document.body.lastChild
 
-		expect(dialog.style.backgroundColor).toBe('white')
-		expect(dialog.style.padding).toBe('1em')
+		expect(dialog.className).toBe('audiochart-options')
 		expect(dialog.style.position).toBe('absolute')
-		expect(dialog.style.borderColor).toBe('blue')
-		expect(dialog.style.borderStyle).toBe('solid')
-		expect(dialog.style.borderWidth).toBe('2px')
-		expect(dialog.style.zIndex).toBe('1')
 		expect(dialog.style.left).toBe(trigger.offsetLeft + 'px')
 		expect(dialog.style.top).toBe(
 			trigger.offsetTop + trigger.offsetHeight + gap + 'px')
+		expect(dialog.style.zIndex).toBe('1')
 	})
 
 	it('adds cancel and OK buttons', () => {
@@ -142,10 +137,39 @@ describe('OptionsMaker', () => {
 		expect(labels.length).toBe(2)
 		const inputs = dialog.querySelectorAll('input')
 		expect(inputs.length).toBe(2)
+		const errors = dialog.querySelectorAll('p')
+		expect(errors.length).toBe(2)
 
 		expect(labels[0].innerText).toBe('Lowest frequency (Hz):')
+		expect(labels[0].getAttribute('for')).toBe(inputs[0].id)
 		expect(inputs[0].value).toBe('200')
+		expect(errors[0].hidden).toBe(true)
+		expect(errors[0].innerText).toBe('Error: moo')
+
 		expect(labels[1].innerText).toBe('Highest frequency (Hz):')
+		expect(labels[1].getAttribute('for')).toBe(inputs[1].id)
 		expect(inputs[1].value).toBe('800')
+		expect(errors[1].hidden).toBe(true)
+		expect(errors[1].innerText).toBe('Error: moo')
+	})
+
+	it('checks frequency values', () => {
+		new OptionsMaker(trigger)
+		trigger.click()
+
+		const dialog = document.body.lastChild
+		const labels = dialog.querySelectorAll('label')
+		expect(labels.length).toBe(2)
+		const inputs = dialog.querySelectorAll('input')
+		expect(inputs.length).toBe(2)
+		const errors = dialog.querySelectorAll('p')
+		expect(errors.length).toBe(2)
+
+		inputs[1].value = 50
+		expect(inputs[1].value).toBe('50')
+
+		// TODO
+		// expect(errors[1].hidden).toBe(false)
+		// TODO more error-checking goodness, e.g. aria-label
 	})
 })

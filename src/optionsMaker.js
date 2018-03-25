@@ -12,16 +12,16 @@ function makeDialog() {
 	const gap = 8
 
 	// Styling
-	container.style.backgroundColor = 'white'
-	container.style.padding = '1em'
+	container.className = 'audiochart-options'
+
+	// Position
 	container.style.position = 'absolute'
-	container.style.border = '2px solid blue'
 	container.style.zIndex = 1
 	container.style.left = this.offsetLeft + 'px'
 	container.style.top = this.offsetTop + this.offsetHeight + gap + 'px'
 
-	appendFrequencySetting(container, 'Lowest', 200)
-	appendFrequencySetting(container, 'Highest', 800)
+	appendFrequencySetting(container, this.id + '-low', 'Lowest', 200)
+	appendFrequencySetting(container, this.id + '-high', 'Highest', 800)
 
 	// Buttons
 	const cancel = document.createElement('button')
@@ -43,19 +43,31 @@ function makeDialog() {
 	document.body.appendChild(container)
 }
 
-function appendFrequencySetting(dialog, prettyName, value) {
+function appendFrequencySetting(dialog, baseId, prettyName, value) {
+	const inputId = baseId + '-input'
+	const container = document.createElement('div')
+
 	const label = document.createElement('label')
 	label.appendChild(document.createTextNode(`${prettyName} frequency (Hz):`))
+	label.setAttribute('for', inputId)
 
 	const input = document.createElement('input')
+	input.id = inputId
 	input.type = 'number'
 	input.value = value
 	input.min = 50
 	input.min = 5000
 	input.step = 50
 
-	label.appendChild(input)
-	dialog.appendChild(label)
+	const error = document.createElement('p')
+	error.appendChild(document.createTextNode('Error: moo'))
+	error.hidden = true
+
+	container.appendChild(label)
+	container.appendChild(input)
+	container.appendChild(error)
+
+	dialog.appendChild(container)
 }
 
 class OptionsMaker {

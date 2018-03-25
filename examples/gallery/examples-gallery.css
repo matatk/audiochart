@@ -60,3 +60,12 @@ button[aria-haspopup="true"]:before {
 button[aria-expanded="true"]:before {
 	content: '▼ ';
 }
+
+/* Options dialogs */
+
+div.audiochart-options {
+	background-color: white;
+	padding: 1em;
+	outline: 4px solid yellow;
+	border: 1px solid black;
+}
