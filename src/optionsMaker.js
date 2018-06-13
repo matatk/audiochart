@@ -1,15 +1,19 @@
 /** @module */
 /* exported OptionsMaker */
 
+function addOpener(trigger, callback) {
+	trigger.onclick = function() {
+		makeDialog(this, callback)
+	}
+}
+
 function removeDialog(trigger, container, callback, callTheCallback) {
 	container.remove()
 	trigger.removeAttribute('aria-expanded')
 	if (callTheCallback) {
 		callback()
 	}
-	trigger.onclick = function() {  // FIXME DRY
-		makeDialog(this, callback)
-	}
+	addOpener(trigger, callback)
 }
 
 function makeDialog(trigger, callback) {
@@ -91,8 +95,6 @@ class OptionsMaker {
 		}
 
 		trigger.setAttribute('aria-haspopup', true)
-		trigger.onclick = function() {
-			makeDialog(this, callback)  // FIXME DRY
-		}
+		addOpener(trigger, callback)
 	}
 }
