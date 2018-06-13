@@ -1,8 +1,13 @@
 'use strict'
-google.load('visualization', '1.0', {'packages':['corechart']})
-google.setOnLoadCallback(init)  // TODO use standard DOM loaded event?
-
 const optionsUpdateObjects = []
+let skipGoogle = false
+
+try {
+	google.load('visualization', '1.0', {'packages':['corechart']})
+	google.setOnLoadCallback(init)
+} catch(error) {
+	handleSupposedGoogleChartToolsAPIError(error)
+}
 
 
 //
@@ -259,23 +264,27 @@ function c3Core(data, chartId, buttonId, extraChartOptions) {
 //
 
 function drawHorizontalLine() {
-	const data = new google.visualization.DataTable()
-	data.addColumn('number', 'X')
-	data.addColumn('number', 'Line')
-	const rows = zip(dataSimpleAxis(10), dataHorizontalLine())
-	data.addRows(rows)
-	googleLineCore(data, 'chart-google-horizontal-line', 'btn-google-horizontal-line')
+	if (!skipGoogle) {
+		const data = new google.visualization.DataTable()
+		data.addColumn('number', 'X')
+		data.addColumn('number', 'Line')
+		const rows = zip(dataSimpleAxis(10), dataHorizontalLine())
+		data.addRows(rows)
+		googleLineCore(data, 'chart-google-horizontal-line', 'btn-google-horizontal-line')
+	}
 }
 
 function drawGradient() {
 	const gradient = dataGradient()
 	const xValues = dataSimpleAxis(gradient.length)
 
-	const data = new google.visualization.DataTable()
-	data.addColumn('number', 'X')
-	data.addColumn('number', 'Gradient')
-	data.addRows(zip(xValues, gradient))
-	googleLineCore(data, 'chart-google-gradient', 'btn-google-gradient')
+	if (!skipGoogle) {
+		const data = new google.visualization.DataTable()
+		data.addColumn('number', 'X')
+		data.addColumn('number', 'Gradient')
+		data.addRows(zip(xValues, gradient))
+		googleLineCore(data, 'chart-google-gradient', 'btn-google-gradient')
+	}
 
 	c3Core(
 		makeC3Data(['Gradient'], [gradient], xValues),
@@ -288,12 +297,14 @@ function drawHorizontalLineAndGradient() {
 	const gradient = dataGradient()
 	const xValues = dataSimpleAxis(100)
 
-	const data = new google.visualization.DataTable()
-	data.addColumn('number', 'X')
-	data.addColumn('number', 'Line')
-	data.addColumn('number', 'Gradient')
-	data.addRows(zip(xValues, line, gradient))
-	googleLineCore(data, 'chart-google-line-gradient', 'btn-google-line-gradient')
+	if (!skipGoogle) {
+		const data = new google.visualization.DataTable()
+		data.addColumn('number', 'X')
+		data.addColumn('number', 'Line')
+		data.addColumn('number', 'Gradient')
+		data.addRows(zip(xValues, line, gradient))
+		googleLineCore(data, 'chart-google-line-gradient', 'btn-google-line-gradient')
+	}
 
 	c3Core(
 		makeC3Data(['Line', 'Gradient'], [line, gradient], xValues),
@@ -305,11 +316,13 @@ function drawSine() {
 	const sine = dataSine()
 	const xValues = dataTrigAxis()
 
-	const data = new google.visualization.DataTable()
-	data.addColumn('number', 'Radians')
-	data.addColumn('number', 'Sine')
-	data.addRows(zip(xValues, sine))
-	googleLineCore(data, 'chart-google-sine', 'btn-google-sine')
+	if (!skipGoogle) {
+		const data = new google.visualization.DataTable()
+		data.addColumn('number', 'Radians')
+		data.addColumn('number', 'Sine')
+		data.addRows(zip(xValues, sine))
+		googleLineCore(data, 'chart-google-sine', 'btn-google-sine')
+	}
 
 	c3Core(
 		makeC3Data(['Sine'], [sine], xValues),
@@ -341,35 +354,39 @@ function drawSine() {
 }
 
 function drawSalesLineAndBar() {
-	const data = new google.visualization.DataTable()
-	data.addColumn('string', 'Month') // Implicit domain label col.
-	data.addColumn('number', 'Sales') // Implicit series 1 data col.
-	data.addRows([
-		['April',1000],
-		['May',  1170],
-		['June',  660],
-		['July', 1030]
-	])
-	googleLineCore(data, 'chart-google-sales-line', 'btn-google-sales-line')
-	googleBarCore(data, 'chart-google-sales-bar', 'btn-google-sales-bar')
+	if (!skipGoogle) {
+		const data = new google.visualization.DataTable()
+		data.addColumn('string', 'Month') // Implicit domain label col.
+		data.addColumn('number', 'Sales') // Implicit series 1 data col.
+		data.addRows([
+			['April',1000],
+			['May',  1170],
+			['June',  660],
+			['July', 1030]
+		])
+		googleLineCore(data, 'chart-google-sales-line', 'btn-google-sales-line')
+		googleBarCore(data, 'chart-google-sales-bar', 'btn-google-sales-bar')
+	}
 }
 
 function drawSalesAnnotated() {
-	const data = new google.visualization.DataTable()
-	data.addColumn('string', 'Month') // Implicit domain label col.
-	data.addColumn('number', 'Sales') // Implicit series 1 data col.
-	data.addColumn({type: 'number',  role: 'interval'})
-	data.addColumn({type: 'number',  role: 'interval'})
-	data.addColumn({type: 'string',  role: 'annotation'})
-	data.addColumn({type: 'string',  role: 'annotationText'})
-	data.addColumn({type: 'boolean', role: 'certainty'})
-	data.addRows([
-		['April',1000,  900, 1100,  'A','Stolen data', true],
-		['May',  1170, 1000, 1200,  'B','Coffee spill', true],
-		['June',  660,  550,  800,  'C','Wumpus attack', true],
-		['July', 1030, null, null, null, null, false]
-	])
-	googleLineCore(data, 'chart-google-sales-annotated', 'btn-google-sales-annotated')
+	if (!skipGoogle) {
+		const data = new google.visualization.DataTable()
+		data.addColumn('string', 'Month') // Implicit domain label col.
+		data.addColumn('number', 'Sales') // Implicit series 1 data col.
+		data.addColumn({type: 'number',  role: 'interval'})
+		data.addColumn({type: 'number',  role: 'interval'})
+		data.addColumn({type: 'string',  role: 'annotation'})
+		data.addColumn({type: 'string',  role: 'annotationText'})
+		data.addColumn({type: 'boolean', role: 'certainty'})
+		data.addRows([
+			['April',1000,  900, 1100,  'A','Stolen data', true],
+			['May',  1170, 1000, 1200,  'B','Coffee spill', true],
+			['June',  660,  550,  800,  'C','Wumpus attack', true],
+			['July', 1030, null, null, null, null, false]
+		])
+		googleLineCore(data, 'chart-google-sales-annotated', 'btn-google-sales-annotated')
+	}
 }
 
 function drawSineAndCosine() {
@@ -377,12 +394,14 @@ function drawSineAndCosine() {
 	const cosine = dataCosine()
 	const xValues = dataTrigAxis()
 
-	const data = new google.visualization.DataTable()
-	data.addColumn('number', 'Radians')
-	data.addColumn('number', 'Sine')
-	data.addColumn('number', 'Cosine')
-	data.addRows(zip(xValues, sine, cosine))
-	googleLineCore(data, 'chart-google-sine-cosine', 'btn-google-sine-cosine')
+	if (!skipGoogle) {
+		const data = new google.visualization.DataTable()
+		data.addColumn('number', 'Radians')
+		data.addColumn('number', 'Sine')
+		data.addColumn('number', 'Cosine')
+		data.addRows(zip(xValues, sine, cosine))
+		googleLineCore(data, 'chart-google-sine-cosine', 'btn-google-sine-cosine')
+	}
 
 	c3Core(
 		makeC3Data(['Sine', 'Cosine'], [sine, cosine], xValues),
@@ -461,8 +480,26 @@ function twoSeriesTable() {
 
 
 //
-// Main
+// Main and support
 //
+
+function handleSupposedGoogleChartToolsAPIError(error) {
+	console.log('Encountered the following error calling the Google Chart Tools API:')
+	console.log(error)
+	console.log('...disabling Google charts.')
+	for (const googleChart of document.querySelectorAll('[id^="chart-google-"]')) {
+		googleChart.appendChild(
+			document.createTextNode('Error loading Google Chart Tools API. '
+				+ 'Internet connection may be offline.'))
+		googleChart.classList.remove('visual-chart')
+		googleChart.classList.add('error-message')
+	}
+	for (const button of document.querySelectorAll('[id^="btn-google-"]')) {
+		button.remove()
+	}
+	skipGoogle = true
+	init()
+}
 
 function init() {
 	// Wire up options error checking

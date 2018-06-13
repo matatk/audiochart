@@ -35,12 +35,12 @@ div.form-field label {
 	width: 13em;
 }
 
-p.error-message {
+.error-message {
 	color: red;
 }
 
-p.hidden-error-message {
-	display: none;
+.hidden-error-message {
+	display: none;  /* FIXME key off ARIA? */
 }
 
 input[aria-invalid=true] {
