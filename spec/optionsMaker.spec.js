@@ -28,34 +28,44 @@ describe('OptionsMaker', () => {
 	it('needs a trigger element', () => {
 		expect(() => {
 			new OptionsMaker(null)
-		}).toThrow(Error('Trigger element not given'))
+		}).toThrow(Error('Trigger HTML Element not given'))
 
 		expect(() => {
 			new OptionsMaker(42)
-		}).toThrow(Error('Trigger element not given'))
+		}).toThrow(Error('Trigger HTML Element not given'))
 	})
 
-	it('accepts an Element as a trigger', () => {
+	it('needs a callback function', () => {
 		expect(() => {
 			new OptionsMaker(trigger)
+		}).toThrow(Error('Callback function not given'))
+
+		expect(() => {
+			new OptionsMaker(trigger, 42)
+		}).toThrow(Error('Callback function not given'))
+	})
+
+	it('accepts an Element as a trigger and a function as callback', () => {
+		expect(() => {
+			new OptionsMaker(trigger, () => {})
 		}).not.toThrow()
 	})
 
 	it('adds an event listener', () => {
 		const initialOnclick = trigger.onclick
-		new OptionsMaker(trigger)
+		new OptionsMaker(trigger, () => {})
 		expect(trigger.onclick).not.toBe(initialOnclick)
 		expect(typeof trigger.onclick).toBe('function')
 	})
 
 	it('adds aria-haspopup', () => {
 		expect(trigger.getAttribute('aria-haspopup')).toBe(null)
-		new OptionsMaker(trigger)
+		new OptionsMaker(trigger, () => {})
 		expect(trigger.getAttribute('aria-haspopup')).toBe('true')
 	})
 
 	it('flags the button as expanded when clicked', () => {
-		new OptionsMaker(trigger)
+		new OptionsMaker(trigger, () => {})
 		trigger.click()
 		expect(trigger.getAttribute('aria-expanded')).toBe('true')
 	})
@@ -63,7 +73,7 @@ describe('OptionsMaker', () => {
 	it('creates a dialog on the first click; removes it on the second', () => {
 		spyOn(document, 'createElement').and.callThrough()
 		spyOn(document, 'appendChild').and.callThrough()
-		new OptionsMaker(trigger)
+		new OptionsMaker(trigger, () => {})
 
 		trigger.click()
 		const initialCreateElementCalls = document.createElement.calls.count()
@@ -80,7 +90,7 @@ describe('OptionsMaker', () => {
 	})
 
 	it('is no longer expanded after the dialog is removed', () => {
-		new OptionsMaker(trigger)
+		new OptionsMaker(trigger, () => {})
 		trigger.click()
 		expect(trigger.getAttribute('aria-expanded')).toBe('true')
 		trigger.click()
@@ -88,7 +98,7 @@ describe('OptionsMaker', () => {
 	})
 
 	it('creates a dialog container with the correct styling', () => {
-		new OptionsMaker(trigger)
+		new OptionsMaker(trigger, () => {})
 		trigger.click()
 
 		const gap = 8
@@ -103,7 +113,7 @@ describe('OptionsMaker', () => {
 	})
 
 	it('adds cancel and OK buttons', () => {
-		new OptionsMaker(trigger)
+		new OptionsMaker(trigger, () => {})
 		trigger.click()
 		const dialog = document.body.lastChild
 		const buttons = dialog.querySelectorAll('button')
@@ -112,24 +122,45 @@ describe('OptionsMaker', () => {
 		expect(buttons[1].innerText).toBe('OK')
 	})
 
-	it('closes the dialog after the cancel button is clicked', () => {
-		new OptionsMaker(trigger)
+	it('closes without running the callback when cancel is clicked', () => {
+		const callback = jasmine.createSpy('testCallback')
+		new OptionsMaker(trigger, callback)
 		trigger.click()
 		const dialog = document.body.lastChild
 		document.querySelectorAll('button')[0].click()
 		expect(document.body.lastChild).not.toBe(dialog)
+		expect(callback).not.toHaveBeenCalled()
 	})
 
-	it('closes the dialog after the ok button is clicked', () => {
-		new OptionsMaker(trigger)
+	it('closes the dialog and runs the callback when ok is clicked', () => {
+		const callback = jasmine.createSpy('testCallback')
+		new OptionsMaker(trigger, callback)
 		trigger.click()
 		const dialog = document.body.lastChild
-		document.querySelectorAll('button')[1].click()
+		dialog.querySelectorAll('button')[1].click()
 		expect(document.body.lastChild).not.toBe(dialog)
+		expect(callback).toHaveBeenCalled()
+	})
+
+	it('closes the dialog and runs the callback after cancel is clicked first', () => {
+		const callback = jasmine.createSpy('testCallback')
+		new OptionsMaker(trigger, callback)
+
+		trigger.click()
+		const dialog1 = document.body.lastChild
+		dialog1.querySelectorAll('button')[0].click()
+		expect(document.body.lastChild).not.toBe(dialog1)
+		expect(callback).not.toHaveBeenCalled()
+
+		trigger.click()
+		const dialog2 = document.body.lastChild
+		dialog2.querySelectorAll('button')[1].click()
+		expect(document.body.lastChild).not.toBe(dialog2)
+		expect(callback).toHaveBeenCalled()
 	})
 
 	it('adds frequency settings', () => {
-		new OptionsMaker(trigger)
+		new OptionsMaker(trigger, () => {})
 		trigger.click()
 
 		const dialog = document.body.lastChild
@@ -154,7 +185,7 @@ describe('OptionsMaker', () => {
 	})
 
 	it('checks frequency values', () => {
-		new OptionsMaker(trigger)
+		new OptionsMaker(trigger, () => {})
 		trigger.click()
 
 		const dialog = document.body.lastChild

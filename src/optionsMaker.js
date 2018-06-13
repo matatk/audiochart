@@ -1,13 +1,18 @@
 /** @module */
 /* exported OptionsMaker */
 
-function removeDialog(trigger, container) {
+function removeDialog(trigger, container, callback, callTheCallback) {
 	container.remove()
 	trigger.removeAttribute('aria-expanded')
-	trigger.onclick = makeDialog
+	if (callTheCallback) {
+		callback()
+	}
+	trigger.onclick = function() {  // FIXME DRY
+		makeDialog(this, callback)
+	}
 }
 
-function makeDialog() {
+function makeDialog(trigger, callback) {
 	const container = document.createElement('div')
 	const gap = 8
 
@@ -17,11 +22,11 @@ function makeDialog() {
 	// Position
 	container.style.position = 'absolute'
 	container.style.zIndex = 1
-	container.style.left = this.offsetLeft + 'px'
-	container.style.top = this.offsetTop + this.offsetHeight + gap + 'px'
+	container.style.left = trigger.offsetLeft + 'px'
+	container.style.top = trigger.offsetTop + trigger.offsetHeight + gap + 'px'
 
-	appendFrequencySetting(container, this.id + '-low', 'Lowest', 200)
-	appendFrequencySetting(container, this.id + '-high', 'Highest', 800)
+	appendFrequencySetting(container, trigger.id + '-low', 'Lowest', 200)
+	appendFrequencySetting(container, trigger.id + '-high', 'Highest', 800)
 
 	// Buttons
 	const cancel = document.createElement('button')
@@ -30,15 +35,15 @@ function makeDialog() {
 	ok.appendChild(document.createTextNode('OK'))
 
 	// Dialog accessibility and labelling
-	this.setAttribute('aria-expanded', true)
+	trigger.setAttribute('aria-expanded', true)
 	// FIXME TODO
 
 	container.appendChild(cancel)
 	container.appendChild(ok)
 
-	cancel.onclick = () => removeDialog(this, container)
-	ok.onclick = () => removeDialog(this, container)
-	this.onclick = () => removeDialog(this, container)
+	cancel.onclick = () => removeDialog(trigger, container, callback, false)
+	ok.onclick = () => removeDialog(trigger, container, callback, true)
+	trigger.onclick = () => removeDialog(trigger, container, callback, false)
 
 	document.body.appendChild(container)
 }
@@ -74,13 +79,20 @@ class OptionsMaker {
 	/**
 	 * Create an OptionsMaker object.
 	 * @param {HTMLElement} trigger - the trigger
+	 * @param {Function} callback - function to run when OK is clicked
 	 */
-	constructor(trigger) {
+	constructor(trigger, callback) {
 		if (!(trigger instanceof Element)) {
-			throw Error('Trigger element not given')
+			throw Error('Trigger HTML Element not given')
+		}
+
+		if (typeof callback !== 'function') {
+			throw Error('Callback function not given')
 		}
 
 		trigger.setAttribute('aria-haspopup', true)
-		trigger.onclick = makeDialog
+		trigger.onclick = function() {
+			makeDialog(this, callback)  // FIXME DRY
+		}
 	}
 }
