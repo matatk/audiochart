@@ -36,22 +36,30 @@ class KeyboardHandler {
 		}
 
 		if (event.key === 'ArrowRight') {
-			this.handleRight()
+			const mode = event.shiftKey ? 'fast' : event.altKey ? 'slow' : 'normal'
+			this.handleRight(mode)
 		} else if (event.key === 'ArrowLeft' ) {
-			this.handleLeft()
+			const mode = event.shiftKey ? 'fast' : event.altKey ? 'slow' : 'normal'
+			this.handleLeft(mode)
 		} else if (event.key === ' ') {
 			this.handleSpace()
 		}
 	}
 
-	/** Handle a left arrow being pressed */
-	handleLeft() {
-		this.player.stepBackward()
+	/**
+	 * Handle a left arrow being pressed
+	 * @param {string} step - size of move to make
+	 */
+	handleLeft(step) {
+		this.player.stepBackward(step)
 	}
 
-	/** Handle a right arrow being pressed */
-	handleRight() {
-		this.player.stepForward()
+	/**
+	 * Handle a right arrow being pressed
+	 * @param {string} step - size of move to make
+	 */
+	handleRight(step) {
+		this.player.stepForward(step)
 	}
 
 	/** Handle the space key being pressed */

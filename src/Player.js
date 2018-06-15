@@ -18,15 +18,15 @@ class Player {
 			this.visualCallback = visualCallback
 		}
 
-		const seriesLen = this.data.seriesLength(0)
-
 		this._numberOfSeries = this.data.numSeries()
+
+		const seriesLen = this.data.seriesLength(0)
+		this.seriesMaxIndex = seriesLen - 1  // TODO just use seriesLen?
 
 		const sampling = Player._samplingInfo(duration, seriesLen)
 		this.interval = sampling.interval
 		this.sampleOneIn = sampling.in
 
-		this.seriesMaxIndex = seriesLen - 1  // TODO just use seriesLen?
 		this._state = 'ready'
 	}
 
@@ -53,7 +53,8 @@ class Player {
 	}
 
 	stepBackward(skip) {
-		const delta = skip || 50
+		// TODO DRY
+		const delta = this._delta(skip)
 		this.playIndex -= delta
 		if (this.playIndex < 0) {
 			this.playIndex = 0  // TODO test limiting
@@ -64,7 +65,8 @@ class Player {
 	}
 
 	stepForward(skip) {
-		const delta = skip || 50
+		// TODO DRY
+		const delta = this._delta(skip)
 		this.playIndex += delta
 		if (this.playIndex > this.seriesMaxIndex) {
 			this.playIndex = this.seriesMaxIndex  // TODO test limiting
@@ -125,10 +127,10 @@ class Player {
 			this._state = 'finished'
 
 			// Debugging info
-			// console.log(`Player: Playing ${this.playCount} of ${this.playIndex} took ${Math.round(performance.now() - this.startTime)} ms`)
+			/* console.log(`Player: Playing ${this.playCount} of ${this.playIndex} took ${Math.round(performance.now() - this.startTime)} ms`)
 			const sum = this.playTimes.reduce((acc, cur) => acc + cur)
 			const mean = sum / this.playTimes.length
-			// console.log(`Player: Average play func time: ${mean.toFixed(2)} ms`)
+			console.log(`Player: Average play func time: ${mean.toFixed(2)} ms`) */
 		}
 
 		this.playIndex += this.sampleOneIn > 0 ? this.sampleOneIn : 1  // TODO sl
@@ -145,6 +147,26 @@ class Player {
 	_pause() {
 		clearInterval(this.intervalID)
 		this._state = 'paused'
+	}
+
+	/**
+	 * Work out the delta for a backwards/forwards skip
+	 * @param {string} skip - the skip mode
+	 * @returns {number} the number of samples to skip
+	 * @todo "samples"?
+	 * @todo document as enum?
+	 */
+	_delta(skip) {
+		switch (skip) {
+			case 'normal':
+				return Math.ceil(0.1 * (this.seriesMaxIndex + 1))
+			case 'fast':
+				return Math.ceil(0.2 * (this.seriesMaxIndex + 1))
+			case 'slow':
+				return 1
+			default:
+				throw Error(`skip must be 'normal', 'fast' or 'slow' (got: ${skip})`)
+		}
 	}
 
 	/* Work out sampling rate */

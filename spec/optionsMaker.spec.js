@@ -1,6 +1,6 @@
 'use strict'
 /* global loadFixture OptionsMaker */
-// TODO
+// FIXME TODO
 // - insert directly after button to guarantee focus order?
 
 describe('OptionsMaker', () => {

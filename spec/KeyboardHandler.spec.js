@@ -1,5 +1,6 @@
 'use strict'
 /* global loadFixture KeyboardHandler */
+// TODO DRY left/right arrow tests?
 
 class FakePlayer {
 	play() {}
@@ -7,19 +8,21 @@ class FakePlayer {
 	playPause() {}
 	stop() {}
 	stepForward() {}
+	stepBackward() {}
 }
 
 
-function createKeydownEvent(keyName, shift) {
+function createKeydownEvent(keyName, shift, alt) {
 	return new KeyboardEvent('keydown', {
 		key: keyName,
-		shiftKey: shift
+		shiftKey: shift,
+		altKey: alt
 	})
 }
 
 
-function createAndDispatchKeydownEvent(keyName, shift, target) {
-	target.dispatchEvent(createKeydownEvent(keyName, shift))
+function createAndDispatchKeydownEvent(keyName, shift, alt, target) {
+	target.dispatchEvent(createKeydownEvent(keyName, shift, alt))
 }
 
 
@@ -76,12 +79,52 @@ describe('KeyboardHandler', () => {
 		}, 100)
 	})
 
+	it('knows when the left arrow key has been pressed', function(done) {
+		const keyboardHandler = new KeyboardHandler(keyTargetDiv, fakePlayer)
+		spyOn(keyboardHandler, 'handleLeft').and.callThrough()
+		createAndDispatchKeydownEvent('ArrowLeft', false, false, keyTargetDiv)
+		setTimeout(() => {
+			expect(keyboardHandler.handleLeft).toHaveBeenCalledWith('normal')
+			done()
+		}, 100)
+	})
+
+	it('steps its player when the left arrow key is pressed', function(done) {
+		new KeyboardHandler(keyTargetDiv, fakePlayer)
+		spyOn(fakePlayer, 'stepBackward')
+		createAndDispatchKeydownEvent('ArrowLeft', false, false, keyTargetDiv)
+		setTimeout(() => {
+			expect(fakePlayer.stepBackward).toHaveBeenCalledWith('normal')
+			done()
+		}, 100)
+	})
+
+	it('steps its player faster when shift + left arrow are pressed', function(done) {
+		new KeyboardHandler(keyTargetDiv, fakePlayer)
+		spyOn(fakePlayer, 'stepBackward')
+		createAndDispatchKeydownEvent('ArrowLeft', true, false, keyTargetDiv)
+		setTimeout(() => {
+			expect(fakePlayer.stepBackward).toHaveBeenCalledWith('fast')
+			done()
+		}, 100)
+	})
+
+	it('steps its player by one when alt + left arrow are pressed', function(done) {
+		new KeyboardHandler(keyTargetDiv, fakePlayer)
+		spyOn(fakePlayer, 'stepBackward')
+		createAndDispatchKeydownEvent('ArrowLeft', false, true, keyTargetDiv)
+		setTimeout(() => {
+			expect(fakePlayer.stepBackward).toHaveBeenCalledWith('slow')
+			done()
+		}, 100)
+	})
+
 	it('knows when the right arrow key has been pressed', function(done) {
 		const keyboardHandler = new KeyboardHandler(keyTargetDiv, fakePlayer)
 		spyOn(keyboardHandler, 'handleRight').and.callThrough()
-		createAndDispatchKeydownEvent('ArrowRight', false, keyTargetDiv)
+		createAndDispatchKeydownEvent('ArrowRight', false, false, keyTargetDiv)
 		setTimeout(() => {
-			expect(keyboardHandler.handleRight).toHaveBeenCalled()
+			expect(keyboardHandler.handleRight).toHaveBeenCalledWith('normal')
 			done()
 		}, 100)
 	})
@@ -89,9 +132,29 @@ describe('KeyboardHandler', () => {
 	it('steps its player when the right arrow key is pressed', function(done) {
 		new KeyboardHandler(keyTargetDiv, fakePlayer)
 		spyOn(fakePlayer, 'stepForward')
-		createAndDispatchKeydownEvent('ArrowRight', false, keyTargetDiv)
+		createAndDispatchKeydownEvent('ArrowRight', false, false, keyTargetDiv)
 		setTimeout(() => {
-			expect(fakePlayer.stepForward).toHaveBeenCalled()
+			expect(fakePlayer.stepForward).toHaveBeenCalledWith('normal')
+			done()
+		}, 100)
+	})
+
+	it('steps its player faster when shift + right arrow are pressed', function(done) {
+		new KeyboardHandler(keyTargetDiv, fakePlayer)
+		spyOn(fakePlayer, 'stepForward')
+		createAndDispatchKeydownEvent('ArrowRight', true, false, keyTargetDiv)
+		setTimeout(() => {
+			expect(fakePlayer.stepForward).toHaveBeenCalledWith('fast')
+			done()
+		}, 100)
+	})
+
+	it('steps its player by one when alt + right arrow are pressed', function(done) {
+		new KeyboardHandler(keyTargetDiv, fakePlayer)
+		spyOn(fakePlayer, 'stepForward')
+		createAndDispatchKeydownEvent('ArrowRight', false, true, keyTargetDiv)
+		setTimeout(() => {
+			expect(fakePlayer.stepForward).toHaveBeenCalledWith('slow')
 			done()
 		}, 100)
 	})
@@ -99,7 +162,7 @@ describe('KeyboardHandler', () => {
 	it('knows when the space key has been pressed', function(done) {
 		const keyboardHandler = new KeyboardHandler(keyTargetDiv, fakePlayer)
 		spyOn(keyboardHandler, 'handleSpace').and.callThrough()
-		createAndDispatchKeydownEvent(' ', false, keyTargetDiv)
+		createAndDispatchKeydownEvent(' ', false, false, keyTargetDiv)
 		setTimeout(() => {
 			expect(keyboardHandler.handleSpace).toHaveBeenCalled()
 			done()
@@ -109,7 +172,7 @@ describe('KeyboardHandler', () => {
 	it('pauses its player when space is pressed', function(done) {
 		new KeyboardHandler(keyTargetDiv, fakePlayer)
 		spyOn(fakePlayer, 'playPause')
-		createAndDispatchKeydownEvent(' ', false, keyTargetDiv)
+		createAndDispatchKeydownEvent(' ', false, false, keyTargetDiv)
 		setTimeout(() => {
 			expect(fakePlayer.playPause).toHaveBeenCalled()
 			done()
