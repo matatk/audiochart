@@ -1,5 +1,7 @@
 'use strict'
 /* global loadFixture OptionsMaker */
+// TODO
+// - insert directly after button to guarantee focus order?
 
 describe('OptionsMaker', () => {
 	let trigger = null  // the button used to open the popup.

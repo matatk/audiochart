@@ -68,6 +68,19 @@ describe('KeyboardHandler', () => {
 	})
 
 	// TODO DRY
+	it('stops the event default handler being called, except for tab', function(done) {
+		new KeyboardHandler(keyTargetDiv, fakePlayer)
+		const evt = createKeydownEvent('Tab', false)
+		spyOn(evt, 'preventDefault')
+		keyTargetDiv.dispatchEvent(evt)
+		// TODO how to not need the timeout?
+		setTimeout(() => {
+			expect(evt.preventDefault).not.toHaveBeenCalled()
+			done()
+		}, 100)
+	})
+
+	// TODO DRY
 	it('knows when the right arrow key has been pressed', function(done) {
 		const keyboardHandler = new KeyboardHandler(keyTargetDiv, fakePlayer)
 		spyOn(keyboardHandler, 'handleRight').and.callThrough()

@@ -31,7 +31,9 @@ class KeyboardHandler {
 	 * @todo make link work
 	 */
 	keypressHandler(event) {
-		event.preventDefault()  // TODO should this be here or later? check for defaultPrevented?
+		if (event.key !== 'Tab') {
+			event.preventDefault()
+		}
 
 		if (event.key === 'ArrowRight') {
 			this.handleRight()
