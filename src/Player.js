@@ -89,8 +89,8 @@ class Player {
 		// Debugging info
 		this.playTimes = []  // store all lengths of time that playOne took
 		this.playCount = 0   // how many datum points were actually sounded?
-
 		this.startTime = performance.now()
+
 		this.sounder.start(0)
 		this.playIndex = 0
 
@@ -113,6 +113,7 @@ class Player {
 	 * datum as the playback occurs.
 	 */
 	_playOne() {
+		// TODO debug mode:
 		const thisPlayTimeStart = performance.now()
 
 		if (this.playIndex <= this.seriesMaxIndex) {
@@ -137,7 +138,10 @@ class Player {
 			console.log(`Player: Average play func time: ${mean.toFixed(2)} ms`) */
 		}
 
-		this.playIndex += this.sampleOneIn > 0 ? this.sampleOneIn : 1  // TODO sl
+		// TODO this might be a abit slow, and easy to optimise
+		this.playIndex += this.sampleOneIn > 0 ? this.sampleOneIn : 1
+
+		// TODO debug mode:
 		this.playCount += 1
 		this.playTimes.push(performance.now() - thisPlayTimeStart)
 	}

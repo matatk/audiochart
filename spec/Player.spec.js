@@ -267,7 +267,8 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 
 		it('steps backward when requested', () => {
 			player.playPause()
-			// player.playPause()  // pause it
+			// jasmine.clock().tick(testDuration * 0.9)
+			// player.playPause()
 			const index1 = player.playIndex
 			player.stepBackward('slow')
 			const index2 = player.playIndex
@@ -288,11 +289,21 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 
 		it('steps forward when requested', () => {
 			player.playPause()
-			// player.playPause()  // pause it
 			const index1 = player.playIndex
 			player.stepForward('slow')
 			const index2 = player.playIndex
 			expect(index2).toBe(index1 + 1)
+		})
+
+		it('steps forward when requested while paused', () => {
+			// TODO: We can't say that the index will be 1, as it depends on
+			//       the sampling rate.
+			/* player.playPause()
+			player.playPause()  // pause it
+			const index1 = player.playIndex
+			player.stepForward('slow')
+			const index2 = player.playIndex
+			expect(index2).toBe(index1 + 1) */
 		})
 
 		it('updates the sound (and visual cursor) when stepped forward whilst paused', () => {
