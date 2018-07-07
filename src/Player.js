@@ -1,3 +1,7 @@
+/* exported Player */
+// TODO: the debug info isn't logged any more but it's still calculated; need a
+//       debug mode.
+
 /**
  * Orchestrates the audible (and visual cursor) rendering of the chart
  * @private
@@ -182,7 +186,6 @@ class Player {
 		if (idealInterval < minInterval) {
 			interval = minInterval
 			slots = Math.floor(duration / minInterval)
-			const sampleOneInFloat = seriesLen / slots
 			sampleOneIn = Math.round(seriesLen / slots)
 			// console.log(`sampleInfo: Need to sample 1 in ${sampleOneIn} (${sampleOneInFloat})`)
 		} else {

@@ -10,14 +10,14 @@ class BaseFakeDataWrapper {
 		return ['Test']
 	}
 
-	seriesValue(series, index) {
+	seriesValue(series, index) {  // eslint-disable-line
 		return 42
 	}
 }
 
 
 class ShortFakeDataWrapper extends BaseFakeDataWrapper {
-	seriesLength(series) {
+	seriesLength(series) {  // eslint-disable-line
 		return 4
 	}
 }
@@ -35,21 +35,21 @@ class ShortTwoSeriesFakeDataWrapper extends ShortFakeDataWrapper {
 
 
 class LongFakeDataWrapper extends BaseFakeDataWrapper {
-	seriesLength(series) {
+	seriesLength(series) {  // eslint-disable-line
 		return 100
 	}
 }
 
 
 class FakeMapper {
-	map(series, datum) {
+	map(series, datum) {  // eslint-disable-line
 		return 21
 	}
 }
 
 
 class FakeSounder {
-	frequency(frequency) {}
+	frequency(frequency) {}  // eslint-disable-line
 	start() {}
 	stop() {}
 }
@@ -267,7 +267,7 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 
 		it('steps backward when requested', () => {
 			player.playPause()
-			jasmine.clock().tick(testDuration * 0.9)
+			// player.playPause()  // pause it
 			const index1 = player.playIndex
 			player.stepBackward('slow')
 			const index2 = player.playIndex
@@ -288,6 +288,7 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 
 		it('steps forward when requested', () => {
 			player.playPause()
+			// player.playPause()  // pause it
 			const index1 = player.playIndex
 			player.stepForward('slow')
 			const index2 = player.playIndex
