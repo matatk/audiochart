@@ -1,22 +1,22 @@
 /** @module */
 /* exported OptionsMaker */
 
-function addOpener(trigger, callback) {
-	trigger.onclick = function() {
-		makeDialog(this, callback)
+function addOpener(audioChart, activator) {
+	activator.onclick = function() {
+		makeDialog(audioChart, this)
 	}
 }
 
-function removeDialog(trigger, container, callback, callTheCallback) {
+function removeDialog(audioChart, activator, container, doUpdate) {
 	container.remove()
-	trigger.removeAttribute('aria-expanded')
-	if (callTheCallback) {
-		callback()
+	activator.removeAttribute('aria-expanded')
+	if (doUpdate) {
+		audioChart.updateOptions({})
 	}
-	addOpener(trigger, callback)
+	addOpener(audioChart, activator)
 }
 
-function makeDialog(trigger, callback) {
+function makeDialog(audioChart, activator) {
 	const container = document.createElement('div')
 	const gap = 8
 
@@ -26,11 +26,11 @@ function makeDialog(trigger, callback) {
 	// Position
 	container.style.position = 'absolute'
 	container.style.zIndex = 1
-	container.style.left = trigger.offsetLeft + 'px'
-	container.style.top = trigger.offsetTop + trigger.offsetHeight + gap + 'px'
+	container.style.left = activator.offsetLeft + 'px'
+	container.style.top = activator.offsetTop + activator.offsetHeight + gap + 'px'
 
-	appendFrequencySetting(container, trigger.id + '-low', 'Lowest', 200)
-	appendFrequencySetting(container, trigger.id + '-high', 'Highest', 800)
+	appendFrequencySetting(container, activator.id + '-low', 'Lowest', 200)
+	appendFrequencySetting(container, activator.id + '-high', 'Highest', 800)
 
 	// Buttons
 	const cancel = document.createElement('button')
@@ -39,15 +39,18 @@ function makeDialog(trigger, callback) {
 	ok.appendChild(document.createTextNode('OK'))
 
 	// Dialog accessibility and labelling
-	trigger.setAttribute('aria-expanded', true)
+	activator.setAttribute('aria-expanded', true)
 	// FIXME TODO
 
 	container.appendChild(cancel)
 	container.appendChild(ok)
 
-	cancel.onclick = () => removeDialog(trigger, container, callback, false)
-	ok.onclick = () => removeDialog(trigger, container, callback, true)
-	trigger.onclick = () => removeDialog(trigger, container, callback, false)
+	cancel.onclick = () =>
+		removeDialog(audioChart, activator, container, false)
+	ok.onclick = () =>
+		removeDialog(audioChart, activator, container, true)
+	activator.onclick = () =>
+		removeDialog(audioChart, activator, container, false)
 
 	document.body.appendChild(container)
 }
@@ -82,19 +85,19 @@ function appendFrequencySetting(dialog, baseId, prettyName, value) {
 class OptionsMaker {
 	/**
 	 * Create an OptionsMaker object.
-	 * @param {HTMLElement} trigger - the trigger
-	 * @param {Function} callback - function to run when OK is clicked
+	 * @param {Object} audioChart - the AudioChart object
+	 * @param {HTMLElement} activator - the button that opens the pop-up
 	 */
-	constructor(trigger, callback) {
-		if (!(trigger instanceof Element)) {
-			throw Error('Trigger HTML Element not given')
+	constructor(audioChart, activator) {
+		if (typeof audioChart !== 'object') {
+			throw Error('AudioChart object not given')
 		}
 
-		if (typeof callback !== 'function') {
-			throw Error('Callback function not given')
+		if (!(activator instanceof Element)) {
+			throw Error('Activator element not given')
 		}
 
-		trigger.setAttribute('aria-haspopup', true)
-		addOpener(trigger, callback)
+		activator.setAttribute('aria-haspopup', true)
+		addOpener(audioChart, activator)
 	}
 }

@@ -3,8 +3,25 @@
 // FIXME TODO
 // - insert directly after button to guarantee focus order?
 
+class FakeAudioChart {
+	get options() {
+		return 'moo'
+	}
+
+	// TODO put the original code back / decide if AC is too strict / other
+	updateOptions(newOptions) {
+		// This is the real code...
+		/* if (newOptions === undefined || Object.keys(newOptions).length === 0) {
+			throw Error('No new options given')
+		} */
+		// However, for our tests, it is easier to do...
+		if (typeof newOptions !== 'object') throw Error('No new options given')
+	}
+}
+
 describe('OptionsMaker', () => {
-	let trigger = null  // the button used to open the popup.
+	let activator = null  // the button used to open the popup.
+	let fakeAudioChart = null
 
 	// After some tests we could end up with a dangling dialog.
 	// Store a copy of the last element on the page before all tests;
@@ -17,7 +34,8 @@ describe('OptionsMaker', () => {
 
 	beforeEach(() => {
 		loadFixture('optionsMaker.fixtures.html')
-		trigger = document.getElementById('options-popup-trigger')
+		activator = document.getElementById('options-popup-activator')
+		fakeAudioChart = new FakeAudioChart()
 	})
 
 	afterEach(() => {
@@ -27,63 +45,63 @@ describe('OptionsMaker', () => {
 		}
 	})
 
-	it('needs a trigger element', () => {
+	it('needs an AudioChart object', () => {
 		expect(() => {
-			new OptionsMaker(null)
-		}).toThrow(Error('Trigger HTML Element not given'))
+			new OptionsMaker()
+		}).toThrow(Error('AudioChart object not given'))
 
 		expect(() => {
 			new OptionsMaker(42)
-		}).toThrow(Error('Trigger HTML Element not given'))
+		}).toThrow(Error('AudioChart object not given'))
 	})
 
-	it('needs a callback function', () => {
+	it('needs an activator element', () => {
 		expect(() => {
-			new OptionsMaker(trigger)
-		}).toThrow(Error('Callback function not given'))
+			new OptionsMaker({}, null)
+		}).toThrow(Error('Activator element not given'))
 
 		expect(() => {
-			new OptionsMaker(trigger, 42)
-		}).toThrow(Error('Callback function not given'))
+			new OptionsMaker({}, 42)
+		}).toThrow(Error('Activator element not given'))
 	})
 
-	it('accepts an Element as a trigger and a function as callback', () => {
+	it('accepts an object and an element', () => {
 		expect(() => {
-			new OptionsMaker(trigger, () => {})
+			new OptionsMaker({}, activator)
 		}).not.toThrow()
 	})
 
 	it('adds an event listener', () => {
-		const initialOnclick = trigger.onclick
-		new OptionsMaker(trigger, () => {})
-		expect(trigger.onclick).not.toBe(initialOnclick)
-		expect(typeof trigger.onclick).toBe('function')
+		const initialOnclick = activator.onclick
+		new OptionsMaker({}, activator)
+		expect(activator.onclick).not.toBe(initialOnclick)
+		expect(typeof activator.onclick).toBe('function')
 	})
 
 	it('adds aria-haspopup', () => {
-		expect(trigger.getAttribute('aria-haspopup')).toBe(null)
-		new OptionsMaker(trigger, () => {})
-		expect(trigger.getAttribute('aria-haspopup')).toBe('true')
+		expect(activator.getAttribute('aria-haspopup')).toBe(null)
+		new OptionsMaker({}, activator)
+		expect(activator.getAttribute('aria-haspopup')).toBe('true')
 	})
 
 	it('flags the button as expanded when clicked', () => {
-		new OptionsMaker(trigger, () => {})
-		trigger.click()
-		expect(trigger.getAttribute('aria-expanded')).toBe('true')
+		new OptionsMaker({}, activator)
+		activator.click()
+		expect(activator.getAttribute('aria-expanded')).toBe('true')
 	})
 
 	it('creates a dialog on the first click; removes it on the second', () => {
 		spyOn(document, 'createElement').and.callThrough()
 		spyOn(document, 'appendChild').and.callThrough()
-		new OptionsMaker(trigger, () => {})
+		new OptionsMaker({}, activator)
 
-		trigger.click()
+		activator.click()
 		const initialCreateElementCalls = document.createElement.calls.count()
 		const initialAppendChildCalls = document.appendChild.calls.count()
 		expect(document.createElement).toHaveBeenCalledWith('div')
 		const dialog = document.body.lastChild
 
-		trigger.click()
+		activator.click()
 		expect(document.body.lastChild).not.toBe(dialog)
 		expect(document.createElement.calls.count())
 			.toBe(initialCreateElementCalls)
@@ -92,31 +110,31 @@ describe('OptionsMaker', () => {
 	})
 
 	it('is no longer expanded after the dialog is removed', () => {
-		new OptionsMaker(trigger, () => {})
-		trigger.click()
-		expect(trigger.getAttribute('aria-expanded')).toBe('true')
-		trigger.click()
-		expect(trigger.getAttribute('aria-expanded')).toBe(null)
+		new OptionsMaker({}, activator)
+		activator.click()
+		expect(activator.getAttribute('aria-expanded')).toBe('true')
+		activator.click()
+		expect(activator.getAttribute('aria-expanded')).toBe(null)
 	})
 
 	it('creates a dialog container with the correct styling', () => {
-		new OptionsMaker(trigger, () => {})
-		trigger.click()
+		new OptionsMaker({}, activator)
+		activator.click()
 
 		const gap = 8
 		const dialog = document.body.lastChild
 
 		expect(dialog.className).toBe('audiochart-options')
 		expect(dialog.style.position).toBe('absolute')
-		expect(dialog.style.left).toBe(trigger.offsetLeft + 'px')
+		expect(dialog.style.left).toBe(activator.offsetLeft + 'px')
 		expect(dialog.style.top).toBe(
-			trigger.offsetTop + trigger.offsetHeight + gap + 'px')
+			activator.offsetTop + activator.offsetHeight + gap + 'px')
 		expect(dialog.style.zIndex).toBe('1')
 	})
 
 	it('adds cancel and OK buttons', () => {
-		new OptionsMaker(trigger, () => {})
-		trigger.click()
+		new OptionsMaker({}, activator)
+		activator.click()
 		const dialog = document.body.lastChild
 		const buttons = dialog.querySelectorAll('button')
 		expect(buttons.length).toBe(2)
@@ -124,46 +142,46 @@ describe('OptionsMaker', () => {
 		expect(buttons[1].innerText).toBe('OK')
 	})
 
-	it('closes without running the callback when cancel is clicked', () => {
-		const callback = jasmine.createSpy('testCallback')
-		new OptionsMaker(trigger, callback)
-		trigger.click()
+	it('closes without updating options when cancel is clicked', () => {
+		spyOn(fakeAudioChart, 'updateOptions').and.callThrough()
+		new OptionsMaker(fakeAudioChart, activator)
+		activator.click()
 		const dialog = document.body.lastChild
 		document.querySelectorAll('button')[0].click()
 		expect(document.body.lastChild).not.toBe(dialog)
-		expect(callback).not.toHaveBeenCalled()
+		expect(fakeAudioChart.updateOptions).not.toHaveBeenCalled()
 	})
 
-	it('closes the dialog and runs the callback when ok is clicked', () => {
-		const callback = jasmine.createSpy('testCallback')
-		new OptionsMaker(trigger, callback)
-		trigger.click()
+	it('closes the dialog and updates options when ok is clicked', () => {
+		spyOn(fakeAudioChart, 'updateOptions').and.callThrough()
+		new OptionsMaker(fakeAudioChart, activator)
+		activator.click()
 		const dialog = document.body.lastChild
 		dialog.querySelectorAll('button')[1].click()
 		expect(document.body.lastChild).not.toBe(dialog)
-		expect(callback).toHaveBeenCalled()
+		expect(fakeAudioChart.updateOptions).toHaveBeenCalled()
 	})
 
-	it('closes the dialog and runs the callback after cancel is clicked first', () => {
-		const callback = jasmine.createSpy('testCallback')
-		new OptionsMaker(trigger, callback)
+	it('closes the dialog and updates options cancel is clicked first', () => {
+		spyOn(fakeAudioChart, 'updateOptions').and.callThrough()
+		new OptionsMaker(fakeAudioChart, activator)
 
-		trigger.click()
+		activator.click()
 		const dialog1 = document.body.lastChild
 		dialog1.querySelectorAll('button')[0].click()
 		expect(document.body.lastChild).not.toBe(dialog1)
-		expect(callback).not.toHaveBeenCalled()
+		expect(fakeAudioChart.updateOptions).not.toHaveBeenCalled()
 
-		trigger.click()
+		activator.click()
 		const dialog2 = document.body.lastChild
 		dialog2.querySelectorAll('button')[1].click()
 		expect(document.body.lastChild).not.toBe(dialog2)
-		expect(callback).toHaveBeenCalled()
+		expect(fakeAudioChart.updateOptions).toHaveBeenCalled()
 	})
 
 	it('adds frequency settings', () => {
-		new OptionsMaker(trigger, () => {})
-		trigger.click()
+		new OptionsMaker({}, activator)
+		activator.click()
 
 		const dialog = document.body.lastChild
 		const labels = dialog.querySelectorAll('label')
@@ -187,8 +205,8 @@ describe('OptionsMaker', () => {
 	})
 
 	it('checks frequency values', () => {
-		new OptionsMaker(trigger, () => {})
-		trigger.click()
+		new OptionsMaker({}, activator)
+		activator.click()
 
 		const dialog = document.body.lastChild
 		const labels = dialog.querySelectorAll('label')

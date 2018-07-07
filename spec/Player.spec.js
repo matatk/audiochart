@@ -10,14 +10,14 @@ class BaseFakeDataWrapper {
 		return ['Test']
 	}
 
-	seriesValue(series, index) {  // eslint-disable-line
+	seriesValue(series, index) {  // eslint-disable-line no-unused-vars
 		return 42
 	}
 }
 
 
 class ShortFakeDataWrapper extends BaseFakeDataWrapper {
-	seriesLength(series) {  // eslint-disable-line
+	seriesLength(series) {  // eslint-disable-line no-unused-vars
 		return 4
 	}
 }
@@ -35,21 +35,21 @@ class ShortTwoSeriesFakeDataWrapper extends ShortFakeDataWrapper {
 
 
 class LongFakeDataWrapper extends BaseFakeDataWrapper {
-	seriesLength(series) {  // eslint-disable-line
+	seriesLength(series) {  // eslint-disable-line no-unused-vars
 		return 100
 	}
 }
 
 
 class FakeMapper {
-	map(series, datum) {  // eslint-disable-line
+	map(series, datum) {  // eslint-disable-line no-unused-vars
 		return 21
 	}
 }
 
 
 class FakeSounder {
-	frequency(frequency) {}  // eslint-disable-line
+	frequency(frequency) {}  // eslint-disable-line no-unused-vars
 	start() {}
 	stop() {}
 }

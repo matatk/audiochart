@@ -254,7 +254,7 @@ function c3Core(data, chartId, buttonId, extraChartOptions) {
 
 	const popupButton = document.getElementById(buttonId + '-options')
 	if (popupButton) {
-		new OptionsMaker(popupButton, () => alert('ok:-)'))
+		new OptionsMaker(ac, popupButton)
 	}
 }
 
