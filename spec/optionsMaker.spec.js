@@ -5,21 +5,21 @@
 
 class FakeAudioChart {
 	get options() {
-		return 'moo'
+		return {
+			frequencyLow: 42,
+			frequencyHigh: 84
+		}
 	}
 
-	// TODO put the original code back / decide if AC is too strict / other
 	updateOptions(newOptions) {
 		// This is the real code...
-		/* if (newOptions === undefined || Object.keys(newOptions).length === 0) {
+		if (newOptions === undefined || Object.keys(newOptions).length === 0) {
 			throw Error('No new options given')
-		} */
-		// However, for our tests, it is easier to do...
-		if (typeof newOptions !== 'object') throw Error('No new options given')
+		}
 	}
 }
 
-describe('OptionsMaker', () => {
+describe('A single OptionsMaker', () => {
 	let activator = null  // the button used to open the popup.
 	let fakeAudioChart = null
 
@@ -34,7 +34,7 @@ describe('OptionsMaker', () => {
 
 	beforeEach(() => {
 		loadFixture('optionsMaker.fixtures.html')
-		activator = document.getElementById('options-popup-activator')
+		activator = document.getElementById('options-popup-activator-1')
 		fakeAudioChart = new FakeAudioChart()
 	})
 
@@ -57,43 +57,50 @@ describe('OptionsMaker', () => {
 
 	it('needs an activator element', () => {
 		expect(() => {
-			new OptionsMaker({}, null)
+			new OptionsMaker(fakeAudioChart)
 		}).toThrow(Error('Activator element not given'))
 
 		expect(() => {
-			new OptionsMaker({}, 42)
+			new OptionsMaker(fakeAudioChart, 42)
 		}).toThrow(Error('Activator element not given'))
 	})
 
 	it('accepts an object and an element', () => {
 		expect(() => {
-			new OptionsMaker({}, activator)
+			new OptionsMaker(fakeAudioChart, activator)
 		}).not.toThrow()
 	})
 
 	it('adds an event listener', () => {
 		const initialOnclick = activator.onclick
-		new OptionsMaker({}, activator)
+		new OptionsMaker(fakeAudioChart, activator)
 		expect(activator.onclick).not.toBe(initialOnclick)
 		expect(typeof activator.onclick).toBe('function')
 	})
 
-	it('adds aria-haspopup', () => {
+	it('adds aria-haspopup to the activator', () => {
 		expect(activator.getAttribute('aria-haspopup')).toBe(null)
-		new OptionsMaker({}, activator)
+		new OptionsMaker(fakeAudioChart, activator)
 		expect(activator.getAttribute('aria-haspopup')).toBe('true')
 	})
 
 	it('flags the button as expanded when clicked', () => {
-		new OptionsMaker({}, activator)
+		new OptionsMaker(fakeAudioChart, activator)
 		activator.click()
 		expect(activator.getAttribute('aria-expanded')).toBe('true')
+	})
+
+	it('gets the current AudioChart options', () => {
+		const spy = spyOnProperty(fakeAudioChart, 'options').and.callThrough()
+		new OptionsMaker(fakeAudioChart, activator)
+		activator.click()
+		expect(spy).toHaveBeenCalled()
 	})
 
 	it('creates a dialog on the first click; removes it on the second', () => {
 		spyOn(document, 'createElement').and.callThrough()
 		spyOn(document, 'appendChild').and.callThrough()
-		new OptionsMaker({}, activator)
+		new OptionsMaker(fakeAudioChart, activator)
 
 		activator.click()
 		const initialCreateElementCalls = document.createElement.calls.count()
@@ -110,7 +117,7 @@ describe('OptionsMaker', () => {
 	})
 
 	it('is no longer expanded after the dialog is removed', () => {
-		new OptionsMaker({}, activator)
+		new OptionsMaker(fakeAudioChart, activator)
 		activator.click()
 		expect(activator.getAttribute('aria-expanded')).toBe('true')
 		activator.click()
@@ -118,7 +125,7 @@ describe('OptionsMaker', () => {
 	})
 
 	it('creates a dialog container with the correct styling', () => {
-		new OptionsMaker({}, activator)
+		new OptionsMaker(fakeAudioChart, activator)
 		activator.click()
 
 		const gap = 8
@@ -133,7 +140,7 @@ describe('OptionsMaker', () => {
 	})
 
 	it('adds cancel and OK buttons', () => {
-		new OptionsMaker({}, activator)
+		new OptionsMaker(fakeAudioChart, activator)
 		activator.click()
 		const dialog = document.body.lastChild
 		const buttons = dialog.querySelectorAll('button')
@@ -142,46 +149,35 @@ describe('OptionsMaker', () => {
 		expect(buttons[1].innerText).toBe('OK')
 	})
 
-	it('closes without updating options when cancel is clicked', () => {
+	it('closes without updating when cancel is clicked', () => {
 		spyOn(fakeAudioChart, 'updateOptions').and.callThrough()
 		new OptionsMaker(fakeAudioChart, activator)
 		activator.click()
 		const dialog = document.body.lastChild
-		document.querySelectorAll('button')[0].click()
+		const button = dialog.querySelectorAll('button')[0]
+		expect(button.innerText).toBe('Cancel')
+		button.click()
 		expect(document.body.lastChild).not.toBe(dialog)
 		expect(fakeAudioChart.updateOptions).not.toHaveBeenCalled()
 	})
 
-	it('closes the dialog and updates options when ok is clicked', () => {
+	it('closes without updating when ok is clicked without changes', () => {
 		spyOn(fakeAudioChart, 'updateOptions').and.callThrough()
 		new OptionsMaker(fakeAudioChart, activator)
 		activator.click()
 		const dialog = document.body.lastChild
-		dialog.querySelectorAll('button')[1].click()
+		const button = dialog.querySelectorAll('button')[1]
+		expect(button.innerText).toBe('OK')
+		button.click()
 		expect(document.body.lastChild).not.toBe(dialog)
-		expect(fakeAudioChart.updateOptions).toHaveBeenCalled()
-	})
-
-	it('closes the dialog and updates options cancel is clicked first', () => {
-		spyOn(fakeAudioChart, 'updateOptions').and.callThrough()
-		new OptionsMaker(fakeAudioChart, activator)
-
-		activator.click()
-		const dialog1 = document.body.lastChild
-		dialog1.querySelectorAll('button')[0].click()
-		expect(document.body.lastChild).not.toBe(dialog1)
 		expect(fakeAudioChart.updateOptions).not.toHaveBeenCalled()
-
-		activator.click()
-		const dialog2 = document.body.lastChild
-		dialog2.querySelectorAll('button')[1].click()
-		expect(document.body.lastChild).not.toBe(dialog2)
-		expect(fakeAudioChart.updateOptions).toHaveBeenCalled()
 	})
 
 	it('adds frequency settings', () => {
-		new OptionsMaker({}, activator)
+		new OptionsMaker(fakeAudioChart, activator)
 		activator.click()
+
+		const options = fakeAudioChart.options
 
 		const dialog = document.body.lastChild
 		const labels = dialog.querySelectorAll('label')
@@ -193,19 +189,19 @@ describe('OptionsMaker', () => {
 
 		expect(labels[0].innerText).toBe('Lowest frequency (Hz):')
 		expect(labels[0].getAttribute('for')).toBe(inputs[0].id)
-		expect(inputs[0].value).toBe('200')
+		expect(inputs[0].value).toBe(String(options.frequencyLow))
 		expect(errors[0].hidden).toBe(true)
 		expect(errors[0].innerText).toBe('Error: moo')
 
 		expect(labels[1].innerText).toBe('Highest frequency (Hz):')
 		expect(labels[1].getAttribute('for')).toBe(inputs[1].id)
-		expect(inputs[1].value).toBe('800')
+		expect(inputs[1].value).toBe(String(options.frequencyHigh))
 		expect(errors[1].hidden).toBe(true)
 		expect(errors[1].innerText).toBe('Error: moo')
 	})
 
 	it('checks frequency values', () => {
-		new OptionsMaker({}, activator)
+		new OptionsMaker(fakeAudioChart, activator)
 		activator.click()
 
 		const dialog = document.body.lastChild
@@ -222,5 +218,29 @@ describe('OptionsMaker', () => {
 		// TODO
 		// expect(errors[1].hidden).toBe(false)
 		// TODO more error-checking goodness, e.g. aria-label
+	})
+})
+
+describe('Two OptionsMakers', () => {
+	let activator1 = null
+	let activator2 = null
+	let fakeAudioChart1 = null
+	let fakeAudioChart2 = null
+
+	beforeEach(() => {
+		loadFixture('optionsMaker.fixtures.html')
+		activator1 = document.getElementById('options-popup-activator-1')
+		activator2 = document.getElementById('options-popup-activator-1')
+		fakeAudioChart1 = new FakeAudioChart()
+		fakeAudioChart2 = new FakeAudioChart()
+	})
+
+	it('can open one popup', () => {
+		new OptionsMaker(fakeAudioChart1, activator1)
+	})
+
+	it('can open two popups', () => {
+		new OptionsMaker(fakeAudioChart1, activator1)
+		new OptionsMaker(fakeAudioChart2, activator2)
 	})
 })

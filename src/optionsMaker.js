@@ -29,8 +29,12 @@ function makeDialog(audioChart, activator) {
 	container.style.left = activator.offsetLeft + 'px'
 	container.style.top = activator.offsetTop + activator.offsetHeight + gap + 'px'
 
-	appendFrequencySetting(container, activator.id + '-low', 'Lowest', 200)
-	appendFrequencySetting(container, activator.id + '-high', 'Highest', 800)
+	const options = audioChart.options
+
+	appendFrequencySetting(
+		container, activator.id + '-low', 'Lowest', options.frequencyLow)
+	appendFrequencySetting(
+		container, activator.id + '-high', 'Highest', options.frequencyHigh)
 
 	// Buttons
 	const cancel = document.createElement('button')
@@ -47,8 +51,10 @@ function makeDialog(audioChart, activator) {
 
 	cancel.onclick = () =>
 		removeDialog(audioChart, activator, container, false)
+
 	ok.onclick = () =>
-		removeDialog(audioChart, activator, container, true)
+		removeDialog(audioChart, activator, container, false)
+
 	activator.onclick = () =>
 		removeDialog(audioChart, activator, container, false)
 
@@ -89,7 +95,13 @@ class OptionsMaker {
 	 * @param {HTMLElement} activator - the button that opens the pop-up
 	 */
 	constructor(audioChart, activator) {
-		if (typeof audioChart !== 'object') {
+		if (typeof audioChart === 'object'
+			&& typeof audioChart.updateOptions === 'function'
+			&& typeof Object.getOwnPropertyDescriptor(
+				Object.getPrototypeOf(audioChart), 'options'
+			).get === 'function') {
+			// OK
+		} else {
 			throw Error('AudioChart object not given')
 		}
 
