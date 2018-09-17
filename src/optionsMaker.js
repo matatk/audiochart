@@ -31,8 +31,11 @@ function makeDialog(audioChart, activator) {
 
 	const options = audioChart.options
 
+	appendDurationSetting(container, activator.id, [1, 3, 5, 10])
+
 	appendFrequencySetting(
 		container, activator.id + '-low', 'Lowest', options.frequencyLow)
+
 	appendFrequencySetting(
 		container, activator.id + '-high', 'Highest', options.frequencyHigh)
 
@@ -59,6 +62,34 @@ function makeDialog(audioChart, activator) {
 		removeDialog(audioChart, activator, container, false)
 
 	document.body.appendChild(container)
+}
+
+function appendDurationSetting(dialog, baseId, values) {
+	const inputId = baseId + '-input'
+	const container = document.createElement('div')
+
+	const label = document.createElement('label')
+	label.appendChild(document.createTextNode('Duration (seconds):'))
+	label.setAttribute('for', inputId)
+
+	const select = document.createElement('select')
+	select.id = inputId
+	for (const value of values) {
+		const option = document.createElement('option')
+		if (value === 5) option.selected = true
+		option.append(document.createTextNode(value))
+		select.append(option)
+	}
+
+	const error = document.createElement('p')
+	error.appendChild(document.createTextNode('Error: moo'))
+	error.hidden = true
+
+	container.appendChild(label)
+	container.appendChild(select)
+	container.appendChild(error)
+
+	dialog.appendChild(container)
 }
 
 function appendFrequencySetting(dialog, baseId, prettyName, value) {

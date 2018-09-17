@@ -1,7 +1,10 @@
 'use strict'
 /* global loadFixture OptionsMaker */
 // FIXME TODO
-// - insert directly after button to guarantee focus order?
+// + insert directly after button/move focus to guarantee focus order?
+// + multiple dialogs:
+//   - check IDs are not the same
+//   - check the correct settings get requested/updated
 
 class FakeAudioChart {
 	get options() {
@@ -173,6 +176,30 @@ describe('A single OptionsMaker', () => {
 		expect(fakeAudioChart.updateOptions).not.toHaveBeenCalled()
 	})
 
+	it('adds duration setting', () => {
+		new OptionsMaker(fakeAudioChart, activator)
+		activator.click()
+
+		// const settings = fakeAudioChart.options
+
+		const dialog = document.body.lastChild
+		const label = dialog.querySelectorAll('label')[0]
+		const select = dialog.querySelectorAll('select')[0]
+		const options = select.querySelectorAll('option')
+		const error = dialog.querySelectorAll('p')[0]
+
+		expect(label.innerText).toBe('Duration (seconds):')
+		expect(label.getAttribute('for')).toBe(select.id)
+		expect(options.length).toBe(4)
+
+		expect(options[1].innerText).toBe('3')
+		expect(options[2].innerText).toBe('5')
+		expect(options[2].selected).toBe(true)
+		expect(options[3].innerText).toBe('10')
+		expect(error.hidden).toBe(true)
+		expect(error.innerText).toBe('Error: moo')
+	})
+
 	it('adds frequency settings', () => {
 		new OptionsMaker(fakeAudioChart, activator)
 		activator.click()
@@ -181,23 +208,31 @@ describe('A single OptionsMaker', () => {
 
 		const dialog = document.body.lastChild
 		const labels = dialog.querySelectorAll('label')
-		expect(labels.length).toBe(2)
+		expect(labels.length).toBe(3)
 		const inputs = dialog.querySelectorAll('input')
 		expect(inputs.length).toBe(2)
 		const errors = dialog.querySelectorAll('p')
-		expect(errors.length).toBe(2)
+		expect(errors.length).toBe(3)
 
-		expect(labels[0].innerText).toBe('Lowest frequency (Hz):')
-		expect(labels[0].getAttribute('for')).toBe(inputs[0].id)
-		expect(inputs[0].value).toBe(String(options.frequencyLow))
-		expect(errors[0].hidden).toBe(true)
-		expect(errors[0].innerText).toBe('Error: moo')
+		const lowLabel = labels[1]
+		const lowInput = inputs[0]
+		const lowError = errors[1]
 
-		expect(labels[1].innerText).toBe('Highest frequency (Hz):')
-		expect(labels[1].getAttribute('for')).toBe(inputs[1].id)
-		expect(inputs[1].value).toBe(String(options.frequencyHigh))
-		expect(errors[1].hidden).toBe(true)
-		expect(errors[1].innerText).toBe('Error: moo')
+		const highLabel = labels[2]
+		const highInput = inputs[1]
+		const highError = errors[2]
+
+		expect(lowLabel.innerText).toBe('Lowest frequency (Hz):')
+		expect(lowLabel.getAttribute('for')).toBe(lowInput.id)
+		expect(lowInput.value).toBe(String(options.frequencyLow))
+		expect(lowError.hidden).toBe(true)
+		expect(lowError.innerText).toBe('Error: moo')
+
+		expect(highLabel.innerText).toBe('Highest frequency (Hz):')
+		expect(highLabel.getAttribute('for')).toBe(highInput.id)
+		expect(highInput.value).toBe(String(options.frequencyHigh))
+		expect(highError.hidden).toBe(true)
+		expect(highError.innerText).toBe('Error: moo')
 	})
 
 	it('checks frequency values', () => {
@@ -206,14 +241,22 @@ describe('A single OptionsMaker', () => {
 
 		const dialog = document.body.lastChild
 		const labels = dialog.querySelectorAll('label')
-		expect(labels.length).toBe(2)
+		expect(labels.length).toBe(3)
 		const inputs = dialog.querySelectorAll('input')
 		expect(inputs.length).toBe(2)
 		const errors = dialog.querySelectorAll('p')
-		expect(errors.length).toBe(2)
+		expect(errors.length).toBe(3)
 
-		inputs[1].value = 50
-		expect(inputs[1].value).toBe('50')
+		// const lowLabel = labels[1]
+		const lowInput = inputs[0]
+		// const lowError = errors[1]
+
+		// const highLabel = labels[2]
+		// const highInput = inputs[1]
+		// const highError = errors[2]
+
+		lowInput.value = 50
+		expect(lowInput.value).toBe('50')
 
 		// TODO
 		// expect(errors[1].hidden).toBe(false)
