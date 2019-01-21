@@ -36,7 +36,7 @@ describe('A single OptionsMaker', () => {
 	})
 
 	beforeEach(() => {
-		loadFixture('optionsMaker.fixtures.html')
+		loadFixture('OptionsMaker.fixtures.html')
 		activator = document.getElementById('options-popup-activator-1')
 		fakeAudioChart = new FakeAudioChart()
 	})
@@ -271,7 +271,7 @@ describe('Two OptionsMakers', () => {
 	let fakeAudioChart2 = null
 
 	beforeEach(() => {
-		loadFixture('optionsMaker.fixtures.html')
+		loadFixture('OptionsMaker.fixtures.html')
 		activator1 = document.getElementById('options-popup-activator-1')
 		activator2 = document.getElementById('options-popup-activator-1')
 		fakeAudioChart1 = new FakeAudioChart()
