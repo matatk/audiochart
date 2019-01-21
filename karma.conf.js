@@ -2,11 +2,12 @@
 module.exports = function(config) {
 	config.set({
 		basePath: '',
-		frameworks: ['jasmine-jquery', 'jasmine'],
+		frameworks: ['jasmine'],
 		files: [
 			'src/*.js',
 			'spec/*.html',
-			'spec/*.js'
+			'spec/util*.js',
+			'spec/*.spec.js'
 		],
 		preprocessors: {
 			'src/*.js': ['coverage']

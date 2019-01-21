@@ -1,16 +1,5 @@
-/*
- * Examples Gallery
- */
-
-nav ul {
-	margin: 0;
-	padding: 0;
-}
-
-nav ul li {
-	display: inline;
-	list-style-type: none;
-	padding-right: 1.5em;
+summary h2 {
+	display: inline-block;
 }
 
 table {
@@ -46,12 +35,12 @@ div.form-field label {
 	width: 13em;
 }
 
-p.error-message {
+.error-message {
 	color: red;
 }
 
-p.hidden-error-message {
-	display: none;
+.hidden-error-message {
+	display: none;  /* FIXME key off ARIA? */
 }
 
 input[aria-invalid=true] {
@@ -60,4 +49,23 @@ input[aria-invalid=true] {
 
 .current-datum {
 	background-color: yellow;
+}
+
+/* Disclosure button triangles */
+
+button[aria-haspopup="true"]:before {
+	content: '▶︎ ';
+}
+
+button[aria-expanded="true"]:before {
+	content: '▼ ';
+}
+
+/* Options dialogs */
+
+div.audiochart-options {
+	background-color: white;
+	padding: 1em;
+	outline: 4px solid yellow;
+	border: 1px solid black;
 }

@@ -10,7 +10,7 @@
     "build": "npm run build:core",
     "prebuild:ci": "npm run test:ci",
     "build:ci": "npm run build:core",
-    "build:core": "npm run uglify && npm run copylibs && npm run copylibs && npm run jsdoc:public && npm run jsdoc:internal && npm run docco && npm run replace",
+    "build:core": "npm run uglify && npm run copylibs && npm run jsdoc:public && npm run jsdoc:internal && npm run docco && npm run replace",
     "clean": "git clean --force -dx --exclude /node_modules",
     "precommit": "npm run build",
     "copylibs": "copyfiles --flat node_modules/*3/*3.min.js lib/ && copyfiles --flat node_modules/c3/c3.min.css lib/",
@@ -26,25 +26,24 @@
     "test": "karma start",
     "test:ci": "npm run test -- --browsers ChromeHeadlessNoSandbox --reporters dots",
     "preuglify": "mkdirp lib && node scripts/src-cat",
-    "uglify": "uglifyjs --verbose --warn --compress --mangle --source-map=\"includeSources,url='audiochart.min.js.map'\" --output lib/audiochart.min.js src/audiochart-all.js && rimraf src/audiochart-all.js"
+    "uglify": "uglifyjs --verbose --warn --compress --mangle --source-map \"includeSources,url='audiochart.min.js.map'\" --output lib/audiochart.min.js src/audiochart-all.js && rimraf src/audiochart-all.js"
   },
   "devDependencies": {
     "c3": "~0.4",
     "copyfiles": "~1.2",
     "docco": "~0.7",
-    "eslint": "~4.18",
+    "eslint": "~4.19",
     "husky": "~0.14",
     "jasmine-core": "~2.99",
     "jsdoc": "~3.5",
-    "karma": "~2.0",
+    "karma": "^3.1.4",
     "karma-chrome-launcher": "~2.2",
     "karma-coverage": "~1.1",
     "karma-firefox-launcher": "~1.1",
     "karma-jasmine": "~1.1",
-    "karma-jasmine-jquery": "~0.1",
     "karma-spec-reporter": "~0.0",
     "mkdirp": "~0.5",
-    "replace-in-file": "~3.1",
+    "replace-in-file": "~3.4",
     "rimraf": "~2.6",
     "uglify-es": "~3.3"
   }

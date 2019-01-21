@@ -10,14 +10,14 @@ class BaseFakeDataWrapper {
 		return ['Test']
 	}
 
-	seriesValue(series, index) {
+	seriesValue(series, index) {  // eslint-disable-line no-unused-vars
 		return 42
 	}
 }
 
 
 class ShortFakeDataWrapper extends BaseFakeDataWrapper {
-	seriesLength(series) {
+	seriesLength(series) {  // eslint-disable-line no-unused-vars
 		return 4
 	}
 }
@@ -35,21 +35,21 @@ class ShortTwoSeriesFakeDataWrapper extends ShortFakeDataWrapper {
 
 
 class LongFakeDataWrapper extends BaseFakeDataWrapper {
-	seriesLength(series) {
+	seriesLength(series) {  // eslint-disable-line no-unused-vars
 		return 100
 	}
 }
 
 
 class FakeMapper {
-	map(series, datum) {
+	map(series, datum) {  // eslint-disable-line no-unused-vars
 		return 21
 	}
 }
 
 
 class FakeSounder {
-	frequency(frequency) {}
+	frequency(frequency) {}  // eslint-disable-line no-unused-vars
 	start() {}
 	stop() {}
 }
@@ -72,6 +72,28 @@ function expectedSounderFrequencyCalls(seriesLength, twoSeries) {
 		if (twoSeries) out.push([1, 21])
 	}
 	return out
+}
+
+
+function expectedSkipSize(seriesLength, mode) {
+	switch (mode) {
+		case 'normal':
+			switch (seriesLength) {
+				case 4: return 1
+				case 100: return 10
+				default: throw Error(`Unexpected series length: ${seriesLength}`)
+			}
+		case 'fast':
+			switch (seriesLength) {
+				case 4: return 1
+				case 100: return 20
+				default: throw Error(`Unexpected series length: ${seriesLength}`)
+			}
+		case 'slow':
+			return 1
+		default:
+			throw Error(`Unexpected mode: ${mode}`)
+	}
 }
 
 
@@ -220,13 +242,37 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 			}).toThrow()
 		})
 
+		it("accepts 'normal', 'fast' or 'slow' only as skip values", () => {
+			expect(() => player._delta('normal')).not.toThrow()
+			expect(() => player._delta('fast')).not.toThrow()
+			expect(() => player._delta('slow')).not.toThrow()
+			expect(() => player._delta()).toThrow()
+			expect(() => player._delta(42)).toThrow()
+		})
+
+		it('calculates the correct normal skip size', () => {
+			const skipSize = expectedSkipSize(fakeData.seriesLength(0), 'normal')
+			expect(player._delta('normal')).toBe(skipSize, 'normal')
+		})
+
+		it('calculates the correct fast skip size', () => {
+			const skipSize = expectedSkipSize(fakeData.seriesLength(0), 'fast')
+			expect(player._delta('fast')).toBe(skipSize)
+		})
+
+		it('calculates the correct slow skip size', () => {
+			const skipSize = expectedSkipSize(fakeData.seriesLength(0), 'slow')
+			expect(player._delta('slow')).toBe(skipSize)
+		})
+
 		it('steps backward when requested', () => {
 			player.playPause()
-			jasmine.clock().tick(testDuration * 0.9)
+			// jasmine.clock().tick(testDuration * 0.9)
+			// player.playPause()
 			const index1 = player.playIndex
-			player.stepBackward(2)
+			player.stepBackward('slow')
 			const index2 = player.playIndex
-			expect(index2).toBe(index1 - 2)
+			expect(index2).toBe(index1 - 1)
 		})
 
 		it('updates the sound (and visual cursor) when stepped backward whilst paused', () => {
@@ -235,7 +281,7 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 			jasmine.clock().tick(testDuration / 10)
 			player.playPause()
 			const numberOfTimesPlayCoreCalled = player._playOne.calls.count()
-			player.stepBackward()
+			player.stepBackward('normal')
 			const steppedNumberOfTimesPlayCoreCalled = player._playOne.calls.count()
 			expect(steppedNumberOfTimesPlayCoreCalled).toBe(
 				numberOfTimesPlayCoreCalled + 1)
@@ -244,9 +290,20 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 		it('steps forward when requested', () => {
 			player.playPause()
 			const index1 = player.playIndex
-			player.stepForward(2)
+			player.stepForward('slow')
 			const index2 = player.playIndex
-			expect(index2).toBe(index1 + 2)
+			expect(index2).toBe(index1 + 1)
+		})
+
+		it('steps forward when requested while paused', () => {
+			// TODO: We can't say that the index will be 1, as it depends on
+			//       the sampling rate.
+			/* player.playPause()
+			player.playPause()  // pause it
+			const index1 = player.playIndex
+			player.stepForward('slow')
+			const index2 = player.playIndex
+			expect(index2).toBe(index1 + 1) */
 		})
 
 		it('updates the sound (and visual cursor) when stepped forward whilst paused', () => {
@@ -255,7 +312,7 @@ function mixinDataWrapperCore(message, TestDataClass, testDuration, testCallCoun
 			jasmine.clock().tick(testDuration / 10)
 			player.playPause()
 			const numberOfTimesPlayCoreCalled = player._playOne.calls.count()
-			player.stepForward()
+			player.stepForward('normal')
 			const steppedNumberOfTimesPlayCoreCalled = player._playOne.calls.count()
 			expect(steppedNumberOfTimesPlayCoreCalled).toBe(
 				numberOfTimesPlayCoreCalled + 1)

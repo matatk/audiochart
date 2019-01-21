@@ -1,5 +1,6 @@
 'use strict'
-/* global KeyboardHandler */
+/* global loadFixture KeyboardHandler */
+// TODO DRY left/right arrow tests?
 
 class FakePlayer {
 	play() {}
@@ -7,19 +8,21 @@ class FakePlayer {
 	playPause() {}
 	stop() {}
 	stepForward() {}
+	stepBackward() {}
 }
 
 
-function createKeydownEvent(keyName, shift) {
+function createKeydownEvent(keyName, shift, alt) {
 	return new KeyboardEvent('keydown', {
 		key: keyName,
-		shiftKey: shift
+		shiftKey: shift,
+		altKey: alt
 	})
 }
 
 
-function createAndDispatchKeydownEvent(keyName, shift, target) {
-	target.dispatchEvent(createKeydownEvent(keyName, shift))
+function createAndDispatchKeydownEvent(keyName, shift, alt, target) {
+	target.dispatchEvent(createKeydownEvent(keyName, shift, alt))
 }
 
 
@@ -29,8 +32,7 @@ describe('KeyboardHandler', () => {
 	let fakePlayer
 
 	beforeEach(() => {
-		jasmine.getFixtures().fixturesPath = 'base/spec/'
-		loadFixtures('KeyboardHandler.fixtures.html')
+		loadFixture('KeyboardHandler.fixtures.html')
 
 		nonExistantDiv = document.getElementById('moo')
 		keyTargetDiv = document.getElementById('test-01')
@@ -55,61 +57,122 @@ describe('KeyboardHandler', () => {
 		expect(keyTargetDiv.tabIndex).toBe(0)
 	})
 
-	// TODO DRY
 	it('stops the event default handler being called', function(done) {
 		new KeyboardHandler(keyTargetDiv, fakePlayer)
 		const evt = createKeydownEvent('Meta', false)
 		spyOn(evt, 'preventDefault')
 		keyTargetDiv.dispatchEvent(evt)
-		// TODO how to not need the timeout?
 		setTimeout(() => {
 			expect(evt.preventDefault).toHaveBeenCalled()
 			done()
 		}, 100)
 	})
 
-	// TODO DRY
+	it('stops the event default handler being called, except for tab', function(done) {
+		new KeyboardHandler(keyTargetDiv, fakePlayer)
+		const evt = createKeydownEvent('Tab', false)
+		spyOn(evt, 'preventDefault')
+		keyTargetDiv.dispatchEvent(evt)
+		setTimeout(() => {
+			expect(evt.preventDefault).not.toHaveBeenCalled()
+			done()
+		}, 100)
+	})
+
+	it('knows when the left arrow key has been pressed', function(done) {
+		const keyboardHandler = new KeyboardHandler(keyTargetDiv, fakePlayer)
+		spyOn(keyboardHandler, 'handleLeft').and.callThrough()
+		createAndDispatchKeydownEvent('ArrowLeft', false, false, keyTargetDiv)
+		setTimeout(() => {
+			expect(keyboardHandler.handleLeft).toHaveBeenCalledWith('normal')
+			done()
+		}, 100)
+	})
+
+	it('steps its player when the left arrow key is pressed', function(done) {
+		new KeyboardHandler(keyTargetDiv, fakePlayer)
+		spyOn(fakePlayer, 'stepBackward')
+		createAndDispatchKeydownEvent('ArrowLeft', false, false, keyTargetDiv)
+		setTimeout(() => {
+			expect(fakePlayer.stepBackward).toHaveBeenCalledWith('normal')
+			done()
+		}, 100)
+	})
+
+	it('steps its player faster when shift + left arrow are pressed', function(done) {
+		new KeyboardHandler(keyTargetDiv, fakePlayer)
+		spyOn(fakePlayer, 'stepBackward')
+		createAndDispatchKeydownEvent('ArrowLeft', true, false, keyTargetDiv)
+		setTimeout(() => {
+			expect(fakePlayer.stepBackward).toHaveBeenCalledWith('fast')
+			done()
+		}, 100)
+	})
+
+	it('steps its player by one when alt + left arrow are pressed', function(done) {
+		new KeyboardHandler(keyTargetDiv, fakePlayer)
+		spyOn(fakePlayer, 'stepBackward')
+		createAndDispatchKeydownEvent('ArrowLeft', false, true, keyTargetDiv)
+		setTimeout(() => {
+			expect(fakePlayer.stepBackward).toHaveBeenCalledWith('slow')
+			done()
+		}, 100)
+	})
+
 	it('knows when the right arrow key has been pressed', function(done) {
 		const keyboardHandler = new KeyboardHandler(keyTargetDiv, fakePlayer)
 		spyOn(keyboardHandler, 'handleRight').and.callThrough()
-		createAndDispatchKeydownEvent('ArrowRight', false, keyTargetDiv)
-		// TODO how to not need the timeout?
+		createAndDispatchKeydownEvent('ArrowRight', false, false, keyTargetDiv)
 		setTimeout(() => {
-			expect(keyboardHandler.handleRight).toHaveBeenCalled()
+			expect(keyboardHandler.handleRight).toHaveBeenCalledWith('normal')
 			done()
 		}, 100)
 	})
 
-	// TODO DRY
 	it('steps its player when the right arrow key is pressed', function(done) {
 		new KeyboardHandler(keyTargetDiv, fakePlayer)
 		spyOn(fakePlayer, 'stepForward')
-		createAndDispatchKeydownEvent('ArrowRight', false, keyTargetDiv)
-		// TODO how to not need the timeout?
+		createAndDispatchKeydownEvent('ArrowRight', false, false, keyTargetDiv)
 		setTimeout(() => {
-			expect(fakePlayer.stepForward).toHaveBeenCalled()
+			expect(fakePlayer.stepForward).toHaveBeenCalledWith('normal')
 			done()
 		}, 100)
 	})
 
-	// TODO DRY
+	it('steps its player faster when shift + right arrow are pressed', function(done) {
+		new KeyboardHandler(keyTargetDiv, fakePlayer)
+		spyOn(fakePlayer, 'stepForward')
+		createAndDispatchKeydownEvent('ArrowRight', true, false, keyTargetDiv)
+		setTimeout(() => {
+			expect(fakePlayer.stepForward).toHaveBeenCalledWith('fast')
+			done()
+		}, 100)
+	})
+
+	it('steps its player by one when alt + right arrow are pressed', function(done) {
+		new KeyboardHandler(keyTargetDiv, fakePlayer)
+		spyOn(fakePlayer, 'stepForward')
+		createAndDispatchKeydownEvent('ArrowRight', false, true, keyTargetDiv)
+		setTimeout(() => {
+			expect(fakePlayer.stepForward).toHaveBeenCalledWith('slow')
+			done()
+		}, 100)
+	})
+
 	it('knows when the space key has been pressed', function(done) {
 		const keyboardHandler = new KeyboardHandler(keyTargetDiv, fakePlayer)
 		spyOn(keyboardHandler, 'handleSpace').and.callThrough()
-		createAndDispatchKeydownEvent(' ', false, keyTargetDiv)
-		// TODO how to not need the timeout?
+		createAndDispatchKeydownEvent(' ', false, false, keyTargetDiv)
 		setTimeout(() => {
 			expect(keyboardHandler.handleSpace).toHaveBeenCalled()
 			done()
 		}, 100)
 	})
 
-	// TODO DRY
 	it('pauses its player when space is pressed', function(done) {
 		new KeyboardHandler(keyTargetDiv, fakePlayer)
 		spyOn(fakePlayer, 'playPause')
-		createAndDispatchKeydownEvent(' ', false, keyTargetDiv)
-		// TODO how to not need the timeout?
+		createAndDispatchKeydownEvent(' ', false, false, keyTargetDiv)
 		setTimeout(() => {
 			expect(fakePlayer.playPause).toHaveBeenCalled()
 			done()

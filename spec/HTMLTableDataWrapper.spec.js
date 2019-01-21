@@ -1,9 +1,8 @@
 'use strict'
-/* global dataWrappersTestCore HTMLTableDataWrapper */
+/* global dataWrappersTestCore loadFixture HTMLTableDataWrapper */
 
 describe('HTMLTableDataWrapper', () => {
-	jasmine.getFixtures().fixturesPath = 'base/spec/'
-	loadFixtures('HTMLTableDataWrapper.fixtures.html')
+	loadFixture('HTMLTableDataWrapper.fixtures.html')
 
 	const nonExistantTable = document.getElementById('moo')
 	const actualTable = document.getElementById('testOne')

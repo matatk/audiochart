@@ -6,6 +6,7 @@
   },
   "globals": {
     "AudioChart": false,
+    "OptionsMaker": false,
     "c3": false,
     "d3": false,
     "google": false
