@@ -11,7 +11,14 @@ function removeDialog(audioChart, activator, container, doUpdate) {
 	container.remove()
 	activator.removeAttribute('aria-expanded')
 	if (doUpdate) {
-		audioChart.updateOptions({})
+		const durationSelect = container.querySelector('select')
+		const duration = durationSelect.options[durationSelect.selectedIndex].value
+
+		if (durationSelect.selectedIndex !== 3) {  // FIXME
+			audioChart.updateOptions({
+				'duration': duration * 1000 // FIXME TEST
+			})
+		}
 	}
 	addOpener(audioChart, activator)
 }
@@ -31,7 +38,7 @@ function makeDialog(audioChart, activator) {
 
 	const options = audioChart.options
 
-	appendDurationSetting(container, activator.id, [1, 3, 5, 10])
+	appendDurationSetting(container, activator.id, [1, 3, 5, 10], options.duration)
 
 	appendFrequencySetting(
 		container, activator.id + '-low', 'Lowest', options.frequencyLow)
@@ -56,7 +63,7 @@ function makeDialog(audioChart, activator) {
 		removeDialog(audioChart, activator, container, false)
 
 	ok.onclick = () =>
-		removeDialog(audioChart, activator, container, false)
+		removeDialog(audioChart, activator, container, true)
 
 	activator.onclick = () =>
 		removeDialog(audioChart, activator, container, false)
@@ -64,7 +71,7 @@ function makeDialog(audioChart, activator) {
 	document.body.appendChild(container)
 }
 
-function appendDurationSetting(dialog, baseId, values) {
+function appendDurationSetting(dialog, baseId, values, currentValue) {
 	const inputId = baseId + '-input'
 	const container = document.createElement('div')
 
@@ -76,7 +83,7 @@ function appendDurationSetting(dialog, baseId, values) {
 	select.id = inputId
 	for (const value of values) {
 		const option = document.createElement('option')
-		if (value === 5) option.selected = true
+		if (value === (currentValue / 1000)) option.selected = true
 		option.append(document.createTextNode(value))
 		select.append(option)
 	}

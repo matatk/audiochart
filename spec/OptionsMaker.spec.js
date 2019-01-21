@@ -9,6 +9,7 @@
 class FakeAudioChart {
 	get options() {
 		return {
+			duration: 10e3,
 			frequencyLow: 42,
 			frequencyHigh: 84
 		}
@@ -180,8 +181,6 @@ describe('A single OptionsMaker', () => {
 		new OptionsMaker(fakeAudioChart, activator)
 		activator.click()
 
-		// const settings = fakeAudioChart.options
-
 		const dialog = document.body.lastChild
 		const label = dialog.querySelectorAll('label')[0]
 		const select = dialog.querySelectorAll('select')[0]
@@ -192,12 +191,13 @@ describe('A single OptionsMaker', () => {
 		expect(label.getAttribute('for')).toBe(select.id)
 		expect(options.length).toBe(4)
 
+		expect(options[0].innerText).toBe('1')
 		expect(options[1].innerText).toBe('3')
 		expect(options[2].innerText).toBe('5')
-		expect(options[2].selected).toBe(true)
 		expect(options[3].innerText).toBe('10')
+		expect(options[3].selected).toBe(true)
 		expect(error.hidden).toBe(true)
-		expect(error.innerText).toBe('Error: moo')
+		expect(error.innerText).toBe('Error: moo')  // FIXME
 	})
 
 	it('adds frequency settings', () => {
@@ -226,13 +226,13 @@ describe('A single OptionsMaker', () => {
 		expect(lowLabel.getAttribute('for')).toBe(lowInput.id)
 		expect(lowInput.value).toBe(String(options.frequencyLow))
 		expect(lowError.hidden).toBe(true)
-		expect(lowError.innerText).toBe('Error: moo')
+		expect(lowError.innerText).toBe('Error: moo')  // FIXME
 
 		expect(highLabel.innerText).toBe('Highest frequency (Hz):')
 		expect(highLabel.getAttribute('for')).toBe(highInput.id)
 		expect(highInput.value).toBe(String(options.frequencyHigh))
 		expect(highError.hidden).toBe(true)
-		expect(highError.innerText).toBe('Error: moo')
+		expect(highError.innerText).toBe('Error: moo')  // FIXME
 	})
 
 	it('checks frequency values', () => {
@@ -262,6 +262,23 @@ describe('A single OptionsMaker', () => {
 		// expect(errors[1].hidden).toBe(false)
 		// TODO more error-checking goodness, e.g. aria-label
 	})
+
+	it('closes and updates when ok is clicked with changes', () => {
+		spyOn(fakeAudioChart, 'updateOptions').and.callThrough()
+		new OptionsMaker(fakeAudioChart, activator)
+		activator.click()
+		const dialog = document.body.lastChild
+		const button = dialog.querySelectorAll('button')[1]
+		expect(button.innerText).toBe('OK')
+
+		const select = dialog.querySelector('select')
+		select.selectedIndex = 0  // this will be 1s rather than 3s
+
+		button.click()
+		expect(document.body.lastChild).not.toBe(dialog)
+		expect(fakeAudioChart.updateOptions).toHaveBeenCalled()
+	})
+
 })
 
 describe('Two OptionsMakers', () => {
