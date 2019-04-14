@@ -6,7 +6,6 @@
   "repository": "https://github.com/matatk/audiochart.git",
   "license": "MIT",
   "scripts": {
-    "_changelog": "replace-in-file --isRegex true '/^# AudioChart Changelog\\n/' '' CHANGELOG.md && conventional-changelog --infile CHANGELOG.md --same-file -p angular --config scripts/conventional-changelog-writer-opts.js && replace-in-file --isRegex true '/^# /g' '## ' CHANGELOG.md && replace-in-file --isRegex true '/\\n\\n\\n/g' '\n\n' CHANGELOG.md && replace-in-file --isRegex true '/\\n\\n\\n/g' '\n\n' CHANGELOG.md && replace-in-file --isRegex true '/\\n\\n\\n/g' '\n\n' CHANGELOG.md && replace-in-file --isRegex true '/^/' '# AudioChart Changelog\n\n' CHANGELOG.md",
     "prebuild": "npm run test",
     "build": "npm run build:core",
     "prebuild:ci": "npm run test:ci",
@@ -28,11 +27,11 @@
     "test:ci": "npm run test -- --browsers ChromeHeadlessNoSandbox --reporters dots",
     "preuglify": "mkdirp lib && node scripts/src-cat",
     "uglify": "uglifyjs --verbose --warn --compress --mangle --source-map \"includeSources,url='audiochart.min.js.map'\" --output lib/audiochart.min.js src/audiochart-all.js && rimraf src/audiochart-all.js",
-    "version": "npm run _changelog && git add CHANGELOG.md"
+    "version": "conventional-changelog-moulded-angular AudioChart && git add CHANGELOG.md"
   },
   "devDependencies": {
     "c3": "~0.4",
-    "conventional-changelog-cli": "^2.0.11",
+    "conventional-changelog-moulded-angular": "github:matatk/conventional-changelog-moulded-angular#0.2.0",
     "copyfiles": "~1.2",
     "docco": "~0.7",
     "eslint": "~4.19",
